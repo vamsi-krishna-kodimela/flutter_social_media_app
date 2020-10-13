@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "645527780923",
+    "firebase_url": "https://frendzit-a0ec6.firebaseio.com",
+    "project_id": "frendzit-a0ec6",
+    "storage_bucket": "frendzit-a0ec6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:645527780923:android:56109cab459b9b34b2661e",
+        "android_client_info": {
+          "package_name": "com.frendzit.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "645527780923-bec89mqsrgs3p6f08hbkgeojeb70ivkn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.frendzit.app",
+            "certificate_hash": "2f55c7eb57a186ee49cb0fc5c14b2ae8796a681a"
+          }
+        },
+        {
+          "client_id": "645527780923-qfhq2hhvvdkm3u2nad3f9lgk3b8nqb37.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDcWlSLXdJMXUIiIQ89NkjEoUfcQqQIz_w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "645527780923-qfhq2hhvvdkm3u2nad3f9lgk3b8nqb37.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
