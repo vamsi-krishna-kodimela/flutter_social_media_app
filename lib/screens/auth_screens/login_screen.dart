@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:social_media/screens/auth_screens/forgot_screen.dart';
-import 'package:social_media/screens/home_screen/home_screen.dart';
+import 'package:social_media/screens/main_screen.dart';
 import 'package:social_media/services/firebase_auth_service.dart';
 import './signup_screen.dart';
 
@@ -32,7 +32,7 @@ class _LoginScreenState extends State<LoginScreen> {
       await FirebaseAuthService().loginWithEmail(
           emailController.value.text, passwordController.value.text);
 
-      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_)=>HomeScreen()));
+      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_)=>MainScreen()));
     } catch (err) {
       _scaffold.currentState.showSnackBar(SnackBar(content: Text(err.message)));
     } finally {
@@ -99,6 +99,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 color: kAccentColor,
                 text: "Sign In",
                 isEnabled: !_isLoading,
+                isLoading: _isLoading,
                 onPressed: signinUser,
               ),
               BuildSizedBox(3),

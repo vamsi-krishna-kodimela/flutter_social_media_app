@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:social_media/constants.dart';
+import 'package:social_media/screens/single_user_screen/single_user_screen.dart';
 
 class ChatScreen extends StatefulWidget {
   final Map<String, dynamic> friend;
@@ -29,14 +31,14 @@ class _ChatScreenState extends State<ChatScreen> {
     if (_dur.inSeconds < 2) {
       postedOnString = "Just Now";
     } else if (_dur.inSeconds < 60) {
-      postedOnString = "Commented ${_dur.inSeconds} secs ago";
+      postedOnString = "${_dur.inSeconds} secs ago";
     } else if (_dur.inMinutes < 60) {
-      postedOnString = "Commented ${_dur.inMinutes} mins ago";
+      postedOnString = "${_dur.inMinutes} mins ago";
     } else if (_dur.inHours < 24) {
-      postedOnString = "Commented ${_dur.inHours} hrs ago";
+      postedOnString = "${_dur.inHours} hrs ago";
     } else {
       postedOnString =
-      "Commented on ${DateFormat("dd MMM, yyyy").format(postedOn)}";
+      "${DateFormat("dd MMM, yyyy").format(postedOn)}";
     }
 
 
@@ -57,7 +59,7 @@ class _ChatScreenState extends State<ChatScreen> {
       padding: EdgeInsets.symmetric(horizontal: 25.0, vertical: 15.0),
       width: MediaQuery.of(context).size.width * 0.75,
       decoration: BoxDecoration(
-        color: isMe ? Theme.of(context).primaryColor : kWhite,
+        color: isMe ? Theme.of(context).primaryColor.withAlpha(200) : kWhite,
         borderRadius: isMe
             ? BorderRadius.only(
                 topLeft: Radius.circular(15.0),
@@ -77,8 +79,8 @@ class _ChatScreenState extends State<ChatScreen> {
             message["message"],
             style: TextStyle(
               color: (isMe) ? kWhite : kTextColor,
-              fontSize: 14.0,
-              fontWeight: FontWeight.w600,
+              fontSize: 15.0,
+              fontWeight: FontWeight.w500,
             ),
             textAlign: TextAlign.start,
           ),
@@ -105,18 +107,37 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final _size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: kPrimaryColor,
       appBar: AppBar(
-        centerTitle: true,
-        title: Text(
-          widget.friend["name"],
-          style: TextStyle(
-            color: kWhite,
-            fontWeight: FontWeight.w600,
+        title: GestureDetector(
+          onTap: (){
+            Navigator.of(context).push(MaterialPageRoute(builder: (_)=>SingleUserScreen(widget.frienId, widget.friend["name"])));
+          },
+          child: Row(
+            children: [
+              Container(
+                padding: EdgeInsets.all(8.0),
+                height: AppBar().preferredSize.height,
+                width: AppBar().preferredSize.height,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(kDefaultPadding),
+                  child: FancyShimmerImage(
+                    imageUrl: widget.friend["photoUrl"],
+                    boxFit: BoxFit.cover,
+                  ),
+                ),
+              ),
+              Text(
+                widget.friend["name"],
+                style: TextStyle(
+                  color: kWhite,
+                  fontWeight: FontWeight.w600,
+                ),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
           ),
-          overflow: TextOverflow.ellipsis,
         ),
         elevation: 0.0,
       ),
@@ -191,8 +212,8 @@ class _ChatScreenState extends State<ChatScreen> {
           ),
           Expanded(
             child: TextField(
-              onSubmitted: (val) async {
-                await _sendMessage();
+              onSubmitted: (val){
+                _sendMessage();
               },
               controller: messageController,
               textCapitalization: TextCapitalization.sentences,
@@ -205,8 +226,8 @@ class _ChatScreenState extends State<ChatScreen> {
             icon: Icon(Icons.send),
             iconSize: 25.0,
             color: Theme.of(context).primaryColor,
-            onPressed: () async {
-              await _sendMessage();
+            onPressed: (){
+              _sendMessage();
             },
           ),
         ],

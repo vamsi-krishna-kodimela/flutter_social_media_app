@@ -198,7 +198,7 @@ final TextEditingController _description = TextEditingController();
                         children: [
                           FlatButton.icon(
                             onPressed: () async {
-                              await DialogCameraPicker.buildShowDialog(type: 0,setImage: setImage,context: context,);
+                              await DialogCameraPicker.buildShowDialog(type: 0,setImage: setImage,context: context,isPost: true);
                             },
                             icon: Icon(
                               Icons.image,

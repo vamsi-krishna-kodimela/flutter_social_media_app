@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-const kAppName = "Frendzit";
+const kAppName = "Friendzit";
 const kSplashTimer = 5;
 const kDefaultPadding = 10.0;
 

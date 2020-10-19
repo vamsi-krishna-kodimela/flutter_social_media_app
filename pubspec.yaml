@@ -36,6 +36,7 @@ dependencies:
   video_thumbnail: ^0.2.2
 
   firebase_messaging: ^7.0.3
+  firebase_database: ^4.1.1
 
 
 dev_dependencies:
@@ -43,7 +44,6 @@ dev_dependencies:
     sdk: flutter
 
 flutter:
-
   uses-material-design: true
   assets:
     - assets/

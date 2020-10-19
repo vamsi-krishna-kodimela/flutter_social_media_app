@@ -18,7 +18,8 @@ class GoogleSigninButton extends StatelessWidget {
         await FirebaseAuthService().signInWithGoogle();
         Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_)=>HomeScreen()));
       }catch(err){
-      _scaffoldState.showSnackBar(SnackBar(content: Text(err.message)));
+      // _scaffoldState.showSnackBar(SnackBar(content: Text(err.message)));
+        print(err.message);
       }
     }
     return Container(

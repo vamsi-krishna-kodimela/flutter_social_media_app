@@ -1,17 +1,14 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:social_media/screens/single_user_screen/single_user_screen.dart';
 
-import 'components/user_feed.dart';
 
 class ProfileScreen extends StatelessWidget {
-  final String uid = FirebaseAuth.instance.currentUser.uid;
+  final _user = FirebaseAuth.instance.currentUser;
 
   @override
   Widget build(BuildContext context) {
     final _size = MediaQuery.of(context).size;
-    return Container(
-      width: _size.width,
-      child: UserFeed(uid),
-    );
+    return SingleUserScreen(_user.uid, _user.displayName);
   }
 }

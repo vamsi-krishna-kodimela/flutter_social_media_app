@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:social_media/screens/friends_screen/friends_screen.dart';
 
 import '../../../constants.dart';
 import 'user_profile_actions.dart';
@@ -21,9 +22,12 @@ class UserProfileWidget extends StatelessWidget {
       builder: (ctx, snapshot) {
         if (snapshot.hasData) {
           var data = snapshot.data.data();
-          final Map<String, dynamic> _friends =
-              (data["friends"] == null) ? [] : data["friends"];
-          List<dynamic> friends = _friends.values.toList();
+          final Map<String, dynamic> _friends = data["friends"];
+          List<dynamic> friends;
+          if (_friends == null)
+            friends = [];
+          else
+            friends = _friends.values.toList();
           friends..removeWhere((element) => element != 3);
           return Container(
             width: double.infinity,
@@ -47,7 +51,6 @@ class UserProfileWidget extends StatelessWidget {
                 Row(
                   children: [
                     _UserProfilePic(size: _size, photoUrl: data["photoUrl"]),
-
                     Expanded(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -57,7 +60,7 @@ class UserProfileWidget extends StatelessWidget {
                             children: [
                               Text(
                                 (data["postCount"] == null)
-                                    ? 0
+                                    ? "0"
                                     : data["postCount"].toString(),
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
@@ -73,24 +76,42 @@ class UserProfileWidget extends StatelessWidget {
                               )
                             ],
                           ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                friends.length.toString(),
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: kTextColor,
-                                  fontSize: 18.0,
+                          GestureDetector(
+                            onTap: () {
+                              List<String> FriendsList = [];
+                              for (String key in _friends.keys) {
+                                if (_friends[key] == 3) {
+                                  FriendsList.add(key);
+                                }
+                              }
+                              if (friends.length > 0)
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (_) => FriendsScreen(
+                                      likedBy: FriendsList,
+                                    ),
+                                  ),
+                                );
+                            },
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  friends.length.toString(),
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: kTextColor,
+                                    fontSize: 18.0,
+                                  ),
                                 ),
-                              ),
-                              Text(
-                                "Friends",
-                                style: TextStyle(
-                                  color: kTextColor,
-                                ),
-                              )
-                            ],
+                                Text(
+                                  "Friends",
+                                  style: TextStyle(
+                                    color: kTextColor,
+                                  ),
+                                )
+                              ],
+                            ),
                           ),
                         ],
                       ),

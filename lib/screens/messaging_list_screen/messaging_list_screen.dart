@@ -62,8 +62,8 @@ class MessagingListScreen extends StatelessWidget {
             }
             friends.removeWhere((element) => element == uid);
             return Card(
-              child: FutureBuilder<DocumentSnapshot>(
-                future: chat["userRef"][friends[0]].get(),
+              child: StreamBuilder<DocumentSnapshot>(
+                stream: chat["userRef"][friends[0]].snapshots(),
                 builder: (ctx, snapshot) {
                   if (snapshot.data == null) {
                     return ListTile(
@@ -142,16 +142,34 @@ class _AuthorDetails extends StatelessWidget {
           ),
         );
       },
-      leading: Container(
-        width: _size.width * 0.1,
-        height: _size.width * 0.1,
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(kDefaultPadding),
-          child: FancyShimmerImage(
-            imageUrl: _userInfo["photoUrl"],
-            boxFit: BoxFit.cover,
+      leading: Stack(
+        children: [
+          Container(
+            width: _size.width * 0.1,
+            height: _size.width * 0.1,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(kDefaultPadding),
+              child: FancyShimmerImage(
+                imageUrl: _userInfo["photoUrl"],
+                boxFit: BoxFit.cover,
+              ),
+            ),
           ),
-        ),
+          Positioned(
+            bottom: 0,
+            right: 0,
+            child: Container(
+              width: 10.0,
+              height: 10.0,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(40.0),
+                color: (_userInfo["status"]==1)?kGreen:kAccentColor,
+                border: Border.all(color: kWhite,width: 2.0),
+              ),
+
+            ),
+          ),
+        ],
       ),
       title: Text(
         _userInfo["name"],

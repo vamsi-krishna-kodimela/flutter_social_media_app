@@ -11,9 +11,20 @@ exports.postCountIncrease = functions.firestore
     context.params.user_id;
     let uid = data.postedBy;
     const userData = db.collection("users").doc(uid).get();
-    return Promise.all([userData]).then((result) => {
+
+    // const payload = {
+    //   notification:{
+    //     title:"Hello",
+    //     body:"hiiii",
+    //   }
+    // };
+    
+
+    return Promise.all([userData]).then(async (result) => {
+    //   console.log(userData.messageToken);
+    // let  response = await admin.messaging().sendToDevice([result[0].data().messageToken],payload);
       let postCount = result[0].data().postCount;
-      console.log(result[0].data().friends["krETudOWpbPua1FnKhsNFdaQy1e2"]);
+
       if (!postCount) {
         postCount = 0;
       }
@@ -115,5 +126,15 @@ exports.updateChatTime = functions.firestore.document("chatRooms/{roomId}/chats/
     }).then((res)=>{
       console.log("Recent chat Time updated");
     });
+  }
+);
+
+exports.userPresenceToggle = functions.database.ref("/status/{uid}").onWrite(
+  async(change,context)=>{
+    let userstatus = change.after.val().trim();
+    // return db.collection("users").doc(context.params.uid).update({status : userstatus});
+    console.log(userstatus+":"+context.params.uid);
+    const uid = context.params.uid;
+    return db.collection("users").doc(uid).update({status:userstatus});
   }
 );

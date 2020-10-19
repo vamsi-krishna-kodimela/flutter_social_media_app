@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:social_media/screens/comments_screen/comments_screen.dart';
+import 'package:social_media/screens/likes_screen/likes_screen.dart';
 import 'package:social_media/screens/single_user_screen/single_user_screen.dart';
 import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
@@ -41,6 +42,7 @@ class _PostWidgetState extends State<PostWidget> {
     if (likes != null) {
       likesCount =
           likes.values.where((element) => element == true).toList().length;
+
       isLiked = likes[_authId];
     }
     if (isLiked == null) isLiked = false;
@@ -53,6 +55,7 @@ class _PostWidgetState extends State<PostWidget> {
               ..initialize().then((_) {
                 setState(() {
                   _videoPlayerController.setLooping(true);
+                  _videoPlayerController.setVolume(0);
                 });
               });
       }
@@ -67,9 +70,11 @@ class _PostWidgetState extends State<PostWidget> {
       _videoPlayerController.dispose();
     }
   }
+  bool audioState = false;
 
   @override
   Widget build(BuildContext context) {
+
     final _size = MediaQuery.of(context).size;
     final DateTime postedOn = _postData["postedOn"].toDate();
     final Duration _dur = DateTime.now().difference(postedOn);
@@ -79,6 +84,19 @@ class _PostWidgetState extends State<PostWidget> {
           isExpanded = !isExpanded;
         });
       };
+
+    void _toggleMute(isMuted) {
+
+      audioState = !isMuted;
+
+      setState(() {
+
+        if (isMuted)
+          _videoPlayerController.setVolume(0);
+        else
+          _videoPlayerController.setVolume(100);
+      });
+    }
 
     String postedOnString;
     if (_dur.inSeconds < 2) {
@@ -215,9 +233,35 @@ class _PostWidgetState extends State<PostWidget> {
                           imageUrl: _postData["resources"],
                           boxFit: BoxFit.cover,
                         )
-                      : AspectRatio(
-                          aspectRatio: 4 / 3,
-                          child: VideoPlayer(_videoPlayerController),
+                      : Stack(
+                          children: [
+                            AspectRatio(
+                              aspectRatio: 4 / 3,
+                              child: VideoPlayer(_videoPlayerController),
+                            ),
+                            Positioned(
+                              child: Container(
+
+                                decoration: BoxDecoration(
+                                  color: Colors.white70,
+                                  borderRadius: BorderRadius.circular(40.0),
+                                ),
+                                child: IconButton(
+                                  color: (audioState)?kPrimaryColor:kAccentColor,
+                                  icon: Icon(
+                                    !audioState
+                                        ? Icons.volume_off
+                                        : Icons.volume_up,
+                                  ),
+                                  onPressed: (){
+                                    _toggleMute(audioState);
+                                  },
+                                ),
+                              ),
+                              bottom: 10.0,
+                              right: 10.0,
+                            ),
+                          ],
                         ),
                 ),
               Container(
@@ -258,6 +302,7 @@ class _PostWidgetState extends State<PostWidget> {
                 likesCount: likesCount,
                 widget: widget,
                 toogleLikes: toogleLikes,
+                likedList: likes,
               ),
             ],
           ),
@@ -274,15 +319,23 @@ class _PostFooter extends StatelessWidget {
     @required this.likesCount,
     @required this.widget,
     @required this.toogleLikes,
+    this.likedList,
   }) : super(key: key);
 
   final bool isLiked;
   final int likesCount;
   final PostWidget widget;
   final Function toogleLikes;
+  final Map<String, dynamic> likedList;
 
   @override
   Widget build(BuildContext context) {
+    List<String> likesList = [];
+    if (likedList != null) {
+      for (String key in likedList.keys) {
+        if (likedList[key] == true) likesList.add(key);
+      }
+    }
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -294,7 +347,18 @@ class _PostFooter extends StatelessWidget {
                 (isLiked) ? Icons.favorite : Icons.favorite_border,
                 color: kAccentColor,
               ),
-              label: Text("$likesCount likes"),
+              label: GestureDetector(
+                  onTap: () {
+                    if (likesCount > 0)
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => LikesScreen(
+                            likedBy: likesList,
+                          ),
+                        ),
+                      );
+                  },
+                  child: Text("$likesCount likes")),
             ),
             IconButton(
               icon: Icon(
@@ -333,7 +397,6 @@ class _AuthorDetails extends StatelessWidget {
     @required this.postedOnString,
     @required this.uid,
     @required this.postId,
-
   })  : _size = size,
         _userInfo = userInfo,
         super(key: key);
@@ -401,8 +464,11 @@ class _AuthorDetails extends StatelessWidget {
                       actions: [
                         FlatButton(
                           color: kPrimaryColor.withAlpha(20),
-                          onPressed: () async{
-                            await FirebaseFirestore.instance.collection("posts").doc(postId).delete();
+                          onPressed: () async {
+                            await FirebaseFirestore.instance
+                                .collection("posts")
+                                .doc(postId)
+                                .delete();
                             Navigator.of(ctx).pop();
                           },
                           child: Text(

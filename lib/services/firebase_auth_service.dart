@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:social_media/models/user_model.dart';
@@ -11,6 +12,7 @@ import 'package:social_media/utils.dart';
 class FirebaseAuthService {
   final _firebaseAuth = FirebaseAuth.instance;
   final _googleSignIn = GoogleSignIn();
+  final _firebaseMessaging = FirebaseMessaging();
 
   Future<String> signInWithGoogle() async {
     final googleSignInAccount = await _googleSignIn.signIn();
@@ -32,7 +34,11 @@ class FirebaseAuthService {
       assert(user.uid == currentUser.uid);
 
       if (authResult.additionalUserInfo.isNewUser) {
+        await currentUser.updateProfile(
+            displayName: user.displayName, photoURL: user.photoURL);
         var keys = SocialUtils.keyWordGenerator(user.displayName);
+        await _firebaseMessaging.requestNotificationPermissions();
+        var notificationToken = await _firebaseMessaging.getToken();
         await FirestoreService.createUser(
           currentUser.uid,
           UserModel(
@@ -40,6 +46,7 @@ class FirebaseAuthService {
             description: "",
             photoUrl: user.photoURL,
             keys: keys,
+            messageToken: notificationToken,
           ),
         );
       }
@@ -65,9 +72,21 @@ class FirebaseAuthService {
     final credentials = await _firebaseAuth.createUserWithEmailAndPassword(
         email: email, password: password);
 
-    final photoUrl = await FirebaseStorageService().storeProfilePic(pic, credentials.user.uid);
-    var user =
-        UserModel(name: name, description: "", photoUrl: photoUrl, keys:SocialUtils.keyWordGenerator(name));
+    final photoUrl = await FirebaseStorageService()
+        .storeProfilePic(pic, credentials.user.uid);
+    await credentials.user.updateProfile(
+      photoURL: photoUrl,
+      displayName: name,
+    );
+    await _firebaseMessaging.requestNotificationPermissions();
+    var notificationToken = await _firebaseMessaging.getToken();
+    var user = UserModel(
+      name: name,
+      description: "",
+      photoUrl: photoUrl,
+      keys: SocialUtils.keyWordGenerator(name),
+      messageToken: notificationToken,
+    );
     await FirestoreService.createUser(
       credentials.user.uid,
       user,
@@ -77,5 +96,15 @@ class FirebaseAuthService {
 
   Future<void> sendResetPassword(String email) async {
     await _firebaseAuth.sendPasswordResetEmail(email: email);
+  }
+
+  Future<void> userSignout() async {
+    if (await _googleSignIn.isSignedIn()) {
+      await _googleSignIn.signOut();
+    }
+
+    if (_firebaseAuth.currentUser != null) {
+      await _firebaseAuth.signOut();
+    }
   }
 }

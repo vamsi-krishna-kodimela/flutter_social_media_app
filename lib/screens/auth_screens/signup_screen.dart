@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:social_media/components/image_source_selector.dart';
-import 'package:social_media/screens/home_screen/home_screen.dart';
+import 'package:social_media/screens/main_screen.dart';
 import 'package:social_media/services/firebase_auth_service.dart';
 
 import './components/google_signin_button.dart';
@@ -31,7 +31,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
   File _profilePic;
 
-  void _setImage(File val) {
+  void _setImage(File val,int type) {
     setState(() {
       _profilePic = val;
     });
@@ -81,7 +81,7 @@ class _SignupScreenState extends State<SignupScreen> {
       await FirebaseAuthService()
           .signupWithEmail(name, email, pass, _profilePic);
 
-      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_)=>HomeScreen()));
+      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_)=>MainScreen()));
 
     } catch (err) {
       _scaffold.currentState.showSnackBar(
@@ -111,7 +111,7 @@ class _SignupScreenState extends State<SignupScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              BuildSizedBox(15),
+              BuildSizedBox(10),
               Image.asset(
                 "assets/logo.png",
                 fit: BoxFit.fitHeight,
@@ -173,6 +173,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 text: "Sign Up",
                 isEnabled: !_isLoading,
                 onPressed: signupWithEmail,
+                isLoading: _isLoading,
               ),
               BuildSizedBox(3),
               Row(

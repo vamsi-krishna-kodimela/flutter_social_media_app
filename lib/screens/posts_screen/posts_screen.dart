@@ -89,6 +89,7 @@ class _PostsScreenState extends State<PostsScreen> {
           return Center(child: CircularProgressIndicator(),);
         if (snapshot.hasData) {
           var data = snapshot.data;
+          if(data.length>0)
           return ListView.builder(
             controller: _scrollController,
             itemCount: data.length,

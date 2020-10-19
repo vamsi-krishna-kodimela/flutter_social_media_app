@@ -9,6 +9,7 @@ class DialogCameraPicker {
     BuildContext context,
     Function setImage,
     int type,
+    bool isPost=false,
   }) async {
     await showDialog(
       context: context,
@@ -26,7 +27,7 @@ class DialogCameraPicker {
                   icon: Icon(Icons.camera),
                   onPressed: () async {
                     final file = await ImageSelectorService()
-                        .pickImage(ImageSource.camera, type);
+                        .pickImage(ImageSource.camera, type,isPost);
                     setImage(file,type);
                     Navigator.of(ctx).pop();
                   },
@@ -35,7 +36,7 @@ class DialogCameraPicker {
                   icon: Icon(Icons.photo_library),
                   onPressed: () async {
                     final file = await ImageSelectorService()
-                        .pickImage(ImageSource.gallery, type);
+                        .pickImage(ImageSource.gallery, type,isPost);
                     setImage(file,type);
                     Navigator.of(ctx).pop();
                   },
