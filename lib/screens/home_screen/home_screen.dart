@@ -4,6 +4,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:social_media/constants.dart';
 import 'package:social_media/screens/create_post_screen/create_post_screen.dart';
+import 'package:social_media/screens/entertainment_screen/entertainment_Screen.dart';
 import 'package:social_media/screens/main_screen.dart';
 import 'package:social_media/screens/messaging_list_screen/messaging_list_screen.dart';
 import 'package:social_media/screens/posts_screen/posts_screen.dart';
@@ -96,8 +97,6 @@ class _HomeScreenState extends State<HomeScreen> {
         return MessagingListScreen();
       case 2:
         return Center(child: Text("This Page is under Construction"));
-      case 3:
-        return Center(child: Text("This Page is under Construction"));
       default:
         return PostsScreen();
     }
@@ -172,13 +171,19 @@ class _HomeScreenState extends State<HomeScreen> {
     return Container(
       decoration: BoxDecoration(
         border: Border(
-            bottom: BorderSide(
-          color: (val == tab) ? kPrimaryColor : Colors.transparent,
-          width: 2,
-        )),
+          bottom: BorderSide(
+            color: (val == tab) ? kPrimaryColor : Colors.transparent,
+            width: 2,
+          ),
+        ),
       ),
       child: IconButton(
         onPressed: () {
+          if (val == 3) {
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: (_) => EntertainmentScreen()));
+            return;
+          }
           setState(() {
             tab = val;
           });
@@ -259,6 +264,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         margin: EdgeInsets.only(top: 1.0),
                       ),
+
                       Card(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(0.0),
