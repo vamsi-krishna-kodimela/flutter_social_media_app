@@ -10,6 +10,7 @@ class FirebaseStorageService{
   FirebaseStorage(storageBucket: "gs://frendzit-a0ec6.appspot.com");
   StorageUploadTask _uploadTask;
   final _auth = FirebaseAuth.instance;
+
   Future<String> storeProfilePic(File image, String uid) async {
     final ext = p.extension(image.path);
       String filepath = "users/$uid/profile$ext";
@@ -30,6 +31,7 @@ class FirebaseStorageService{
 
     String filepath = "posts/$uid/${DateTime.now().toString()}$ext";
     _uploadTask = _storage.ref().child(filepath).putFile(image);
+
     final StreamSubscription<StorageTaskEvent> streamSubscription =
     _uploadTask.events.listen((event) {});
 
