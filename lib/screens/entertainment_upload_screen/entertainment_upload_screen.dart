@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -117,7 +118,66 @@ class _EntertainmentUploadScreenState extends State<EntertainmentUploadScreen> {
                             },
                           ),
                           GestureDetector(
-                            onTap: () async {},
+                            onTap: () async {
+                              final pickedFile =
+                                  await FilePicker.platform.pickFiles(
+                                allowMultiple: false,
+                                type: FileType.audio,
+                              );
+
+                              if (pickedFile != null) {
+                                final file = File(pickedFile.files.single.path);
+                                final ext = p.extension(file.path);
+                                setState(() {
+                                  isUploading = true;
+                                });
+                                try {
+                                  final _storage = FirebaseStorage(
+                                    storageBucket:
+                                        "gs://frendzit-a0ec6.appspot.com",
+                                  );
+                                  final _filepath =
+                                      "entertainment/${DateTime.now().toString()}$ext";
+                                  StorageUploadTask _task = _storage
+                                      .ref()
+                                      .child(_filepath)
+                                      .putFile(file);
+
+                                  StorageTaskSnapshot _storageSnapshot =
+                                      await _task.onComplete;
+                                  if (_storageSnapshot.error != null) {
+                                    _scaffold.currentState.showSnackBar(
+                                      SnackBar(
+                                        content: Text("File upload failed..."),
+                                      ),
+                                    );
+                                    return;
+                                  }
+                                  final String url = await _storage
+                                      .ref()
+                                      .child(_filepath)
+                                      .getDownloadURL();
+                                  final _firestore = FirebaseFirestore.instance;
+                                  await _firestore
+                                      .collection("entertainment")
+                                      .add({
+                                    "resource": url,
+                                    "postedBy":
+                                        FirebaseAuth.instance.currentUser.uid,
+                                    "postedOn": Timestamp.now(),
+                                    "type": 1,
+                                  });
+                                  Navigator.of(context).pop();
+                                } catch (err) {
+                                  print(err.message);
+                                } finally {
+                                  if (mounted)
+                                    setState(() {
+                                      isUploading = false;
+                                    });
+                                }
+                              }
+                            },
                             child: Container(
                               padding: EdgeInsets.all(kDefaultPadding * 3),
                               decoration: BoxDecoration(
