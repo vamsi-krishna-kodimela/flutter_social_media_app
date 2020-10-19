@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:social_media/constants.dart';
+import 'package:social_media/screens/entertainment_upload_screen/entertainment_upload_screen.dart';
 
 class EntertainmentScreen extends StatefulWidget {
   @override
@@ -25,7 +26,9 @@ class _EntertainmentScreenState extends State<EntertainmentScreen> {
         elevation: 0.0,
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.of(context).push(MaterialPageRoute(builder: (_)=>EntertainmentUploadScreen()));
+        },
         child: Icon(Icons.add),
       ),
       body: Column(
@@ -68,7 +71,7 @@ class _EntertainmentScreenState extends State<EntertainmentScreen> {
                 borderRadius: BorderRadius.vertical(
                   top: Radius.circular(20),
                 ),
-                color: kWhite,
+                color: kBGColor,
               ),
               child: Center(
                 child: Text("Entertainment list"),
@@ -88,12 +91,11 @@ class _TopBarOption extends StatelessWidget {
   final int optionNum;
 
   const _TopBarOption({
-    Key key,
     this.option,
     this.isActive,
     this.onPress,
     this.optionNum,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
