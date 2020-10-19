@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -38,77 +40,98 @@ class _EntertainmentUploadScreenState extends State<EntertainmentUploadScreen> {
             Image.asset("assets/entertainment_upload.png"),
             Expanded(
               child: Center(
-                child: (isUploading)?CircularProgressIndicator():Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    GestureDetector(
-                      child: Container(
-                        padding: EdgeInsets.all(kDefaultPadding * 3),
-                        decoration: BoxDecoration(
-                          color: kPrimaryColor.withAlpha(50),
-                          borderRadius: BorderRadius.circular(20.0),
-                        ),
-                        child: Icon(
-                          Icons.video_call,
-                          color: kPrimaryColor,
-                        ),
-                      ),
-                      onTap: () async {
-                        final picker = ImagePicker();
-                        final pickedFile = await picker.getVideo(
-                          source: ImageSource.camera,
-                        );
-
-                        if (pickedFile != null) {
-                          final file = File(pickedFile.path);
-                          final ext = p.extension(file.path);
-                          setState(() {
-                            isUploading = true;
-                          });
-                          try {
-                            final _storage = FirebaseStorage(
-                                storageBucket:
-                                    "gs://frendzit-a0ec6.appspot.com");
-                            final _filepath =
-                                "entertainment/${DateTime.now().toString()}$ext";
-                            StorageUploadTask _task =
-                                _storage.ref().child(_filepath).putFile(file);
-
-                            StorageTaskSnapshot _storageSnapshot =
-                                await _task.onComplete;
-                            if (_storageSnapshot.error != null) {
-                              _scaffold.currentState.showSnackBar(
-                                SnackBar(
-                                  content: Text("File upload failed..."),
-                                ),
+                child: (isUploading)
+                    ? CircularProgressIndicator()
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          GestureDetector(
+                            child: Container(
+                              padding: EdgeInsets.all(kDefaultPadding * 3),
+                              decoration: BoxDecoration(
+                                color: kPrimaryColor.withAlpha(50),
+                                borderRadius: BorderRadius.circular(20.0),
+                              ),
+                              child: Icon(
+                                Icons.video_call,
+                                color: kPrimaryColor,
+                              ),
+                            ),
+                            onTap: () async {
+                              final picker = ImagePicker();
+                              final pickedFile = await picker.getVideo(
+                                source: ImageSource.gallery,
                               );
-                              return;
-                            }
-                            final String url = await _storage
-                                .ref()
-                                .child(_filepath)
-                                .getDownloadURL();
-                          } finally {
-                            setState(() {
-                              isUploading = false;
-                            });
-                          }
-                        }
-                      },
-                    ),
-                    Container(
-                      padding: EdgeInsets.all(kDefaultPadding * 3),
-                      decoration: BoxDecoration(
-                        color: kAccentColor.withAlpha(50),
-                        borderRadius: BorderRadius.circular(20.0),
+
+                              if (pickedFile != null) {
+                                final file = File(pickedFile.path);
+                                final ext = p.extension(file.path);
+                                setState(() {
+                                  isUploading = true;
+                                });
+                                try {
+                                  final _storage = FirebaseStorage(
+                                      storageBucket:
+                                          "gs://frendzit-a0ec6.appspot.com");
+                                  final _filepath =
+                                      "entertainment/${DateTime.now().toString()}$ext";
+                                  StorageUploadTask _task = _storage
+                                      .ref()
+                                      .child(_filepath)
+                                      .putFile(file);
+
+                                  StorageTaskSnapshot _storageSnapshot =
+                                      await _task.onComplete;
+                                  if (_storageSnapshot.error != null) {
+                                    _scaffold.currentState.showSnackBar(
+                                      SnackBar(
+                                        content: Text("File upload failed..."),
+                                      ),
+                                    );
+                                    return;
+                                  }
+                                  final String url = await _storage
+                                      .ref()
+                                      .child(_filepath)
+                                      .getDownloadURL();
+                                  final _firestore = FirebaseFirestore.instance;
+                                  await _firestore
+                                      .collection("entertainment")
+                                      .add({
+                                    "resource": url,
+                                    "postedBy":
+                                        FirebaseAuth.instance.currentUser.uid,
+                                    "postedOn": Timestamp.now(),
+                                    "type": 0,
+                                  });
+                                  Navigator.of(context).pop();
+                                } catch (err) {
+                                  print(err.message);
+                                } finally {
+                                  if (mounted)
+                                    setState(() {
+                                      isUploading = false;
+                                    });
+                                }
+                              }
+                            },
+                          ),
+                          GestureDetector(
+                            onTap: () async {},
+                            child: Container(
+                              padding: EdgeInsets.all(kDefaultPadding * 3),
+                              decoration: BoxDecoration(
+                                color: kAccentColor.withAlpha(50),
+                                borderRadius: BorderRadius.circular(20.0),
+                              ),
+                              child: Icon(
+                                Icons.audiotrack_rounded,
+                                color: kAccentColor,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                      child: Icon(
-                        Icons.audiotrack_rounded,
-                        color: kAccentColor,
-                      ),
-                    ),
-                  ],
-                ),
               ),
             ),
             Center(

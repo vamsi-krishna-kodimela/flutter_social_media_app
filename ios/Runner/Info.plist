@@ -33,6 +33,10 @@
     <key>NSPhotoLibraryUsageDescription</key>
     <string>Used to pick images from gallery</string>
 
+    <key>NSAppleMusicUsageDescription</key>
+    <string>Explain why your app uses music</string>
+
+
     <key>NSAppTransportSecurity</key>
     <dict>
       <key>NSAllowsArbitraryLoads</key>
