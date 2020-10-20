@@ -70,11 +70,11 @@ class _PostWidgetState extends State<PostWidget> {
       _videoPlayerController.dispose();
     }
   }
+
   bool audioState = false;
 
   @override
   Widget build(BuildContext context) {
-
     final _size = MediaQuery.of(context).size;
     final DateTime postedOn = _postData["postedOn"].toDate();
     final Duration _dur = DateTime.now().difference(postedOn);
@@ -86,11 +86,9 @@ class _PostWidgetState extends State<PostWidget> {
       };
 
     void _toggleMute(isMuted) {
-
       audioState = !isMuted;
 
       setState(() {
-
         if (isMuted)
           _videoPlayerController.setVolume(0);
         else
@@ -171,7 +169,9 @@ class _PostWidgetState extends State<PostWidget> {
         },
         child: Container(
           padding: EdgeInsets.symmetric(
-              horizontal: kDefaultPadding * 2, vertical: kDefaultPadding),
+            horizontal: kDefaultPadding * 2,
+            vertical: kDefaultPadding,
+          ),
           child: Column(
             children: [
               FutureBuilder<DocumentSnapshot>(
@@ -241,19 +241,20 @@ class _PostWidgetState extends State<PostWidget> {
                             ),
                             Positioned(
                               child: Container(
-
                                 decoration: BoxDecoration(
                                   color: Colors.white70,
                                   borderRadius: BorderRadius.circular(40.0),
                                 ),
                                 child: IconButton(
-                                  color: (audioState)?kPrimaryColor:kAccentColor,
+                                  color: (audioState)
+                                      ? kPrimaryColor
+                                      : kAccentColor,
                                   icon: Icon(
                                     !audioState
                                         ? Icons.volume_off
                                         : Icons.volume_up,
                                   ),
-                                  onPressed: (){
+                                  onPressed: () {
                                     _toggleMute(audioState);
                                   },
                                 ),
