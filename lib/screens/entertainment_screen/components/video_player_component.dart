@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 
 import '../../../constants.dart';
 
@@ -49,47 +50,56 @@ class _VideoPlayerComponentState extends State<VideoPlayerComponent> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 10.0),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20.0),
-      ),
-      child: Stack(
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(20.0),
-            child: AspectRatio(
-              aspectRatio: 4 / 3,
-              child: (_videoPlayerController.value.initialized)
-                  ? VideoPlayer(_videoPlayerController)
-                  : Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20.0),
-                        color: kGrey,
+    return VisibilityDetector(
+      onVisibilityChanged: (info){
+        if(info.visibleFraction>0.8){
+          _videoPlayerController.play();
+        }else{
+          _videoPlayerController.pause();
+        }
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 10.0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20.0),
+        ),
+        child: Stack(
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(20.0),
+              child: AspectRatio(
+                aspectRatio: 4 / 3,
+                child: (_videoPlayerController.value.initialized)
+                    ? VideoPlayer(_videoPlayerController)
+                    : Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20.0),
+                          color: kGrey,
+                        ),
                       ),
+              ),
+            ),
+            Positioned(
+              child: Row(
+                children: [
+                  Text("$likesCount Likes"),
+                  IconButton(
+                    onPressed: () async{
+                      await toogleLikes();
+                    },
+                    icon: Icon(
+                      (!isLiked)?Icons.favorite_border_rounded:Icons.favorite_rounded,
+                      color: kAccentColor,
                     ),
-            ),
-          ),
-          Positioned(
-            child: Row(
-              children: [
-                Text("$likesCount Likes"),
-                IconButton(
-                  onPressed: () async{
-                    await toogleLikes();
-                  },
-                  icon: Icon(
-                    (!isLiked)?Icons.favorite_border_rounded:Icons.favorite_rounded,
-                    color: kAccentColor,
-                  ),
 
-                ),
-              ],
+                  ),
+                ],
+              ),
+              right: 10.0,
+              bottom: 10.0,
             ),
-            right: 10.0,
-            bottom: 10.0,
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

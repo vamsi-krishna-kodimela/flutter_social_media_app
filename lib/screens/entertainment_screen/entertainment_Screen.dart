@@ -6,7 +6,6 @@ import 'package:social_media/constants.dart';
 import 'package:social_media/screens/entertainment_screen/components/audio_player_component.dart';
 import 'package:social_media/screens/entertainment_upload_screen/entertainment_upload_screen.dart';
 
-
 import 'components/top_bar_option.dart';
 import 'components/video_player_component.dart';
 
@@ -53,7 +52,6 @@ class _EntertainmentScreenState extends State<EntertainmentScreen> {
   DocumentSnapshot _lastAudio;
   List<List<QueryDocumentSnapshot>> _allPagedAudio =
       List<List<QueryDocumentSnapshot>>();
-
 
   @override
   void initState() {
@@ -298,13 +296,18 @@ class _EntertainmentScreenState extends State<EntertainmentScreen> {
                         itemCount: _data.length,
                         itemBuilder: (ctx, i) {
                           Map<String, dynamic> resourceData = _data[i].data();
-                          if (resourceData["type"] == 0)
+                          if (resourceData["type"] == 0) {
                             return VideoPlayerComponent(
                               data: resourceData,
                               key: Key(_data[i].id),
                               reference: _data[i].reference,
                             );
-                          return AudioPlayerComponent(reference: _data[i].reference,key: Key(_data[i].id),data: _data[i].data(),);
+                          }
+                          return AudioPlayerComponent(
+                            reference: _data[i].reference,
+                            key: Key(_data[i].id),
+                            data: _data[i].data(),
+                          );
                         },
                       );
                     }),

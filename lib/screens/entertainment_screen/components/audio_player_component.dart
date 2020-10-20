@@ -2,6 +2,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 
 import '../../../constants.dart';
 
@@ -43,46 +44,59 @@ class _AudioPlayerComponentState extends State<AudioPlayerComponent> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 10.0),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20.0),
-      ),
-      child: Stack(
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(20.0),
-            child: AspectRatio(
-              aspectRatio: 4 / 3,
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20.0),
-                  color: kGrey,
+    return VisibilityDetector(
+      onVisibilityChanged: (info){
+        if(info.visibleFraction>0.8){
+          audioPlayer.resume();
+        }else{
+          audioPlayer.pause();
+        }
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 10.0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20.0),
+        ),
+        child: Stack(
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(20.0),
+              child: AspectRatio(
+                aspectRatio: 4 / 3,
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20.0),
+                    color: kGrey,
+                    image: DecorationImage(
+                      image: AssetImage("assets/audio_bg.jpg"),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
                 ),
               ),
             ),
-          ),
-          Positioned(
-            child: Row(
-              children: [
-                Text("$likesCount Likes"),
-                IconButton(
-                  onPressed: () async {
-                    await toogleLikes();
-                  },
-                  icon: Icon(
-                    (!isLiked)
-                        ? Icons.favorite_border_rounded
-                        : Icons.favorite_rounded,
-                    color: kAccentColor,
+            Positioned(
+              child: Row(
+                children: [
+                  Text("$likesCount Likes"),
+                  IconButton(
+                    onPressed: () async {
+                      await toogleLikes();
+                    },
+                    icon: Icon(
+                      (!isLiked)
+                          ? Icons.favorite_border_rounded
+                          : Icons.favorite_rounded,
+                      color: kAccentColor,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
+              right: 10.0,
+              bottom: 10.0,
             ),
-            right: 10.0,
-            bottom: 10.0,
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
