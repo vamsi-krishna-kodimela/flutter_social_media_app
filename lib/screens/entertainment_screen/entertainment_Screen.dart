@@ -1,11 +1,11 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:social_media/constants.dart';
+import 'package:social_media/screens/entertainment_screen/components/audio_player_component.dart';
 import 'package:social_media/screens/entertainment_upload_screen/entertainment_upload_screen.dart';
-import 'package:video_player/video_player.dart';
+
 
 import 'components/top_bar_option.dart';
 import 'components/video_player_component.dart';
@@ -34,7 +34,7 @@ class _EntertainmentScreenState extends State<EntertainmentScreen> {
   }
 
   ScrollController _scrollController = ScrollController();
-  final int perPage = 10;
+  final int perPage = 4;
   String uid;
   bool _hasMorePosts = true;
   DocumentSnapshot _lastDocument;
@@ -53,6 +53,7 @@ class _EntertainmentScreenState extends State<EntertainmentScreen> {
   DocumentSnapshot _lastAudio;
   List<List<QueryDocumentSnapshot>> _allPagedAudio =
       List<List<QueryDocumentSnapshot>>();
+
 
   @override
   void initState() {
@@ -215,7 +216,12 @@ class _EntertainmentScreenState extends State<EntertainmentScreen> {
     return Scaffold(
       backgroundColor: kPrimaryColor,
       appBar: AppBar(
-        title: Text("Entertainment"),
+        title: Text(
+          "Entertainment",
+          style: TextStyle(
+            fontWeight: FontWeight.w600,
+          ),
+        ),
         elevation: 0.0,
       ),
       floatingActionButton: FloatingActionButton(
@@ -287,6 +293,7 @@ class _EntertainmentScreenState extends State<EntertainmentScreen> {
                         );
                       List<QueryDocumentSnapshot> _data = snapshot.data;
                       return ListView.builder(
+                        controller: _scrollController,
                         padding: EdgeInsets.all(kDefaultPadding),
                         itemCount: _data.length,
                         itemBuilder: (ctx, i) {
@@ -297,7 +304,7 @@ class _EntertainmentScreenState extends State<EntertainmentScreen> {
                               key: Key(_data[i].id),
                               reference: _data[i].reference,
                             );
-                          return Text("Audio File");
+                          return AudioPlayerComponent(reference: _data[i].reference,key: Key(_data[i].id),data: _data[i].data(),);
                         },
                       );
                     }),
