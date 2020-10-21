@@ -51,7 +51,9 @@ class _VideoPlayerComponentState extends State<VideoPlayerComponent> {
   @override
   Widget build(BuildContext context) {
     return VisibilityDetector(
+      key: Key(DateTime.now().toString()),
       onVisibilityChanged: (info){
+        if(mounted)
         if(info.visibleFraction>0.8){
           _videoPlayerController.play();
         }else{
@@ -84,8 +86,8 @@ class _VideoPlayerComponentState extends State<VideoPlayerComponent> {
                 children: [
                   Text("$likesCount Likes"),
                   IconButton(
-                    onPressed: () async{
-                      await toogleLikes();
+                    onPressed: (){
+                      toogleLikes();
                     },
                     icon: Icon(
                       (!isLiked)?Icons.favorite_border_rounded:Icons.favorite_rounded,

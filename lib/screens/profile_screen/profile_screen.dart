@@ -8,7 +8,6 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _size = MediaQuery.of(context).size;
     return SingleUserScreen(_user.uid, _user.displayName);
   }
 }

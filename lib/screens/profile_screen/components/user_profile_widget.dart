@@ -78,17 +78,17 @@ class UserProfileWidget extends StatelessWidget {
                           ),
                           GestureDetector(
                             onTap: () {
-                              List<String> FriendsList = [];
+                              List<String> friendsList = [];
                               for (String key in _friends.keys) {
                                 if (_friends[key] == 3) {
-                                  FriendsList.add(key);
+                                  friendsList.add(key);
                                 }
                               }
                               if (friends.length > 0)
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
                                     builder: (_) => FriendsScreen(
-                                      likedBy: FriendsList,
+                                      likedBy: friendsList,
                                     ),
                                   ),
                                 );

@@ -1,0 +1,69 @@
+import 'package:flutter/material.dart';
+import 'package:social_media/constants.dart';
+import 'file:///F:/Flutter/social_media/lib/screens/create_group_screen/create_group_screen.dart';
+
+class GroupPostsScreen extends StatefulWidget {
+  @override
+  _GroupPostsScreenState createState() => _GroupPostsScreenState();
+}
+
+class _GroupPostsScreenState extends State<GroupPostsScreen> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: kPrimaryColor,
+      appBar: _buildGroupAppBar(),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => CreateGroupScreen(),
+            ),
+          );
+        },
+      ),
+      body: ClipRRect(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(20.0),
+        ),
+        child: Container(
+          color: kBGColor,
+          child: Column(
+            children: [
+              Container(
+                child: Text("Groups"),
+              ),
+              Expanded(
+                child: Center(
+                  child: Text("Group Posts"),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  AppBar _buildGroupAppBar() {
+    return AppBar(
+      title: Text(
+        "Groups",
+        style: TextStyle(
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+      actions: [
+        IconButton(
+          icon: Icon(
+            Icons.search_rounded,
+            color: kWhite,
+          ),
+          onPressed: () {},
+        ),
+      ],
+      elevation: 0.0,
+    );
+  }
+}

@@ -32,7 +32,7 @@ class _AudioPlayerComponentState extends State<AudioPlayerComponent> {
     isLiked = !(data["likes"] == null || data["likes"][uid] != true);
     likesCount = likesCounter(data["likes"]);
     audioPlayer.setUrl(data["resource"]).then((value) async {
-      int result = await audioPlayer.resume();
+      // int result = await audioPlayer.resume();
     });
   }
   @override
@@ -45,11 +45,13 @@ class _AudioPlayerComponentState extends State<AudioPlayerComponent> {
   @override
   Widget build(BuildContext context) {
     return VisibilityDetector(
-      onVisibilityChanged: (info){
+      key: Key(DateTime.now().toString()),
+      onVisibilityChanged: (info) async {
+        if(mounted)
         if(info.visibleFraction>0.8){
-          audioPlayer.resume();
+          await audioPlayer.resume();
         }else{
-          audioPlayer.pause();
+          await audioPlayer.pause();
         }
       },
       child: Container(
@@ -80,8 +82,9 @@ class _AudioPlayerComponentState extends State<AudioPlayerComponent> {
                 children: [
                   Text("$likesCount Likes"),
                   IconButton(
-                    onPressed: () async {
-                      await toogleLikes();
+                    onPressed: (){
+                      if(mounted)
+                      toogleLikes();
                     },
                     icon: Icon(
                       (!isLiked)
@@ -118,7 +121,6 @@ class _AudioPlayerComponentState extends State<AudioPlayerComponent> {
     setState(() {});
   }
 
-  play(String url) async {
-    int result = await audioPlayer.play(url);
-  }
+
 }
+

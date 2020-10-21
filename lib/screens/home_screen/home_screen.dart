@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:social_media/constants.dart';
 import 'package:social_media/screens/create_post_screen/create_post_screen.dart';
 import 'package:social_media/screens/entertainment_screen/entertainment_Screen.dart';
+import 'package:social_media/screens/group_posts_screen/group_posts_screen.dart';
 import 'package:social_media/screens/main_screen.dart';
 import 'package:social_media/screens/messaging_list_screen/messaging_list_screen.dart';
 import 'package:social_media/screens/posts_screen/posts_screen.dart';
@@ -330,12 +331,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: ListTile(
                           onTap: () {
                             Navigator.of(context).pop();
-                            _scaffold.currentState.showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                    "Groups Screen is under construction!"),
-                              ),
-                            );
+                            Navigator.of(context).push(MaterialPageRoute(builder: (_)=>GroupPostsScreen()));
                           },
                           leading: Icon(
                             Icons.flag_outlined,

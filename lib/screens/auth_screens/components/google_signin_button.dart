@@ -6,9 +6,9 @@ import 'package:social_media/screens/home_screen/home_screen.dart';
 import 'package:social_media/services/firebase_auth_service.dart';
 
 class GoogleSigninButton extends StatelessWidget {
-  final ScaffoldState _scaffoldState;
+  final ScaffoldState scaffoldState;
 
-  const GoogleSigninButton(this._scaffoldState);
+  const GoogleSigninButton(this.scaffoldState);
 
 
   @override
