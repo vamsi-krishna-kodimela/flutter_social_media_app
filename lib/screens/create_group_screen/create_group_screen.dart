@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:social_media/constants.dart';
 import 'package:social_media/services/firebase_storage_service.dart';
 
+import 'components/create_group_button.dart';
 import 'components/group_text_field.dart';
 import 'components/image_picker.dart';
 
@@ -30,54 +31,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
     });
   }
 
-  void createGroup() async {
-    String _groupName = _groupNameController.value.text.trim();
-    String _groupDescription = _groupDescriptionController.value.text.trim();
-    if (_groupDescription.length == 0 ||
-        _groupName.length == 0 ||
-        _profilePic == null) {
-      final _snackbar = SnackBar(
-        content: Text("All fields are necessary."),
-      );
-      _scaffold.currentState.showSnackBar(_snackbar);
-      return;
-    }
 
-    setState(() {
-      isLoading=true;
-    });
-
-    try{
-      final userRef = _firestore.collection("users").doc(_uid);
-      final _store =FirebaseStorageService();
-      final _grpPic = await _store.storeGroupPic(_profilePic);
-      await _firestore.collection("groups").add({
-        "name" : _groupName,
-        "description" : _groupDescription,
-        "pic" : _grpPic,
-        "createdOn" : Timestamp.now(),
-        "createdBy" : userRef,
-        "admins" : [_uid],
-        "members" : [_uid],
-        "posts" : 0,
-      });
-
-      Navigator.of(context).pop();
-
-    }catch(err){
-      final _snackbar = SnackBar(
-        content: Text("Something went wrong..."),
-      );
-      if(mounted)
-      _scaffold.currentState.showSnackBar(_snackbar);
-      return;
-    } finally{
-      if(mounted)
-      setState(() {
-        isLoading=false;
-      });
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -127,31 +81,78 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                   ),
                 ),
               ),
-              GestureDetector(
-                onTap: (){
-                  createGroup();
-                },
-                child: InkWell(
-                  child: Container(
-                    padding: EdgeInsets.symmetric(vertical: 20.0,),
-                    color: kAccentColor,
-                    width: double.infinity,
-                    child:Center(
-                      child: Text(
-                        "Create",
-                        style: TextStyle(
-                          color: kWhite,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
+              (isLoading)
+                  ? CircularProgressIndicator()
+                  : CreateGroupButton(
+                      createGroup: createGroup,
                     ),
-                  ),
-                ),
-              ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  void createGroup() async {
+    String _groupName = _groupNameController.value.text.trim();
+    String _groupDescription = _groupDescriptionController.value.text.trim();
+    if (_groupDescription.length == 0 ||
+        _groupName.length == 0 ||
+        _profilePic == null) {
+      final _snackbar = SnackBar(
+        content: Text("All fields are necessary."),
+      );
+      _scaffold.currentState.showSnackBar(_snackbar);
+      return;
+    }
+
+    if (_groupDescription.length > 100 || _groupDescription.length < 20) {
+      final _snackbar = SnackBar(
+        content: Text("Description must be between 20 to 100 characters."),
+      );
+      _scaffold.currentState.showSnackBar(_snackbar);
+      return;
+    }
+
+    if (_groupDescription.length > 10 || _groupDescription.length < 4) {
+      final _snackbar = SnackBar(
+        content: Text("Description must be between 4 to 10 characters."),
+      );
+      _scaffold.currentState.showSnackBar(_snackbar);
+      return;
+    }
+
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      final userRef = _firestore.collection("users").doc(_uid);
+      final _store = FirebaseStorageService();
+      final _grpPic = await _store.storeGroupPic(_profilePic);
+      await _firestore.collection("groups").add({
+        "name": _groupName,
+        "description": _groupDescription,
+        "pic": _grpPic,
+        "createdOn": Timestamp.now(),
+        "createdBy": userRef,
+        "admins": [_uid],
+        "members": [_uid],
+        "posts": 0,
+      });
+
+      Navigator.of(context).pop();
+    } catch (err) {
+      final _snackbar = SnackBar(
+        content: Text("Something went wrong..."),
+      );
+      if (mounted) _scaffold.currentState.showSnackBar(_snackbar);
+      return;
+    } finally {
+      if (mounted)
+        setState(() {
+          isLoading = false;
+        });
+    }
   }
 }
