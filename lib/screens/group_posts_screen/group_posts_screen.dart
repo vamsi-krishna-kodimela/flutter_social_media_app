@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:social_media/constants.dart';
 import 'file:///F:/Flutter/social_media/lib/screens/create_group_screen/create_group_screen.dart';
+import 'package:social_media/screens/group_posts_screen/components/groups_user_in_component.dart';
 
 class GroupPostsScreen extends StatefulWidget {
   @override
@@ -31,9 +32,7 @@ class _GroupPostsScreenState extends State<GroupPostsScreen> {
           color: kBGColor,
           child: Column(
             children: [
-              Container(
-                child: Text("Groups"),
-              ),
+              GroupsUserInComponent(),
               Expanded(
                 child: Center(
                   child: Text("Group Posts"),
