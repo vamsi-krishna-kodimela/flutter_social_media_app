@@ -106,17 +106,19 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
       return;
     }
 
-    if (_groupDescription.length > 100 || _groupDescription.length < 20) {
+
+
+    if (_groupName.length > 10 || _groupName.length < 4) {
       final _snackbar = SnackBar(
-        content: Text("Description must be between 20 to 100 characters."),
+        content: Text("Group Name must be between 4 to 10 characters."),
       );
       _scaffold.currentState.showSnackBar(_snackbar);
       return;
     }
 
-    if (_groupDescription.length > 10 || _groupDescription.length < 4) {
+    if (_groupDescription.length > 100 || _groupDescription.length < 20) {
       final _snackbar = SnackBar(
-        content: Text("Description must be between 4 to 10 characters."),
+        content: Text("Description must be between 20 to 100 characters."),
       );
       _scaffold.currentState.showSnackBar(_snackbar);
       return;

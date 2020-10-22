@@ -34,7 +34,7 @@ class GroupsUserInComponent extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             itemBuilder: (ctx, i) {
               var data = groups[i].data();
-              return GroupTileComponent(gid: groups[i].id, data: data);
+              return GroupTileComponent(gid: groups[i].id, data: data,key: Key(groups[i].id),);
             },
             itemCount: groups.length,
           );
