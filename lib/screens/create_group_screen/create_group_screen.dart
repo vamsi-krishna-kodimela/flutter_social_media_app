@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:social_media/constants.dart';
 import 'package:social_media/services/firebase_storage_service.dart';
+import 'package:social_media/utils.dart';
 
 import 'components/create_group_button.dart';
 import 'components/group_text_field.dart';
@@ -132,6 +133,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
       final userRef = _firestore.collection("users").doc(_uid);
       final _store = FirebaseStorageService();
       final _grpPic = await _store.storeGroupPic(_profilePic);
+      final keys = SocialUtils.keyWordGenerator(_groupName);
       await _firestore.collection("groups").add({
         "name": _groupName,
         "description": _groupDescription,
@@ -141,6 +143,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
         "admins": [_uid],
         "members": [_uid],
         "posts": 0,
+        "keys": keys,
       });
 
       Navigator.of(context).pop();

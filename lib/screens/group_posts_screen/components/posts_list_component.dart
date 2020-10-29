@@ -7,6 +7,9 @@ import 'package:social_media/screens/group_post_widget_component/group_post_widg
 
 
 class PostsListComponent extends StatefulWidget {
+  final gid ;
+
+  const PostsListComponent([this.gid]);
 
   @override
   _PostsListComponentState createState() => _PostsListComponentState();
@@ -24,6 +27,12 @@ class _PostsListComponentState extends State<PostsListComponent> {
   @override
   void initState() {
     super.initState();
+    
+    if(widget.gid!=null)
+      _postsCollectionReference = FirebaseFirestore.instance
+          .collection("group_posts").where("group",isEqualTo: widget.gid)
+          .orderBy("postedOn", descending: true);
+    
     _scrollController.addListener(() {
       double maxScroll = _scrollController.position.maxScrollExtent;
       double currentScroll = _scrollController.position.pixels;
@@ -36,7 +45,7 @@ class _PostsListComponentState extends State<PostsListComponent> {
   final StreamController<List<QueryDocumentSnapshot>> _postsController =
   StreamController<List<QueryDocumentSnapshot>>.broadcast();
 
-  final _postsCollectionReference = FirebaseFirestore.instance
+  var _postsCollectionReference = FirebaseFirestore.instance
       .collection("group_posts")
       .orderBy("postedOn", descending: true);
 

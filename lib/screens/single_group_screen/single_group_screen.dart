@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:social_media/constants.dart';
 import 'package:social_media/screens/create_group_post_screen/create_group_post_screen.dart';
+import 'package:social_media/screens/group_posts_screen/components/posts_list_component.dart';
 import 'package:social_media/screens/single_group_screen/components/group_description_component.dart';
 import 'components/group_info_component.dart';
 import 'components/group_members_component.dart';
@@ -112,6 +113,8 @@ class _SingleGroupScreenState extends State<SingleGroupScreen> {
 
   widgetSwitch() {
     switch (option) {
+      case 1:
+        return PostsListComponent(widget.gid);
       case 2:
         return GroupMembersComponent(
           members: members,

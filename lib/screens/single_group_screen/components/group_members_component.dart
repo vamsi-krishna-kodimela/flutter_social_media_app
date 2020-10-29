@@ -22,7 +22,7 @@ class GroupMembersComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final firestore = FirebaseFirestore.instance;
-    // members.removeWhere((element) => element==uid);
+    members.removeWhere((element) => element==uid);
     return ListView.builder(
       itemCount: members.length,
       itemBuilder: (ctx, i) {
