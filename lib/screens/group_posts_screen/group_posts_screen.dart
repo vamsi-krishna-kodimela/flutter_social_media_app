@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:social_media/constants.dart';
+import 'package:social_media/screens/group_posts_screen/components/posts_list_component.dart';
 import '../create_group_screen/create_group_screen.dart';
 import './components/groups_user_in_component.dart';
 
@@ -34,9 +35,7 @@ class _GroupPostsScreenState extends State<GroupPostsScreen> {
             children: [
               GroupsUserInComponent(),
               Expanded(
-                child: Center(
-                  child: Text("Group Posts"),
-                ),
+                child: PostsListComponent(),
               ),
             ],
           ),
