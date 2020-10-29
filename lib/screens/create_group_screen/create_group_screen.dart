@@ -108,9 +108,9 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
 
 
 
-    if (_groupName.length > 10 || _groupName.length < 4) {
+    if (_groupName.length > 20 || _groupName.length < 4) {
       final _snackbar = SnackBar(
-        content: Text("Group Name must be between 4 to 10 characters."),
+        content: Text("Group Name must be between 4 to 20 characters."),
       );
       _scaffold.currentState.showSnackBar(_snackbar);
       return;

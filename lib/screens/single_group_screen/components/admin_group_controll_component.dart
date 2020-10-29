@@ -1,4 +1,5 @@
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import '../../../constants.dart';
@@ -11,8 +12,11 @@ class AdminGroupControllComponent extends StatelessWidget {
 
   final gid;
 
+
   @override
   Widget build(BuildContext context) {
+    final _firestore = FirebaseFirestore.instance;
+    
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
@@ -28,7 +32,10 @@ class AdminGroupControllComponent extends StatelessWidget {
         ),
         FlatButton.icon(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-          onPressed: () {},
+          onPressed: () async{
+            await _firestore.collection("groups").doc(gid).delete();
+            Navigator.of(context).pop();
+          },
           icon: Icon(Icons.delete,color: kWhite,),
           label: Text(
             "Delete",

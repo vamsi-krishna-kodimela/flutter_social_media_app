@@ -11,14 +11,17 @@ class GroupMembersComponent extends StatelessWidget {
     Key key,
     @required this.members,
     @required this.admins,
+    @required this.gid,
   }) : super(key: key);
 
   final List members;
   final List admins;
+  final String gid;
   final String uid = FirebaseAuth.instance.currentUser.uid;
 
   @override
   Widget build(BuildContext context) {
+    final firestore = FirebaseFirestore.instance;
     // members.removeWhere((element) => element==uid);
     return ListView.builder(
       itemCount: members.length,
@@ -119,15 +122,35 @@ class GroupMembersComponent extends StatelessWidget {
                   subtitle:
                       Text(admins.contains(members[i]) ? "Admin" : "Member"),
                   trailing: IconButton(
-                    onPressed: (){},
+                    onPressed: () async {
+                      (admins.contains(members[i]))
+                          ? await firestore
+                              .collection("groups")
+                              .doc(gid)
+                              .update({
+                              "admins": FieldValue.arrayRemove([members[i]]),
+                            })
+                          : await firestore
+                              .collection("groups")
+                              .doc(gid)
+                              .update({
+                              "admins": FieldValue.arrayUnion([uid]),
+                            });
+                    },
                     icon: Icon(
                       Icons.admin_panel_settings,
                       color:
-                          admins.contains(members[i]) ? kAccentColor : kGreen,
+                          (admins.contains(members[i])) ? kAccentColor : kGreen,
                     ),
                   ),
                 ),
               ),
+              onDismissed: (dir) async {
+                await _firestore.collection("groups").doc(gid).update({
+                  "admins": FieldValue.arrayRemove([uid]),
+                  "members": FieldValue.arrayRemove([uid]),
+                });
+              },
             );
           },
         );
