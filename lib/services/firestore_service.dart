@@ -38,6 +38,28 @@ class FirestoreService {
     });
   }
 
+
+  static Future<void> addGroupPostToFireStore(
+      String gid,
+      String description,
+      String resource,
+      int type,
+      ) async {
+    String uid = FirebaseAuth.instance.currentUser.uid;
+    final CollectionReference _postsCollectionReference =
+    FirebaseFirestore.instance.collection('group_posts');
+
+    await _postsCollectionReference.add({
+      "group" : gid,
+      "description": description,
+      "resources": resource,
+      "type": type,
+      "postedBy": uid,
+      "postedOn": Timestamp.now(),
+      "userData": FirebaseFirestore.instance.collection('users').doc(uid),
+    });
+  }
+
   static Future<void> sendFriendRequest(String friendID) async {
     final uid = FirebaseAuth.instance.currentUser.uid;
     await _usersCollectionReference.doc(uid).update({"friends.$friendID": 0});

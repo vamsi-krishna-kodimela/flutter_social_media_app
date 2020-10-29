@@ -38,7 +38,7 @@ class _CreateGroupPostScreenState extends State<CreateGroupPostScreen> {
       isLoading = true;
     });
     try {
-      await PublishPostUtil().publishPost(description, _image, _video);
+      await PublishPostUtil().publishPost(widget.gid,description, _image, _video);
     } catch (err) {
       _scaffold.currentState.showSnackBar(
         SnackBar(
@@ -73,7 +73,7 @@ class _CreateGroupPostScreenState extends State<CreateGroupPostScreen> {
       key: _scaffold,
       appBar: AppBar(
         title: Text(
-          "Create Post",
+          "Create Group Post",
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 20.0,
