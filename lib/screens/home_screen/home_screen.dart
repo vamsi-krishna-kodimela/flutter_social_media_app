@@ -8,6 +8,7 @@ import 'package:social_media/screens/entertainment_screen/entertainment_Screen.d
 import 'package:social_media/screens/group_posts_screen/group_posts_screen.dart';
 import 'package:social_media/screens/main_screen.dart';
 import 'package:social_media/screens/messaging_list_screen/messaging_list_screen.dart';
+import 'package:social_media/screens/pages_screen/pages_screen.dart';
 import 'package:social_media/screens/posts_screen/posts_screen.dart';
 import 'package:social_media/screens/profile_screen/profile_screen.dart';
 import 'package:social_media/screens/search_screen/search_screen.dart';
@@ -354,12 +355,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: ListTile(
                           onTap: () {
                             Navigator.of(context).pop();
-                            _scaffold.currentState.showSnackBar(
-                              SnackBar(
-                                content:
-                                    Text("Pages Screen is under construction!"),
-                              ),
-                            );
+
+                            Navigator.of(context).push(MaterialPageRoute(builder: (_)=>PagesScreen()));
                           },
                           leading: Icon(
                             Icons.chrome_reader_mode,

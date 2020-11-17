@@ -36,7 +36,7 @@ class ImagePicker extends StatelessWidget {
             type: 0,
           );
         },
-        title: Text("Upload Group Display Pic"),
+        title: Text("Upload Page Display Pic"),
         leading: (profilePic == null)
             ? Container(
           height: 40,

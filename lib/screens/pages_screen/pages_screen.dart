@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:social_media/screens/create_page_screen/create_page_screen.dart';
 import '../../components/top_bar_option.dart';
 
 import '../../constants.dart';
@@ -10,6 +11,7 @@ class PagesScreen extends StatefulWidget {
 
 class _PagesScreenState extends State<PagesScreen> {
   int currentOption = 0;
+
   void changeOption(val) {
     setState(() {
       currentOption = val;
@@ -35,61 +37,63 @@ class _PagesScreenState extends State<PagesScreen> {
         elevation: 0.0,
       ),
       backgroundColor: kPrimaryColor,
-
       body: Column(
         children: [
-          Row(
-            children: [
-              Container(
-                width: double.infinity,
-                color: kPrimaryColor,
-                padding: EdgeInsets.symmetric(vertical: kDefaultPadding),
-                child: SingleChildScrollView(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      TopBarOption(
-                        isActive: currentOption == 0,
-                        option: "All",
-                        onPress: changeOption,
-                        optionNum: 0,
-                      ),
-                      TopBarOption(
-                        isActive: currentOption == 1,
-                        option: "Video",
-                        onPress: changeOption,
-                        optionNum: 1,
-                      ),
-                      TopBarOption(
-                        isActive: currentOption == 2,
-                        option: "Audio",
-                        onPress: changeOption,
-                        optionNum: 2,
-                      ),
-                    ],
+          Container(
+            width: double.infinity,
+            color: kPrimaryColor,
+            padding: EdgeInsets.symmetric(vertical: kDefaultPadding),
+            child: SingleChildScrollView(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  TopBarOption(
+                    isActive: currentOption == 0,
+                    option: "Posts",
+                    onPress: changeOption,
+                    optionNum: 0,
                   ),
-                ),
+                  TopBarOption(
+                    isActive: currentOption == 1,
+                    option: "Liked",
+                    onPress: changeOption,
+                    optionNum: 1,
+                  ),
+                  TopBarOption(
+                    isActive: currentOption == 2,
+                    option: "Created",
+                    onPress: changeOption,
+                    optionNum: 2,
+                  ),
+                ],
               ),
-              Expanded(
-                child: ClipRRect(
+            ),
+          ),
+          Expanded(
+            child: ClipRRect(
+              borderRadius: BorderRadius.vertical(
+                top: Radius.circular(20),
+              ),
+              child: Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
                   borderRadius: BorderRadius.vertical(
                     top: Radius.circular(20),
                   ),
-                  child: Container(
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.vertical(
-                        top: Radius.circular(20),
-                      ),
-                      color: kBGColor,
-                    ),
-                    child: Text("Hello World!"),
-                  ),
+                  color: kBGColor,
                 ),
+                child: Text("Hello World!"),
               ),
-            ],
+            ),
           ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (_) => CreatePageScreen()));
+        },
+        child: Icon(Icons.add),
       ),
     );
   }
