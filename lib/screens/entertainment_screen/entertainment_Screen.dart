@@ -6,7 +6,7 @@ import 'package:social_media/constants.dart';
 import 'package:social_media/screens/entertainment_screen/components/audio_player_component.dart';
 import 'package:social_media/screens/entertainment_upload_screen/entertainment_upload_screen.dart';
 
-import 'components/top_bar_option.dart';
+import '../../components/top_bar_option.dart';
 import 'components/video_player_component.dart';
 
 class EntertainmentScreen extends StatefulWidget {
