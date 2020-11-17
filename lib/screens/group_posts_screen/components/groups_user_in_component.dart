@@ -1,11 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
-
-import 'group_tile_component.dart';
+import './group_tile_component.dart';
 
 class GroupsUserInComponent extends StatelessWidget {
   final _firestore = FirebaseFirestore.instance;
+  final _uid = FirebaseAuth.instance.currentUser.uid;
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +16,7 @@ class GroupsUserInComponent extends StatelessWidget {
       width: double.infinity,
       height: 100.0,
       child: StreamBuilder<QuerySnapshot>(
-        stream: _firestore.collection("groups").snapshots(),
+        stream: _firestore.collection("groups").where("members",arrayContains: _uid).snapshots(),
         builder: (_, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting)
             return Shimmer.fromColors(

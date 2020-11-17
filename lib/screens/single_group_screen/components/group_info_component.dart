@@ -22,6 +22,8 @@ class GroupInfoComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if(gData ==null)
+      Navigator.of(context).pop();
     final List<dynamic> admins = gData["admins"];
 
     final List<dynamic> members = gData["members"];

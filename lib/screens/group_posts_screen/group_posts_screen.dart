@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:social_media/constants.dart';
 import 'package:social_media/screens/group_posts_screen/components/posts_list_component.dart';
@@ -5,17 +7,15 @@ import 'package:social_media/screens/group_search_screen/group_search_screen.dar
 import '../create_group_screen/create_group_screen.dart';
 import './components/groups_user_in_component.dart';
 
-class GroupPostsScreen extends StatefulWidget {
-  @override
-  _GroupPostsScreenState createState() => _GroupPostsScreenState();
-}
+class GroupPostsScreen extends StatelessWidget {
+  final _firestoreInstance = FirebaseFirestore.instance;
+  final _uid = FirebaseAuth.instance.currentUser.uid;
 
-class _GroupPostsScreenState extends State<GroupPostsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: kPrimaryColor,
-      appBar: _buildGroupAppBar(),
+      appBar: _buildGroupAppBar(context),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () {
@@ -32,20 +32,32 @@ class _GroupPostsScreenState extends State<GroupPostsScreen> {
         ),
         child: Container(
           color: kBGColor,
-          child: Column(
-            children: [
-              GroupsUserInComponent(),
-              Expanded(
-                child: PostsListComponent(),
-              ),
-            ],
+          child: StreamBuilder<QuerySnapshot>(
+            stream: _firestoreInstance
+                .collection("groups")
+                .where("members", arrayContains: _uid)
+                .snapshots(),
+            builder: (ctx, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting)
+                return Center(child: CircularProgressIndicator());
+              final data = snapshot.data;
+              if(! snapshot.hasData || data.size==0)
+                return Center(child: Text("No Groups Found for you."));
+              final _groups = data.docs.map((e) => e.id).toList();
+              return Column(
+                children: [
+                  GroupsUserInComponent(),
+                  Expanded(child: PostsListComponent(groups:_groups)),
+                ],
+              );
+            },
           ),
         ),
       ),
     );
   }
 
-  AppBar _buildGroupAppBar() {
+  AppBar _buildGroupAppBar(BuildContext context) {
     return AppBar(
       title: Text(
         "Groups",
@@ -61,9 +73,7 @@ class _GroupPostsScreenState extends State<GroupPostsScreen> {
           ),
           onPressed: () {
             Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (_) => GroupSearchScreen(),
-              ),
+              MaterialPageRoute(builder: (_) => GroupSearchScreen()),
             );
           },
         ),

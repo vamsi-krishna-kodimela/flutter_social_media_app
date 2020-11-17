@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:social_media/screens/single_user_screen/single_user_screen.dart';
+import '../../single_user_screen/single_user_screen.dart';
 
 import '../../../constants.dart';
 
@@ -15,6 +15,7 @@ class AuthorDetails extends StatelessWidget {
     @required this.uid,
     @required this.postId,
     @required this.gid,
+    @required this.function,
   })  : _size = size,
         _userInfo = userInfo,
         super(key: key);
@@ -24,6 +25,7 @@ class AuthorDetails extends StatelessWidget {
   final String postedOnString;
   final String uid;
   final String postId;
+  final Function function;
   final String gid;
 
   @override
@@ -88,6 +90,7 @@ class AuthorDetails extends StatelessWidget {
                           .collection("group_posts")
                           .doc(postId)
                           .delete();
+                      function();
                       Navigator.of(cx).pop();
                     },
                     child: Text(

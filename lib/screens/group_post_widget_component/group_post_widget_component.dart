@@ -15,8 +15,9 @@ import 'components/post_footer.dart';
 
 class GroupPostWidgetComponent extends StatefulWidget {
   final QueryDocumentSnapshot post;
+  final Function function;
 
-  GroupPostWidgetComponent({Key key, this.post}) : super(key: key);
+  GroupPostWidgetComponent({Key key, this.post,this.function}) : super(key: key);
 
   @override
   _GroupPostWidgetComponent createState() => _GroupPostWidgetComponent();
@@ -219,6 +220,7 @@ class _GroupPostWidgetComponent extends State<GroupPostWidgetComponent> {
                     uid: snapshot.data.id,
                     postId: widget.post.id,
                     gid: _postData["gid"],
+                    function:widget.function,
                   );
                 },
               ),

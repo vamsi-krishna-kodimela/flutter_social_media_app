@@ -1,15 +1,14 @@
-
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:social_media/screens/group_post_widget_component/group_post_widget_component.dart';
 
-
 class PostsListComponent extends StatefulWidget {
-  final gid ;
+  final gid;
+  final groups;
 
-  const PostsListComponent([this.gid]);
+  const PostsListComponent({this.groups,this.gid});
 
   @override
   _PostsListComponentState createState() => _PostsListComponentState();
@@ -22,28 +21,38 @@ class _PostsListComponentState extends State<PostsListComponent> {
   bool _hasMorePosts = true;
   DocumentSnapshot _lastDocument;
   List<List<QueryDocumentSnapshot>> _allPagedResults =
-  List<List<QueryDocumentSnapshot>>();
+      List<List<QueryDocumentSnapshot>>();
+popListItem(){
+  if(_allPagedResults.length==1)
+  setState(() {
+    _allPagedResults =
+        List<List<QueryDocumentSnapshot>>();
+  });
 
+}
   @override
   void initState() {
     super.initState();
-    
-    if(widget.gid!=null)
+
+    if (widget.gid != null)
       _postsCollectionReference = FirebaseFirestore.instance
-          .collection("group_posts").where("group",isEqualTo: widget.gid)
+          .collection("group_posts")
+          .where("group", isEqualTo: widget.gid)
           .orderBy("postedOn", descending: true);
-    
+    else
+      _postsCollectionReference = FirebaseFirestore.instance
+          .collection("group_posts").where("group",whereIn: widget.groups)
+          .orderBy("postedOn", descending: true);
     _scrollController.addListener(() {
       double maxScroll = _scrollController.position.maxScrollExtent;
       double currentScroll = _scrollController.position.pixels;
       double delta = MediaQuery.of(context).size.height * 0.25;
       if (maxScroll - currentScroll <= delta) _requestPosts();
     });
-
   }
 
   final StreamController<List<QueryDocumentSnapshot>> _postsController =
-  StreamController<List<QueryDocumentSnapshot>>.broadcast();
+      StreamController<List<QueryDocumentSnapshot>>.broadcast();
 
   var _postsCollectionReference = FirebaseFirestore.instance
       .collection("group_posts")
@@ -75,7 +84,7 @@ class _PostsListComponentState extends State<PostsListComponent> {
 
         var allPosts = _allPagedResults.fold<List<QueryDocumentSnapshot>>(
             List<QueryDocumentSnapshot>(),
-                (initialValue, pageItems) => initialValue..addAll(pageItems));
+            (initialValue, pageItems) => initialValue..addAll(pageItems));
 
         _postsController.add(allPosts);
 
@@ -91,25 +100,48 @@ class _PostsListComponentState extends State<PostsListComponent> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<List<QueryDocumentSnapshot>>(
-      stream: listenToPostsRealTime(),
-      builder: (ctx, snapshot) {
-        if(snapshot.connectionState == ConnectionState.waiting)
-          return Center(child: CircularProgressIndicator(),);
-        if (snapshot.hasData) {
-          var data = snapshot.data;
-          if(data.length>0)
-            return ListView.builder(
-              controller: _scrollController,
-              itemCount: data.length,
-              itemBuilder: (ctx, i) => GroupPostWidgetComponent(
-                key: Key(data[i].id),
-                post: data[i],
-              ),
+    final _firestore = FirebaseFirestore.instance;
+    return FutureBuilder(
+      future: _firestore
+          .collection("groups")
+          .where("members", arrayContains: uid)
+          .get(),
+      builder: (ctx, data) {
+        if (data.connectionState == ConnectionState.waiting)
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+
+        return StreamBuilder<List<QueryDocumentSnapshot>>(
+          stream: listenToPostsRealTime(),
+          builder: (ctx, snapshot) {
+            if(!snapshot.hasData)
+              return Center(child: Text("No Posts found"),);
+            if (snapshot.connectionState == ConnectionState.waiting)
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            if (snapshot.hasData) {
+              var data = snapshot.data;
+
+              if (data.length > 0)
+                return ListView.builder(
+                  controller: _scrollController,
+                  itemCount: data.length,
+                  itemBuilder: (ctx, i) => GroupPostWidgetComponent(
+                    key: Key(data[i].id),
+                    post: data[i],
+                    function:popListItem,
+                  ),
+                );
+              return Center(
+                child: Text("No Posts Found"),
+              );
+            }
+            return Center(
+              child: Text("No Posts Found"),
             );
-        }
-        return Center(
-          child: Text("No Posts Found"),
+          },
         );
       },
     );

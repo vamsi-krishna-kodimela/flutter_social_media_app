@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:social_media/screens/single_user_screen/single_user_screen.dart';
+import '../single_group_screen/single_group_screen.dart';
 
 import '../../constants.dart';
 
@@ -114,8 +114,8 @@ class _GroupSearchScreenState extends State<GroupSearchScreen> {
                       onTap: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (_) => SingleUserScreen(
-                                _results[i].id, _data["name"]),
+                            builder: (_) => SingleGroupScreen(
+                                _results[i].id, _data),
                           ),
                         );
                       },
@@ -180,7 +180,7 @@ class SearchBarWidget extends StatelessWidget {
         controller: _searchController,
         decoration: InputDecoration(
           border: InputBorder.none,
-          hintText: "Search for people",
+          hintText: "Search for groups",
           suffixIcon: IconButton(
             onPressed: () {},
             icon: Icon(

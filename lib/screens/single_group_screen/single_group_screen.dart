@@ -54,6 +54,7 @@ class _SingleGroupScreenState extends State<SingleGroupScreen> {
             );
           var _data = snapshot.data;
           var gData = _data.data();
+          if (gData == null) Navigator.of(context).pop();
 
           return Column(
             children: [
@@ -97,7 +98,7 @@ class _SingleGroupScreenState extends State<SingleGroupScreen> {
           );
         },
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: (members.contains(uid))?FloatingActionButton(
         onPressed: () {
           Navigator.of(context).push(
             MaterialPageRoute(
@@ -106,21 +107,16 @@ class _SingleGroupScreenState extends State<SingleGroupScreen> {
           );
         },
         child: Icon(Icons.edit),
-      ),
-
+      ):null,
     );
   }
 
   widgetSwitch() {
     switch (option) {
       case 1:
-        return PostsListComponent(widget.gid);
+        return PostsListComponent(gid: widget.gid);
       case 2:
-        return GroupMembersComponent(
-          members: members,
-          admins: admins,
-          gid: widget.gid,
-        );
+        return GroupMembersComponent(gid: widget.gid);
       default:
         return GroupDescriptionComponent(
             description: widget.gData["description"]);
