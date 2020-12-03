@@ -134,6 +134,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 controller: passwordController,
                 icon: Icons.vpn_key,
                 hintText: "Password",
+                isObscure: true,
               ),
               BuildSizedBox(2),
               Card(

@@ -3,8 +3,8 @@ import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:social_media/constants.dart';
-import 'package:social_media/screens/single_user_screen/single_user_screen.dart';
+import '../../constants.dart';
+import '../single_user_screen/single_user_screen.dart';
 
 class ChatScreen extends StatefulWidget {
   final Map<String, dynamic> friend;
@@ -59,7 +59,15 @@ class _ChatScreenState extends State<ChatScreen> {
       padding: EdgeInsets.symmetric(horizontal: 25.0, vertical: 15.0),
       width: MediaQuery.of(context).size.width * 0.75,
       decoration: BoxDecoration(
-        color: isMe ? Theme.of(context).primaryColor.withAlpha(200) : kWhite,
+        color: isMe ? Theme.of(context).primaryColor : kWhite,
+        boxShadow: [
+          BoxShadow(
+            color: kGrey,
+            blurRadius: 4.0,
+            offset: Offset(0.0,0.0),
+            spreadRadius: 0.0,
+          ),
+        ],
         borderRadius: isMe
             ? BorderRadius.only(
                 topLeft: Radius.circular(15.0),
@@ -108,7 +116,6 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: kPrimaryColor,
       appBar: AppBar(
         title: GestureDetector(
           onTap: (){
@@ -120,18 +127,15 @@ class _ChatScreenState extends State<ChatScreen> {
                 padding: EdgeInsets.all(8.0),
                 height: AppBar().preferredSize.height,
                 width: AppBar().preferredSize.height,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(kDefaultPadding),
-                  child: FancyShimmerImage(
-                    imageUrl: widget.friend["photoUrl"],
-                    boxFit: BoxFit.cover,
-                  ),
+                child: FancyShimmerImage(
+                  imageUrl: widget.friend["photoUrl"],
+                  boxFit: BoxFit.cover,
                 ),
               ),
               Text(
                 widget.friend["name"],
                 style: TextStyle(
-                  color: kWhite,
+                  color: kTextColor,
                   fontWeight: FontWeight.w600,
                 ),
                 overflow: TextOverflow.ellipsis,
@@ -147,48 +151,41 @@ class _ChatScreenState extends State<ChatScreen> {
             child: Container(
               decoration: BoxDecoration(
                 color: kBGColor,
-                borderRadius: BorderRadius.vertical(
-                  top: Radius.circular(kDefaultPadding * 2),
-                ),
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.vertical(
-                  top: Radius.circular(kDefaultPadding * 2),
-                ),
-                child: StreamBuilder<QuerySnapshot>(
-                    stream: _firestore
-                        .collection("chatRooms")
-                        .doc(_chatRoomId)
-                        .collection("chats")
-                        .orderBy("postedOn", descending: true)
-                        .snapshots(),
-                    builder: (_, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting)
-                        return Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      if (snapshot.data == null)
-                        return Center(
-                          child: Text("Start Messaging..."),
-                        );
 
-                      var chats = snapshot.data.docs;
-                      return ListView.builder(
-                        reverse: true,
-                        padding: EdgeInsets.only(
-                          top: 15.0,
-                          left: kDefaultPadding,
-                          right: kDefaultPadding,
-                        ),
-                        itemBuilder: (ctx, i) {
-                          var message = chats[i];
-                          bool isMe = currentId == message["postedBy"];
-                          return _buildMessage(message.data(), isMe);
-                        },
-                        itemCount: chats.length,
-                      );
-                    }),
               ),
+              child: StreamBuilder<QuerySnapshot>(
+                  stream: _firestore
+                      .collection("chatRooms")
+                      .doc(_chatRoomId)
+                      .collection("chats")
+                      .orderBy("postedOn", descending: true)
+                      .snapshots(),
+                  builder: (_, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting)
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    if (snapshot.data == null)
+                      return Center(
+                        child: Text("Start Messaging..."),
+                      );
+
+                    var chats = snapshot.data.docs;
+                    return ListView.builder(
+                      reverse: true,
+                      padding: EdgeInsets.only(
+                        top: 15.0,
+                        left: kDefaultPadding,
+                        right: kDefaultPadding,
+                      ),
+                      itemBuilder: (ctx, i) {
+                        var message = chats[i];
+                        bool isMe = currentId == message["postedBy"];
+                        return _buildMessage(message.data(), isMe);
+                      },
+                      itemCount: chats.length,
+                    );
+                  }),
             ),
           ),
           _buildMessageComposer(),
@@ -204,12 +201,12 @@ class _ChatScreenState extends State<ChatScreen> {
       color: Colors.white,
       child: Row(
         children: <Widget>[
-          IconButton(
-            icon: Icon(Icons.photo),
-            iconSize: 25.0,
-            color: Theme.of(context).primaryColor,
-            onPressed: () {},
-          ),
+          // IconButton(
+          //   icon: Icon(Icons.photo),
+          //   iconSize: 25.0,
+          //   color: Theme.of(context).primaryColor,
+          //   onPressed: () {},
+          // ),
           Expanded(
             child: TextField(
               onSubmitted: (val){

@@ -3,8 +3,8 @@ import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:social_media/constants.dart';
-import 'package:social_media/screens/single_user_screen/single_user_screen.dart';
+import '../../constants.dart';
+import '../single_user_screen/single_user_screen.dart';
 
 class CommentsScreen extends StatelessWidget {
   final _firestore = FirebaseFirestore.instance;
@@ -25,6 +25,7 @@ class CommentsScreen extends StatelessWidget {
           "Comments",
           style: TextStyle(
             fontWeight: FontWeight.bold,
+            color: kTextColor,
           ),
         ),
       ),

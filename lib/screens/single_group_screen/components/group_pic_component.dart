@@ -1,6 +1,7 @@
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:fdottedline/fdottedline.dart';
 import 'package:flutter/material.dart';
+import 'package:social_media/constants.dart';
 
 class GroupPicComponent extends StatelessWidget {
   const GroupPicComponent({
@@ -27,7 +28,7 @@ class GroupPicComponent extends StatelessWidget {
           ),
         ),
       ),
-      color: Colors.white,
+      color: kPrimaryColor,
       strokeWidth: 2.0,
       dottedLength: 10.0,
       space: 5.0,

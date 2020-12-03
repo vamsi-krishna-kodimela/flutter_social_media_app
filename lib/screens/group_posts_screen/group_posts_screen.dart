@@ -14,7 +14,6 @@ class GroupPostsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: kPrimaryColor,
       appBar: _buildGroupAppBar(context),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
@@ -63,13 +62,13 @@ class GroupPostsScreen extends StatelessWidget {
         "Groups",
         style: TextStyle(
           fontWeight: FontWeight.w600,
+          color: kTextColor,
         ),
       ),
       actions: [
         IconButton(
           icon: Icon(
             Icons.search_rounded,
-            color: kWhite,
           ),
           onPressed: () {
             Navigator.of(context).push(

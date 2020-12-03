@@ -1,18 +1,26 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:social_media/constants.dart';
-import 'package:social_media/screens/create_post_screen/create_post_screen.dart';
-import 'package:social_media/screens/entertainment_screen/entertainment_Screen.dart';
-import 'package:social_media/screens/group_posts_screen/group_posts_screen.dart';
-import 'package:social_media/screens/main_screen.dart';
-import 'package:social_media/screens/messaging_list_screen/messaging_list_screen.dart';
-import 'package:social_media/screens/pages_screen/pages_screen.dart';
-import 'package:social_media/screens/posts_screen/posts_screen.dart';
-import 'package:social_media/screens/profile_screen/profile_screen.dart';
-import 'package:social_media/screens/search_screen/search_screen.dart';
-import 'package:social_media/services/firebase_auth_service.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:social_media/screens/app_info_screen/app_info_screen.dart';
+
+import '../../constants.dart';
+import '../ads_screen/ads_screen.dart';
+import '../create_post_screen/create_post_screen.dart';
+import '../friends_screen/friends_screen.dart';
+import '../group_posts_screen/group_posts_screen.dart';
+import '../main_screen.dart';
+import '../messaging_list_screen/messaging_list_screen.dart';
+import '../pages_screen/pages_screen.dart';
+import '../posts_screen/posts_screen.dart';
+import '../profile_screen/profile_screen.dart';
+import '../search_screen/search_screen.dart';
+import '../store_screen/store_screen.dart';
+import '../../services/firebase_auth_service.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -24,6 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   int tab = 0;
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  final uid = FirebaseAuth.instance.currentUser.uid;
 
   _configureFirebaseListeners() {
     _firebaseMessaging.configure(
@@ -38,7 +47,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void checkUserPresence() async {
     if (FirebaseAuth.instance.currentUser != null) {
-      var uid = FirebaseAuth.instance.currentUser.uid;
       final databaseReference =
           FirebaseDatabase.instance.reference().child("status/$uid");
       databaseReference.set(1).then((value) {
@@ -66,27 +74,7 @@ class _HomeScreenState extends State<HomeScreen> {
       backgroundColor: kBGColor,
       appBar: _buildAppBar(),
       drawer: _buildSidebar(),
-      body: Stack(
-        children: [
-          Container(
-            color: kPrimaryColor,
-          ),
-          Container(
-            decoration: BoxDecoration(
-              color: kBGColor,
-              borderRadius: BorderRadius.vertical(
-                top: Radius.circular(15.0),
-              ),
-            ),
-          ),
-          ClipRRect(
-            child: _widgetRetriver(),
-            borderRadius: BorderRadius.vertical(
-              top: Radius.circular(15.0),
-            ),
-          ),
-        ],
-      ),
+      body: _widgetRetriver(),
       floatingActionButton: _buildFloatingActionButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: _buildBottomAppBar(),
@@ -98,6 +86,8 @@ class _HomeScreenState extends State<HomeScreen> {
       case 1:
         return MessagingListScreen();
       case 2:
+        return StoreScreen();
+      case 3:
         return Center(child: Text("This Page is under Construction"));
       default:
         return PostsScreen();
@@ -112,10 +102,10 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Padding(
           padding: const EdgeInsets.all(kDefaultPadding),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              buildBottomBarButton(0, Icons.home_outlined),
-              buildBottomBarButton(1, Icons.chat_bubble_outline),
+              buildBottomBarButton(0, FeatherIcons.home),
+              buildBottomBarButton(1, FeatherIcons.messageSquare),
               SizedBox(width: kDefaultPadding * 3),
               buildBottomBarButton(2, Icons.storefront_outlined),
               buildBottomBarButton(3, Icons.local_fire_department_sharp),
@@ -143,12 +133,14 @@ class _HomeScreenState extends State<HomeScreen> {
       title: Text(
         kAppName,
         style: TextStyle(
-          fontWeight: FontWeight.bold,
+          color: kTextColor,
+          fontFamily: GoogleFonts.lobster().fontFamily,
+          fontSize: 26.0,
         ),
       ),
       actions: [
         IconButton(
-          icon: Icon(Icons.search_outlined),
+          icon: Icon(FeatherIcons.search),
           onPressed: () {
             Navigator.of(context).push(
               MaterialPageRoute(
@@ -157,13 +149,13 @@ class _HomeScreenState extends State<HomeScreen> {
             );
           },
         ),
-        IconButton(icon: Icon(Icons.notifications), onPressed: () {}),
-        IconButton(
-            icon: Icon(Icons.person_outline_rounded),
-            onPressed: () {
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (_) => ProfileScreen()));
-            }),
+        IconButton(icon: Icon(FeatherIcons.bell), onPressed: () {}),
+        // IconButton(
+        //     icon: Icon(FeatherIcons.user),
+        //     onPressed: () {
+        //       Navigator.of(context)
+        //           .push(MaterialPageRoute(builder: (_) => ProfileScreen()));
+        //     }),
       ],
       elevation: 0.0,
     );
@@ -174,23 +166,29 @@ class _HomeScreenState extends State<HomeScreen> {
       decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(
-            color: (val == tab) ? kPrimaryColor : Colors.transparent,
-            width: 2,
+            // color: (val == tab) ? kPrimaryColor : Colors.transparent,
+            color: Colors.transparent,
+            // width: 2,
           ),
         ),
       ),
       child: IconButton(
         onPressed: () {
           if (val == 3) {
-            Navigator.of(context)
-                .push(MaterialPageRoute(builder: (_) => EntertainmentScreen()));
-            return;
+            // Navigator.of(context)
+            //     .push(MaterialPageRoute(builder: (_) => EntertainmentScreen()));
+            // return;
           }
-          setState(() {
-            tab = val;
-          });
+          if (tab != val) {
+            setState(() {
+              tab = val;
+            });
+          }
         },
-        icon: Icon(icon),
+        icon: Icon(
+          icon,
+          size: (val == tab) ? 30.0 : 24.0,
+        ),
         color: (val == tab) ? kPrimaryColor : kTextColor,
       ),
     );
@@ -203,8 +201,8 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
             children: [
               Container(
-                padding: EdgeInsets.symmetric(
-                  vertical: 50.0,
+                padding: EdgeInsets.only(
+                  top: 50.0,
                 ),
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
@@ -232,6 +230,46 @@ class _HomeScreenState extends State<HomeScreen> {
                         color: Color(0xFF2a608c),
                       ),
                     ),
+                    FutureBuilder<DocumentSnapshot>(
+                      future: FirebaseFirestore.instance
+                          .collection("users")
+                          .doc(uid)
+                          .get(),
+                      builder: (ctx, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting)
+                          return Text("Loading...");
+                        final data = snapshot.data.data();
+                        return ListTile(
+                          contentPadding: EdgeInsets.symmetric(
+                              horizontal: kDefaultPadding,
+                              vertical: kDefaultPadding / 2),
+                          title: Text(
+                            data["name"],
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 16.0,
+                              color: kPrimaryColor,
+                            ),
+                          ),
+                          onTap: () {
+                            Navigator.of(context).pop();
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (_) => ProfileScreen()));
+                          },
+                          leading: AspectRatio(
+                            aspectRatio: 1.0,
+                            child: ClipRRect(
+                              borderRadius:
+                                  BorderRadius.circular(kDefaultPadding),
+                              child: FancyShimmerImage(
+                                imageUrl: data["photoUrl"],
+                                boxFit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
                   ],
                 ),
               ),
@@ -244,13 +282,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       Card(
                         child: ListTile(
                           onTap: () {
+                            Navigator.of(context).pop();
                             setState(() {
                               tab = 0;
                             });
-                            Navigator.of(context).pop();
                           },
                           leading: Icon(
-                            Icons.home_outlined,
+                            FeatherIcons.home,
                             color: kPrimaryColor,
                           ),
                           title: Text(
@@ -266,7 +304,57 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         margin: EdgeInsets.only(top: 1.0),
                       ),
-
+                      Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(0.0),
+                        ),
+                        margin: EdgeInsets.only(top: 1.0),
+                        elevation: 0.0,
+                        child: ListTile(
+                          onTap: () {
+                            Navigator.of(context).pop();
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (_) => FriendsScreen(
+                                      likedBy: [],
+                                    )));
+                          },
+                          leading: Icon(
+                            FeatherIcons.users,
+                            color: kPrimaryColor,
+                          ),
+                          title: Text(
+                            "Friends",
+                            style: TextStyle(
+                              color: kTextColor,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(0.0),
+                        ),
+                        margin: EdgeInsets.only(top: 1.0),
+                        elevation: 0.0,
+                        child: ListTile(
+                          onTap: () {
+                            Navigator.of(context).pop();
+                            setState(() {
+                              tab = 2;
+                            });
+                          },
+                          leading: Icon(
+                            Icons.store,
+                            color: kPrimaryColor,
+                          ),
+                          title: Text(
+                            "Store",
+                            style: TextStyle(
+                              color: kTextColor,
+                            ),
+                          ),
+                        ),
+                      ),
                       Card(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(0.0),
@@ -284,7 +372,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             );
                           },
                           leading: Icon(
-                            Icons.class__outlined,
+                            FeatherIcons.bookOpen,
                             color: kPrimaryColor,
                           ),
                           title: Text(
@@ -304,12 +392,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: ListTile(
                           onTap: () {
                             Navigator.of(context).pop();
-                            _scaffold.currentState.showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                    "Entertainment Screen is under construction!"),
-                              ),
-                            );
+                            setState(() {
+                              tab = 3;
+                            });
                           },
                           leading: Icon(
                             Icons.local_fire_department_outlined,
@@ -332,10 +417,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: ListTile(
                           onTap: () {
                             Navigator.of(context).pop();
-                            Navigator.of(context).push(MaterialPageRoute(builder: (_)=>GroupPostsScreen()));
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (_) => GroupPostsScreen()));
                           },
                           leading: Icon(
-                            Icons.flag_outlined,
+                            FeatherIcons.flag,
                             color: kPrimaryColor,
                           ),
                           title: Text(
@@ -356,10 +442,13 @@ class _HomeScreenState extends State<HomeScreen> {
                           onTap: () {
                             Navigator.of(context).pop();
 
-                            Navigator.of(context).push(MaterialPageRoute(builder: (_)=>PagesScreen()));
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (_) => PagesScreen()));
+
+                            // _scaffold.currentState.showSnackBar(SnackBar(content: Text("Page uder construction")));
                           },
                           leading: Icon(
-                            Icons.chrome_reader_mode,
+                            FeatherIcons.layout,
                             color: kPrimaryColor,
                           ),
                           title: Text(
@@ -386,7 +475,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             );
                           },
                           leading: Icon(
-                            Icons.search_outlined,
+                            FeatherIcons.search,
                             color: kPrimaryColor,
                           ),
                           title: Text(
@@ -414,7 +503,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             );
                           },
                           leading: Icon(
-                            Icons.notifications,
+                            FeatherIcons.bell,
                             color: kPrimaryColor,
                           ),
                           title: Text(
@@ -425,37 +514,6 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                       ),
-                      // Container(
-                      //   color: kWhite,
-                      //   child: Card(
-                      //     color: kAccentColor.withAlpha(50),
-                      //     shape: RoundedRectangleBorder(
-                      //       borderRadius: BorderRadius.circular(0.0),
-                      //     ),
-                      //     margin: EdgeInsets.only(top: 1.0),
-                      //     elevation: 0.0,
-                      //     child: ListTile(
-                      //       onTap: () async {
-                      //         await FirebaseAuthService().userSignout();
-                      //         Navigator.pop(context);
-                      //         Navigator.of(context).pushReplacement(
-                      //             MaterialPageRoute(
-                      //                 builder: (_) => MainScreen()));
-                      //       },
-                      //       leading: Icon(
-                      //         Icons.logout,
-                      //         color: kAccentColor,
-                      //       ),
-                      //       title: Text(
-                      //         "Logout",
-                      //         style: TextStyle(
-                      //           color: kAccentColor,
-                      //           fontWeight: FontWeight.w600,
-                      //         ),
-                      //       ),
-                      //     ),
-                      //   ),
-                      // ),
                       Card(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(0.0),
@@ -463,6 +521,33 @@ class _HomeScreenState extends State<HomeScreen> {
                         margin: EdgeInsets.only(top: 1.0),
                         elevation: 0.0,
                         child: ListTile(
+                          onTap: () {
+                            Navigator.of(context).push(
+                                MaterialPageRoute(builder: (_) => AdsScreen()));
+                          },
+                          leading: Icon(
+                            FeatherIcons.package,
+                            color: kPrimaryColor,
+                          ),
+                          title: Text(
+                            "Promotions",
+                            style: TextStyle(
+                              color: kTextColor,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(0.0),
+                        ),
+                        margin: EdgeInsets.only(top: 1.0),
+                        elevation: 0.0,
+                        child: ListTile(
+                          onTap: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (_) => AppInfoScreen("about")));
+                          },
                           title: Text(
                             "About",
                             style: TextStyle(color: kTextColor),
@@ -476,6 +561,10 @@ class _HomeScreenState extends State<HomeScreen> {
                         margin: EdgeInsets.only(top: 0.0),
                         elevation: 0.0,
                         child: ListTile(
+                          onTap: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (_) => AppInfoScreen("privacy")));
+                          },
                           title: Text(
                             "Privacy Policy",
                             style: TextStyle(color: kTextColor),
@@ -489,6 +578,10 @@ class _HomeScreenState extends State<HomeScreen> {
                         margin: EdgeInsets.only(top: 0.0),
                         elevation: 0.0,
                         child: ListTile(
+                          onTap: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (_) => AppInfoScreen("terms")));
+                          },
                           title: Text(
                             "Terms & Conditions",
                             style: TextStyle(color: kTextColor),

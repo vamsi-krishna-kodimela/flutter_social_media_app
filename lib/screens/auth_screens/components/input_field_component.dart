@@ -9,8 +9,9 @@ class InputFieldComponent extends StatelessWidget {
   final TextEditingController controller;
   final String hintText;
   final IconData icon;
+  final bool isObscure;
 
-  const InputFieldComponent({@required this.controller, @required this.hintText, @required this.icon});
+  const InputFieldComponent({@required this.controller, @required this.hintText, @required this.icon, this.isObscure=false});
 
 
   @override
@@ -32,6 +33,7 @@ class InputFieldComponent extends StatelessWidget {
           hintText: hintText,
           prefixIcon: Icon(icon),
         ),
+        obscureText: isObscure,
       ),
     );
   }

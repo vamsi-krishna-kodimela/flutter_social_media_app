@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -203,11 +204,11 @@ class _UserProfilePic extends StatelessWidget {
       margin: EdgeInsets.symmetric(vertical: kDefaultPadding),
       width: _size.width * 0.2,
       height: _size.width * 0.2,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(kDefaultPadding * 2 + 4),
-        image: DecorationImage(
-          image: NetworkImage(photoUrl),
-          fit: BoxFit.cover,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(kDefaultPadding * 2),
+        child: FancyShimmerImage(
+          imageUrl: photoUrl,
+          boxFit: BoxFit.cover,
         ),
       ),
     );

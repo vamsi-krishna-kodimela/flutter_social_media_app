@@ -23,12 +23,12 @@ class AdminGroupControllComponent extends StatelessWidget {
         FlatButton.icon(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
           onPressed: () {},
-          icon: Icon(Icons.edit_outlined),
+          icon: Icon(Icons.edit_outlined,color: kWhite,),
           label: Text(
             "Edit Info",
-            style: TextStyle(color: kTextColor),
+            style: TextStyle(color: kWhite),
           ),
-          color: kWhite,
+          color: kPrimaryColor,
         ),
         FlatButton.icon(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),

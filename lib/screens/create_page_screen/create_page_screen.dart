@@ -38,13 +38,13 @@ class _CreatePageScreenState extends State<CreatePageScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffold,
-      backgroundColor: kPrimaryColor,
       appBar: AppBar(
         elevation: 0.0,
         title: Text(
           "Create Page",
           style: TextStyle(
             fontWeight: FontWeight.w600,
+            color: kTextColor
           ),
         ),
       ),
@@ -108,7 +108,7 @@ class _CreatePageScreenState extends State<CreatePageScreen> {
     }
 
 
-
+    _groupName = _groupName.trim();
     if (_groupName.length > 20 || _groupName.length < 4) {
       final _snackbar = SnackBar(
         content: Text("Page Name must be between 4 to 20 characters."),
@@ -116,7 +116,7 @@ class _CreatePageScreenState extends State<CreatePageScreen> {
       _scaffold.currentState.showSnackBar(_snackbar);
       return;
     }
-
+      _groupDescription = _groupDescription.trim();
     if (_groupDescription.length > 100 || _groupDescription.length < 20) {
       final _snackbar = SnackBar(
         content: Text("Description must be between 20 to 100 characters."),
@@ -139,7 +139,7 @@ class _CreatePageScreenState extends State<CreatePageScreen> {
         "pic": _grpPic,
         "createdOn": Timestamp.now(),
         "createdBy": _uid,
-        "followers" : [],
+        "followers" : [_uid],
         "posts": 0,
         "keys": keys,
       });

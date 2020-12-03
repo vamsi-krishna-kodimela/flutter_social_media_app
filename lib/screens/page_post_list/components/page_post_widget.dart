@@ -5,24 +5,24 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';
-import '../screens/comments_screen/comments_screen.dart';
-import '../screens/likes_screen/likes_screen.dart';
-import '../screens/single_user_screen/single_user_screen.dart';
+import 'package:social_media/screens/comments_screen/comments_screen.dart';
+import 'package:social_media/screens/likes_screen/likes_screen.dart';
+import 'package:social_media/screens/single_page_screen/single_page_screen.dart';
 import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
-import '../constants.dart';
+import '../../../constants.dart';
 
-class PostWidget extends StatefulWidget {
+class PagePostWidget extends StatefulWidget {
   final QueryDocumentSnapshot post;
 
-  PostWidget({Key key, this.post}) : super(key: key);
+  PagePostWidget({Key key, this.post}) : super(key: key);
 
   @override
-  _PostWidgetState createState() => _PostWidgetState();
+  _PagePostWidgetState createState() => _PagePostWidgetState();
 }
 
-class _PostWidgetState extends State<PostWidget> {
+class _PagePostWidgetState extends State<PagePostWidget> {
   final String _authId = FirebaseAuth.instance.currentUser.uid;
   Map<String, dynamic> _postData = {};
   Map<String, dynamic> likes = {};
@@ -32,6 +32,7 @@ class _PostWidgetState extends State<PostWidget> {
   GestureRecognizer _gestureRecognizer;
 
   VideoPlayerController _videoPlayerController;
+  final _firestore = FirebaseFirestore.instance;
 
   @override
   void initState() {
@@ -51,13 +52,13 @@ class _PostWidgetState extends State<PostWidget> {
           _postData["resources"] != null &&
           _postData["resources"] != "") {
         _videoPlayerController =
-            VideoPlayerController.network(_postData["resources"])
-              ..initialize().then((_) {
-                setState(() {
-                  _videoPlayerController.setLooping(true);
-                  _videoPlayerController.setVolume(0);
-                });
-              });
+        VideoPlayerController.network(_postData["resources"])
+          ..initialize().then((_) {
+            setState(() {
+              _videoPlayerController.setLooping(true);
+              _videoPlayerController.setVolume(0);
+            });
+          });
       }
     }
   }
@@ -109,7 +110,7 @@ class _PostWidgetState extends State<PostWidget> {
       postedOnString = "Posted ${_dur.inDays} days ago";
     } else {
       postedOnString =
-          "Posted on ${DateFormat("dd MMM, yyyy").format(postedOn)}";
+      "Posted on ${DateFormat("dd MMM, yyyy").format(postedOn)}";
     }
 
     toogleLikes() async {
@@ -175,7 +176,7 @@ class _PostWidgetState extends State<PostWidget> {
           child: Column(
             children: [
               FutureBuilder<DocumentSnapshot>(
-                future: _postData["userData"].get(),
+                future: _firestore.collection("pages").doc(_postData["page"]).get(),
                 builder: (ctx, snapshot) {
                   if (snapshot.data == null) {
                     return ListTile(
@@ -184,7 +185,7 @@ class _PostWidgetState extends State<PostWidget> {
                         height: _size.width * 0.1,
                         child: ClipRRect(
                           borderRadius:
-                              BorderRadius.circular(_size.width * 0.1),
+                          BorderRadius.circular(_size.width * 0.1),
                           child: Shimmer.fromColors(
                             baseColor: Colors.grey[300],
                             highlightColor: Colors.grey[100],
@@ -227,52 +228,52 @@ class _PostWidgetState extends State<PostWidget> {
                   borderRadius: BorderRadius.circular(kDefaultPadding),
                   child: (_postData["type"] == 0)
                       ? FancyShimmerImage(
-                          width: _size.width - (kDefaultPadding * 4),
-                          height:
-                              (_size.width - (kDefaultPadding * 4)) * (3 / 4),
-                          imageUrl: _postData["resources"],
-                          boxFit: BoxFit.cover,
-                        )
+                    width: _size.width - (kDefaultPadding * 4),
+                    height:
+                    (_size.width - (kDefaultPadding * 4)) * (3 / 4),
+                    imageUrl: _postData["resources"],
+                    boxFit: BoxFit.cover,
+                  )
                       : Stack(
-                          children: [
-                            AspectRatio(
-                              aspectRatio: 4/3,
-                              child: SizedBox.expand(
-                                child: FittedBox(
-                                  fit: BoxFit.cover,
-                                  child: SizedBox(
-                                    width: _videoPlayerController.value.size?.width ?? 0,
-                                    height: _videoPlayerController.value.size?.height ?? 0,
-                                    child: VideoPlayer(_videoPlayerController),
-                                  ),
-                                ),
-                              ),
+                    children: [
+                      AspectRatio(
+                        aspectRatio: 4/3,
+                        child: SizedBox.expand(
+                          child: FittedBox(
+                            fit: BoxFit.cover,
+                            child: SizedBox(
+                              width: _videoPlayerController.value.size?.width ?? 0,
+                              height: _videoPlayerController.value.size?.height ?? 0,
+                              child: VideoPlayer(_videoPlayerController),
                             ),
-                            Positioned(
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.white70,
-                                  borderRadius: BorderRadius.circular(40.0),
-                                ),
-                                child: IconButton(
-                                  color: (audioState)
-                                      ? kPrimaryColor
-                                      : kAccentColor,
-                                  icon: Icon(
-                                    !audioState
-                                        ? Icons.volume_off
-                                        : Icons.volume_up,
-                                  ),
-                                  onPressed: () {
-                                    _toggleMute(audioState);
-                                  },
-                                ),
-                              ),
-                              bottom: 10.0,
-                              right: 10.0,
-                            ),
-                          ],
+                          ),
                         ),
+                      ),
+                      Positioned(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white70,
+                            borderRadius: BorderRadius.circular(40.0),
+                          ),
+                          child: IconButton(
+                            color: (audioState)
+                                ? kPrimaryColor
+                                : kAccentColor,
+                            icon: Icon(
+                              !audioState
+                                  ? Icons.volume_off
+                                  : Icons.volume_up,
+                            ),
+                            onPressed: () {
+                              _toggleMute(audioState);
+                            },
+                          ),
+                        ),
+                        bottom: 10.0,
+                        right: 10.0,
+                      ),
+                    ],
+                  ),
                 ),
               Container(
                 padding: EdgeInsets.symmetric(vertical: kDefaultPadding),
@@ -284,19 +285,19 @@ class _PostWidgetState extends State<PostWidget> {
                         text: (_postData["description"] == null)
                             ? ""
                             : (isExpanded ||
-                                    _postData["description"].length <= 20)
-                                ? _postData["description"]
-                                : "${_postData["description"].substring(0, 20)} .....          ",
+                            _postData["description"].length <= 20)
+                            ? _postData["description"]
+                            : "${_postData["description"].substring(0, 20)} .....          ",
                         style: TextStyle(color: kTextColor),
                       ),
                       TextSpan(
                         text: (_postData["description"] == null)
                             ? ""
                             : (_postData["description"].length <= 20)
-                                ? ""
-                                : (isExpanded)
-                                    ? "        see less "
-                                    : "       see more ",
+                            ? ""
+                            : (isExpanded)
+                            ? "        see less "
+                            : "       see more ",
                         style: TextStyle(
                           color: kAccentColor,
                           fontWeight: FontWeight.w600,
@@ -334,7 +335,7 @@ class _PostFooter extends StatelessWidget {
 
   final bool isLiked;
   final int likesCount;
-  final PostWidget widget;
+  final PagePostWidget widget;
   final Function toogleLikes;
   final Map<String, dynamic> likedList;
 
@@ -424,7 +425,7 @@ class _AuthorDetails extends StatelessWidget {
         if (uid != FirebaseAuth.instance.currentUser.uid) {
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (_) => SingleUserScreen(uid, _userInfo["name"]),
+              builder: (_) => SinglePageScreen(pageId: uid, pageName: _userInfo["name"]),
             ),
           );
         }
@@ -436,7 +437,7 @@ class _AuthorDetails extends StatelessWidget {
         child: ClipRRect(
           borderRadius: BorderRadius.circular(kDefaultPadding),
           child: FancyShimmerImage(
-            imageUrl: _userInfo["photoUrl"],
+            imageUrl: _userInfo["pic"],
             boxFit: BoxFit.cover,
           ),
         ),
@@ -453,62 +454,62 @@ class _AuthorDetails extends StatelessWidget {
         postedOnString,
         style: TextStyle(color: kGrey),
       ),
-      trailing: (uid == FirebaseAuth.instance.currentUser.uid)
+      trailing: (_userInfo["createdBy"] == FirebaseAuth.instance.currentUser.uid)
           ? IconButton(
-              icon: Icon(
-                Icons.delete_outline_outlined,
-                color: kAccentColor,
-              ),
-              onPressed: () async {
-                await showDialog(
-                  builder: (ctx) {
-                    return AlertDialog(
-                      title: Text(
-                        "Are you Sure to delete?",
-                        style: TextStyle(
-                          color: kTextColor,
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.w600,
-                        ),
+        icon: Icon(
+          Icons.delete_outline_outlined,
+          color: kAccentColor,
+        ),
+        onPressed: () async {
+          await showDialog(
+            builder: (ctx) {
+              return AlertDialog(
+                title: Text(
+                  "Are you Sure to delete?",
+                  style: TextStyle(
+                    color: kTextColor,
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                actions: [
+                  FlatButton(
+                    color: kPrimaryColor.withAlpha(20),
+                    onPressed: () async {
+                      await FirebaseFirestore.instance
+                          .collection("page_posts")
+                          .doc(postId)
+                          .delete();
+                      Navigator.of(ctx).pop();
+                    },
+                    child: Text(
+                      "Yes",
+                      style: TextStyle(
+                        color: kPrimaryColor,
+                        fontWeight: FontWeight.w600,
                       ),
-                      actions: [
-                        FlatButton(
-                          color: kPrimaryColor.withAlpha(20),
-                          onPressed: () async {
-                            await FirebaseFirestore.instance
-                                .collection("posts")
-                                .doc(postId)
-                                .delete();
-                            Navigator.of(ctx).pop();
-                          },
-                          child: Text(
-                            "Yes",
-                            style: TextStyle(
-                              color: kPrimaryColor,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                        FlatButton(
-                          color: kAccentColor,
-                          onPressed: () {
-                            Navigator.of(ctx).pop();
-                          },
-                          child: Text(
-                            "No",
-                            style: TextStyle(
-                              color: kWhite,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                      ],
-                    );
-                  },
-                  context: context,
-                );
-              },
-            )
+                    ),
+                  ),
+                  FlatButton(
+                    color: kAccentColor,
+                    onPressed: () {
+                      Navigator.of(ctx).pop();
+                    },
+                    child: Text(
+                      "No",
+                      style: TextStyle(
+                        color: kWhite,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            },
+            context: context,
+          );
+        },
+      )
           : Text(""),
     );
   }

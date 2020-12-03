@@ -38,13 +38,13 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffold,
-      backgroundColor: kPrimaryColor,
       appBar: AppBar(
         elevation: 0.0,
         title: Text(
           "Create Group",
           style: TextStyle(
             fontWeight: FontWeight.w600,
+            color: kTextColor
           ),
         ),
       ),

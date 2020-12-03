@@ -12,20 +12,23 @@ Future<void> main() async {
 }
 
 class RootApp extends StatelessWidget {
-
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: kAppName,
-
       theme: ThemeData(
         fontFamily: GoogleFonts.nunitoSans().fontFamily,
         scaffoldBackgroundColor: kBGColor,
         primaryColor: kPrimaryColor,
         accentColor: kAccentColor,
+        appBarTheme: AppBarTheme(
+          color: Colors.transparent,
+          brightness: Brightness.light,
+          elevation: 0.0,
+          iconTheme: IconThemeData(color: kPrimaryColor),
+          centerTitle: true,
+        ),
       ),
-
       home: SplashScreen(),
     );
   }

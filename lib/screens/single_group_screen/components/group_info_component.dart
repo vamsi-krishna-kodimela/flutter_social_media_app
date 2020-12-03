@@ -22,76 +22,77 @@ class GroupInfoComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if(gData ==null)
-      Navigator.of(context).pop();
+    // if(gData ==null)
+    //   Navigator.of(context).pop();
+    if(gData == null)
+      return Center(child: Text("Group Deleted"));
     final List<dynamic> admins = gData["admins"];
 
     final List<dynamic> members = gData["members"];
 
-    return ClipRRect(
-      borderRadius: BorderRadius.vertical(bottom: Radius.circular(20.0)),
-      child: Container(
-        color: kPrimaryColor,
-        width: MediaQuery.of(context).size.width,
-        child: Column(
-          children: [
-            GroupPicComponent(picUrl: gData["pic"]),
-            SizedBox(height: kDefaultPadding),
-            GroupNameComponent(gName: gData["name"]),
-            SizedBox(height: kDefaultPadding * 2),
-            GroupStatsComponent(
-              postCount: gData["posts"],
-              followers: gData["members"],
-            ),
-            SizedBox(height: kDefaultPadding),
-            if (admins.contains(uid)) AdminGroupControllComponent(gid: gid),
-            if (members.contains(uid) &&
-                (!admins.contains(uid) || admins.length > 1))
-              FlatButton.icon(
-                onPressed: () async {
-                  await _firestore.collection("groups").doc(gid).update({
-                    "admins": FieldValue.arrayRemove([uid]),
-                    "members": FieldValue.arrayRemove([uid]),
-                  });
-                },
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                label: Text(
-                  "Leave Group",
-                  style: TextStyle(color: kAccentColor),
-                ),
-                icon: Icon(
-                  Icons.cancel_outlined,
-                  color: kAccentColor,
-                ),
-                color: Colors.white54,
+    return Container(
+      color: kWhite,
+      width: MediaQuery.of(context).size.width,
+      child: Column(
+        children: [
+          GroupPicComponent(picUrl: gData["pic"]),
+          SizedBox(height: kDefaultPadding),
+          GroupNameComponent(gName: gData["name"]),
+          SizedBox(height: kDefaultPadding * 2),
+          GroupStatsComponent(
+            postCount: gData["posts"],
+            followers: gData["members"],
+          ),
+
+
+          SizedBox(height: kDefaultPadding),
+          if (admins.contains(uid)) AdminGroupControllComponent(gid: gid),
+          if (members.contains(uid) &&
+              (!admins.contains(uid) || admins.length > 1))
+            FlatButton.icon(
+              onPressed: () async {
+                await _firestore.collection("groups").doc(gid).update({
+                  "admins": FieldValue.arrayRemove([uid]),
+                  "members": FieldValue.arrayRemove([uid]),
+                });
+              },
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8.0),
               ),
-            if (!members.contains(uid))
-              FlatButton.icon(
-                onPressed: () async {
-                 await  _firestore.collection("groups").doc(gid).update({
-                   "members" : FieldValue.arrayUnion([uid]),
-                 });
-                },
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                label: Text(
-                  "Join Group",
-                  style: TextStyle(color: kWhite),
-                ),
-                icon: Icon(
-                  Icons.add,
-                  color: kWhite,
-                ),
-                color: kGreen,
+              label: Text(
+                "Leave Group",
+                style: TextStyle(color: kAccentColor),
               ),
-            SizedBox(
-              height: kDefaultPadding * 3,
+              icon: Icon(
+                Icons.cancel_outlined,
+                color: kAccentColor,
+              ),
+              color: Colors.white54,
             ),
-          ],
-        ),
+          if (!members.contains(uid))
+            FlatButton.icon(
+              onPressed: () async {
+               await  _firestore.collection("groups").doc(gid).update({
+                 "members" : FieldValue.arrayUnion([uid]),
+               });
+              },
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+              label: Text(
+                "Join Group",
+                style: TextStyle(color: kWhite),
+              ),
+              icon: Icon(
+                Icons.add,
+                color: kWhite,
+              ),
+              color: kGreen,
+            ),
+          SizedBox(
+            height: kDefaultPadding * 3,
+          ),
+        ],
       ),
     );
   }

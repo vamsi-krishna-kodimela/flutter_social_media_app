@@ -22,11 +22,11 @@ class TopBarOption extends StatelessWidget {
         onPress(optionNum);
       },
       child: Container(
-        padding: EdgeInsets.only(left: kDefaultPadding, right: kDefaultPadding),
+        padding: EdgeInsets.only(left: kDefaultPadding, right: kDefaultPadding,bottom: kDefaultPadding/2),
         decoration: BoxDecoration(
           border: Border(
             bottom: BorderSide(
-              color: isActive ? Colors.white : Colors.transparent,
+              color: isActive ? kAccentColor : Colors.transparent,
               width: 2,
             ),
           ),
@@ -34,7 +34,7 @@ class TopBarOption extends StatelessWidget {
         child: Text(
           option,
           style: TextStyle(
-            color: isActive ? kWhite : Colors.white70,
+            color: isActive ? kPrimaryColor : kTextColor,
             fontWeight: isActive ? FontWeight.bold : FontWeight.w600,
             fontSize: 16.0,
           ),

@@ -35,8 +35,11 @@ class _SingleGroupScreenState extends State<SingleGroupScreen> {
   @override
   void initState() {
     super.initState();
-    members = widget.gData["members"];
-    admins = widget.gData["admins"];
+
+    if(widget.gData != null){
+      members = widget.gData["members"];
+      admins = widget.gData["admins"];
+    }
   }
 
   @override
@@ -44,6 +47,7 @@ class _SingleGroupScreenState extends State<SingleGroupScreen> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0.0,
+        backgroundColor: kWhite,
       ),
       body: StreamBuilder<DocumentSnapshot>(
         stream: _firestore.collection("groups").doc(widget.gid).snapshots(),

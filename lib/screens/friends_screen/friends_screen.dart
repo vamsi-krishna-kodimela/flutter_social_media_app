@@ -1,15 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:social_media/screens/single_user_screen/single_user_screen.dart';
 import '../../constants.dart';
 
 class FriendsScreen extends StatelessWidget {
-  final List<String> likedBy;
+  List<String> likedBy;
 
   FriendsScreen({Key key, this.likedBy}) : super(key: key);
   final _firestore = FirebaseFirestore.instance;
+  final _uid = FirebaseAuth.instance.currentUser.uid;
 
   @override
   Widget build(BuildContext context) {
@@ -19,57 +22,71 @@ class FriendsScreen extends StatelessWidget {
         title: Text(
           "Friends",
           style: TextStyle(
-            color: kWhite,
+            color: kTextColor,
             fontWeight: FontWeight.bold,
           ),
         ),
       ),
-      body: ListView.builder(
-        itemBuilder: (ctx, i) {
-          return FutureBuilder<DocumentSnapshot>(
-            future: _firestore.collection("users").doc(likedBy[i]).get(),
-            builder: (ctx, snapshot) {
-              if (snapshot.data == null) {
-                return ListTile(
-                  leading: Container(
-                    width: _size.width * 0.1,
-                    height: _size.width * 0.1,
-                    child: ClipRRect(
-                      borderRadius:
-                      BorderRadius.circular(_size.width * 0.1),
-                      child: Shimmer.fromColors(
+      body: StreamBuilder<DocumentSnapshot>(
+
+        stream: _firestore.collection("users").doc(_uid).snapshots(),
+
+        builder: (ctx,snapshot){
+          if(snapshot.connectionState == ConnectionState.waiting)
+            return Center(child: CircularProgressIndicator());
+          final data = snapshot.data.data();
+          final Map<String,dynamic> friends = data["friends"];
+          friends.removeWhere((key, value) => value!=3);
+          likedBy = friends.keys.toList();
+          return ListView.builder(
+            itemBuilder: (ctx, i) {
+              return FutureBuilder<DocumentSnapshot>(
+                future: _firestore.collection("users").doc(likedBy[i]).get(),
+                builder: (ctx, snapshot) {
+                  if (snapshot.data == null) {
+                    return ListTile(
+                      leading: Container(
+                        width: _size.width * 0.1,
+                        height: _size.width * 0.1,
+                        child: ClipRRect(
+                          borderRadius:
+                          BorderRadius.circular(_size.width * 0.1),
+                          child: Shimmer.fromColors(
+                            baseColor: Colors.grey[300],
+                            highlightColor: Colors.grey[100],
+                            child: Container(
+                              width: _size.width * 0.1,
+                              height: _size.width * 0.1,
+                              color: kAccentColor,
+                            ),
+                          ),
+                        ),
+                      ),
+                      title: Shimmer.fromColors(
                         baseColor: Colors.grey[300],
                         highlightColor: Colors.grey[100],
                         child: Container(
-                          width: _size.width * 0.1,
-                          height: _size.width * 0.1,
+                          width: _size.width * 0.2,
+                          height: 16.0,
                           color: kAccentColor,
                         ),
                       ),
-                    ),
-                  ),
-                  title: Shimmer.fromColors(
-                    baseColor: Colors.grey[300],
-                    highlightColor: Colors.grey[100],
-                    child: Container(
-                      width: _size.width * 0.2,
-                      height: 16.0,
-                      color: kAccentColor,
-                    ),
-                  ),
 
-                );
-              }
-              final _userInfo = snapshot.data.data();
-              return _AuthorDetails(
-                  size: _size,
-                  userInfo: _userInfo,
-                  uid: snapshot.data.id,
-                );
+                    );
+                  }
+                  final _userInfo = snapshot.data.data();
+                  return _AuthorDetails(
+                    size: _size,
+                    userInfo: _userInfo,
+                    uid: snapshot.data.id,
+                  );
+                },
+              );
             },
+            itemCount: likedBy.length,
           );
         },
-        itemCount: likedBy.length,
+
       ),
     );
   }
@@ -92,6 +109,7 @@ class _AuthorDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return Card(
       child: ListTile(
         onTap: () {
@@ -106,6 +124,7 @@ class _AuthorDetails extends StatelessWidget {
           height: _size.width * 0.1,
           child: ClipRRect(
             borderRadius: BorderRadius.circular(kDefaultPadding),
+
             child: FancyShimmerImage(
               imageUrl: _userInfo["photoUrl"],
               boxFit: BoxFit.cover,

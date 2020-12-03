@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:social_media/constants.dart';
 
 class GroupNameComponent extends StatelessWidget {
   const GroupNameComponent({
@@ -13,7 +14,7 @@ class GroupNameComponent extends StatelessWidget {
     return Text(
       gName.toString().trim(),
       style: TextStyle(
-        color: Colors.white,
+        color: kTextColor,
         fontWeight: FontWeight.w600,
         fontSize: 16.0,
       ),

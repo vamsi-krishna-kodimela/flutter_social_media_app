@@ -72,6 +72,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 controller: passwordController,
                 icon: Icons.vpn_key,
                 hintText: "Password",
+                isObscure: true,
               ),
               BuildSizedBox(2),
               Container(

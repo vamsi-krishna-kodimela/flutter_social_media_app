@@ -2,20 +2,21 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:social_media/screens/single_page_screen/single_page_screen.dart';
 import '../single_group_screen/single_group_screen.dart';
 
 import '../../constants.dart';
 
-class GroupSearchScreen extends StatefulWidget {
+class PagesSearchScreen extends StatefulWidget {
   @override
-  _GroupSearchScreenState createState() => _GroupSearchScreenState();
+  _PagesSearchScreenState createState() => _PagesSearchScreenState();
 }
 
-class _GroupSearchScreenState extends State<GroupSearchScreen> {
+class _PagesSearchScreenState extends State<PagesSearchScreen> {
   final TextEditingController _searchController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   final CollectionReference _firestore =
-  FirebaseFirestore.instance.collection("groups");
+  FirebaseFirestore.instance.collection("pages");
   final uid = FirebaseAuth.instance.currentUser.uid;
   final int perPage = 10;
   bool hasMoreResults = true;
@@ -90,7 +91,7 @@ class _GroupSearchScreenState extends State<GroupSearchScreen> {
       appBar: AppBar(
         elevation: 0.0,
         title: Text(
-          "Search For Groups",
+          "Search For Pages",
           style: TextStyle(
             fontWeight: FontWeight.w600,
             color: kTextColor
@@ -114,10 +115,13 @@ class _GroupSearchScreenState extends State<GroupSearchScreen> {
                     child: ListTile(
                       contentPadding: EdgeInsets.all(kDefaultPadding),
                       onTap: () {
+
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (_) => SingleGroupScreen(
-                                _results[i].id, _data),
+                            builder: (_) => SinglePageScreen(
+                              pageId: _data[i].id,
+                              pageName: _data[i].data()["name"],
+                            ),
                           ),
                         );
                       },
@@ -182,7 +186,7 @@ class SearchBarWidget extends StatelessWidget {
         controller: _searchController,
         decoration: InputDecoration(
           border: InputBorder.none,
-          hintText: "Search for groups",
+          hintText: "Search for Pages",
           suffixIcon: IconButton(
             onPressed: () {},
             icon: Icon(

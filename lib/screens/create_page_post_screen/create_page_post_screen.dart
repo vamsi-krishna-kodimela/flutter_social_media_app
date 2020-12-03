@@ -7,15 +7,15 @@ import 'package:video_thumbnail/video_thumbnail.dart';
 import '../../constants.dart';
 import './utils/publish_post_util.dart';
 
-class CreateGroupPostScreen extends StatefulWidget {
-final String gid;
+class CreatePagePostScreen extends StatefulWidget {
+  final String pid;
 
-  const CreateGroupPostScreen(this.gid);
+  const CreatePagePostScreen(this.pid);
   @override
-  _CreateGroupPostScreenState createState() => _CreateGroupPostScreenState();
+  _CreatePagePostScreenState createState() => _CreatePagePostScreenState();
 }
 
-class _CreateGroupPostScreenState extends State<CreateGroupPostScreen> {
+class _CreatePagePostScreenState extends State<CreatePagePostScreen> {
   File _image;
   File _video;
   bool isLoading = false;
@@ -38,7 +38,7 @@ class _CreateGroupPostScreenState extends State<CreateGroupPostScreen> {
       isLoading = true;
     });
     try {
-      await PublishPostUtil().publishPost(widget.gid,description, _image, _video);
+      await PublishPostUtil().publishPost(widget.pid,description, _image, _video);
     } catch (err) {
       _scaffold.currentState.showSnackBar(
         SnackBar(
@@ -73,11 +73,11 @@ class _CreateGroupPostScreenState extends State<CreateGroupPostScreen> {
       key: _scaffold,
       appBar: AppBar(
         title: Text(
-          "Create Group Post",
+          "Create Post for Page",
           style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 20.0,
-            color: kTextColor
+              fontWeight: FontWeight.bold,
+              fontSize: 20.0,
+              color: kTextColor
           ),
         ),
       ),
@@ -197,85 +197,85 @@ class _CreateGroupPostScreenState extends State<CreateGroupPostScreen> {
             ),
             (_video == null && _image == null)
                 ? Container(
-                    width: _size.width,
-                    padding: EdgeInsets.symmetric(
-                      horizontal: kDefaultPadding * 2,
-                      vertical: kDefaultPadding,
-                    ),
-                    color: kWhite,
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: [
-                          FlatButton.icon(
-                            onPressed: () async {
-                              await DialogCameraPicker.buildShowDialog(
-                                  type: 0,
-                                  setImage: setImage,
-                                  context: context,
-                                  isPost: true);
-                            },
-                            icon: Icon(
-                              Icons.image,
-                              color: kAccentColor,
-                            ),
-                            label: Text(
-                              "Photo",
-                              style: TextStyle(
-                                color: kTextColor,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            padding: EdgeInsets.all(kDefaultPadding),
-                          ),
-                          FlatButton.icon(
-                            onPressed: () async {
-                              await DialogCameraPicker.buildShowDialog(
-                                  context: context,
-                                  setImage: setImage,
-                                  type: 1);
-                            },
-                            icon: Icon(
-                              Icons.videocam,
-                              color: kAccentColor,
-                            ),
-                            label: Text(
-                              "Video",
-                              style: TextStyle(
-                                color: kTextColor,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            padding: EdgeInsets.all(kDefaultPadding),
-                          ),
-                        ],
+              width: _size.width,
+              padding: EdgeInsets.symmetric(
+                horizontal: kDefaultPadding * 2,
+                vertical: kDefaultPadding,
+              ),
+              color: kWhite,
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    FlatButton.icon(
+                      onPressed: () async {
+                        await DialogCameraPicker.buildShowDialog(
+                            type: 0,
+                            setImage: setImage,
+                            context: context,
+                            isPost: true);
+                      },
+                      icon: Icon(
+                        Icons.image,
+                        color: kAccentColor,
                       ),
+                      label: Text(
+                        "Photo",
+                        style: TextStyle(
+                          color: kTextColor,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      padding: EdgeInsets.all(kDefaultPadding),
                     ),
-                  )
+                    FlatButton.icon(
+                      onPressed: () async {
+                        await DialogCameraPicker.buildShowDialog(
+                            context: context,
+                            setImage: setImage,
+                            type: 1);
+                      },
+                      icon: Icon(
+                        Icons.videocam,
+                        color: kAccentColor,
+                      ),
+                      label: Text(
+                        "Video",
+                        style: TextStyle(
+                          color: kTextColor,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      padding: EdgeInsets.all(kDefaultPadding),
+                    ),
+                  ],
+                ),
+              ),
+            )
                 : SizedBox(
-                    height: kDefaultPadding,
-                  ),
+              height: kDefaultPadding,
+            ),
             (isLoading)
                 ? CircularProgressIndicator()
                 : GestureDetector(
-                    onTap: publishPost,
-                    child: Container(
-                      width: double.infinity,
-                      color: kPrimaryColor,
-                      padding:
-                          EdgeInsets.symmetric(vertical: kDefaultPadding * 1.5),
-                      child: Center(
-                        child: Text(
-                          "Publish Post",
-                          style: TextStyle(
-                            color: kWhite,
-                            fontSize: 18.0,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
+              onTap: publishPost,
+              child: Container(
+                width: double.infinity,
+                color: kPrimaryColor,
+                padding:
+                EdgeInsets.symmetric(vertical: kDefaultPadding * 1.5),
+                child: Center(
+                  child: Text(
+                    "Publish Post",
+                    style: TextStyle(
+                      color: kWhite,
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
+                ),
+              ),
+            ),
           ],
         ),
       ),

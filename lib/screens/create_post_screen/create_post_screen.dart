@@ -75,6 +75,7 @@ final TextEditingController _description = TextEditingController();
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 20.0,
+            color: kTextColor,
           ),
         ),
       ),

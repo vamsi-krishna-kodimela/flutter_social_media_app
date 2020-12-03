@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:social_media/constants.dart';
 import '../profile_screen/components/user_feed.dart';
 
 class SingleUserScreen extends StatelessWidget {
@@ -13,7 +14,8 @@ class SingleUserScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(name),
+        backgroundColor: kWhite,
+        title: Text(name,style: TextStyle(color: kTextColor,fontWeight: FontWeight.w600),),
       ),
       body: Container(
         width: _size.width,

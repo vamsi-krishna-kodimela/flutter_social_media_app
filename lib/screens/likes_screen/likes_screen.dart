@@ -20,7 +20,7 @@ class LikesScreen extends StatelessWidget {
         title: Text(
           "Likes",
           style: TextStyle(
-            color: kWhite,
+            color: kTextColor,
             fontWeight: FontWeight.bold,
           ),
         ),

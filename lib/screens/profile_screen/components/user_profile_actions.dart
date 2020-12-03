@@ -59,6 +59,7 @@ class UserProfileActions extends StatelessWidget {
               ),
             ),
             color: kGrey,
+            disabledColor: kGrey,
             shape: RoundedRectangleBorder(
                 borderRadius:
                 BorderRadius.circular(kDefaultPadding)),
