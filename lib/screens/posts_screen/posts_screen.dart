@@ -112,6 +112,7 @@ class _PostsScreenState extends State<PostsScreen> {
               return Center(
                 child: CircularProgressIndicator(),
               );
+            
             if (snapshot.hasData) {
               var data = snapshot.data;
               if (data.length > 0)
@@ -124,6 +125,7 @@ class _PostsScreenState extends State<PostsScreen> {
                   ),
                 );
             }
+
             return Center(
               child: Text("No Posts Found"),
             );

@@ -153,7 +153,6 @@ class _SinglePageScreenState extends State<SinglePageScreen> {
                                 ),
                                 Column(
                                   children: [
-                                    //Todo: Add Posts count
                                     Text(
                                       _followers.length.toString(),
                                       style: TextStyle(
@@ -168,54 +167,91 @@ class _SinglePageScreenState extends State<SinglePageScreen> {
                             ),
                           ),
                           SizedBox(height: kDefaultPadding),
-                          if (_data["createdBy"] == _uid)
-                            Container(
-                              width: double.infinity,
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    child: FlatButton.icon(
-                                      onPressed: () {
-                                        Navigator.of(context).push(
-                                            MaterialPageRoute(
+                          (_data["createdBy"] == _uid)
+                              ? Container(
+                                  width: double.infinity,
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: FlatButton.icon(
+                                          onPressed: () {
+                                            Navigator.of(context).push(
+                                              MaterialPageRoute(
                                                 builder: (_) =>
                                                     CreatePagePostScreen(
-                                                        widget.pageId)));
-                                      },
-                                      icon: Icon(
-                                        Icons.add,
-                                        color: kWhite,
+                                                        widget.pageId),
+                                              ),
+                                            );
+                                          },
+                                          icon: Icon(
+                                            Icons.add,
+                                            color: kWhite,
+                                          ),
+                                          label: Text(
+                                            "Create Post",
+                                            style: TextStyle(color: kWhite),
+                                          ),
+                                          color: kPrimaryColor,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(
+                                                kDefaultPadding),
+                                          ),
+                                        ),
                                       ),
-                                      label: Text(
-                                        "Create Post",
-                                        style: TextStyle(color: kWhite),
+                                      SizedBox(
+                                        width: kDefaultPadding,
                                       ),
-                                      color: kPrimaryColor,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(
-                                            kDefaultPadding),
+                                      OutlineButton.icon(
+                                        onPressed: () {
+                                          //Todo: Navigate to Edit info page
+                                        },
+                                        icon: Icon(Icons.edit),
+                                        label: Text("Edit Info"),
+                                        textColor: kAccentColor,
+                                        borderSide:
+                                            BorderSide(color: kAccentColor),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                              kDefaultPadding),
+                                        ),
                                       ),
-                                    ),
+                                    ],
                                   ),
-                                  SizedBox(
-                                    width: kDefaultPadding,
+                                )
+                              : Container(
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: FlatButton(
+                                          onPressed: () {
+                                            if (_followers.contains(_uid)) {
+                                              _firestore.collection("pages").doc(widget.pageId).update(
+                                                {
+                                                  "followers":FieldValue.arrayRemove([_uid]),
+                                                }
+                                              );
+                                            } else {
+                                              _firestore.collection("pages").doc(widget.pageId).update(
+                                                  {
+                                                    "followers":FieldValue.arrayUnion([_uid]),
+                                                  }
+                                              );
+                                            }
+                                          },
+                                          child: Text(
+                                            (_followers.contains(_uid))
+                                                ? "Unfollow"
+                                                : "Follow",
+                                            style: TextStyle(color: kWhite),
+                                          ),
+                                          color: (_followers.contains(_uid))
+                                              ? kAccentColor
+                                              : kPrimaryColor,
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                  OutlineButton.icon(
-                                    onPressed: () {
-                                      //Todo: Navigate to Edit info page
-                                    },
-                                    icon: Icon(Icons.edit),
-                                    label: Text("Edit Info"),
-                                    textColor: kAccentColor,
-                                    borderSide: BorderSide(color: kAccentColor),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(
-                                          kDefaultPadding),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
+                                ),
                         ],
                       ),
                     ),

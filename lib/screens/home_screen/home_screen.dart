@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:social_media/screens/app_info_screen/app_info_screen.dart';
+import 'package:social_media/screens/class_room_screen/class_room_screen.dart';
+import 'package:social_media/screens/entertainment_screen/entertainment_Screen.dart';
 
 import '../../constants.dart';
 import '../ads_screen/ads_screen.dart';
@@ -88,7 +90,7 @@ class _HomeScreenState extends State<HomeScreen> {
       case 2:
         return StoreScreen();
       case 3:
-        return Center(child: Text("This Page is under Construction"));
+        return EntertainmentScreen();
       default:
         return PostsScreen();
     }
@@ -364,12 +366,13 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: ListTile(
                           onTap: () {
                             Navigator.of(context).pop();
-                            _scaffold.currentState.showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                    "Classrooms Screen is under construction!"),
-                              ),
-                            );
+                            // _scaffold.currentState.showSnackBar(
+                            //   SnackBar(
+                            //     content: Text(
+                            //         "Classrooms Screen is under construction!"),
+                            //   ),
+                            // );
+                            Navigator.of(context).push(MaterialPageRoute(builder: (_)=>ClassRoomScreen()),);
                           },
                           leading: Icon(
                             FeatherIcons.bookOpen,
