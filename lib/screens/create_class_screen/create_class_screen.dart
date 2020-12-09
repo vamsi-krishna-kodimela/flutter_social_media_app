@@ -48,6 +48,7 @@ class _CreateClassScreenState extends State<CreateClassScreen> {
           "ref": _firestore.collection("users").doc(_uid),
           "createdOn": Timestamp.now(),
           "classId": nanoid(8),
+          "students" : [_uid],
         },
       );
       Navigator.of(context).pop();
