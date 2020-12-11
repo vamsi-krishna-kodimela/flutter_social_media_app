@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:social_media/screens/pages_screen/components/following_pages_component.dart';
 import 'package:social_media/screens/pages_screen/components/page_posts_home.dart';
@@ -47,46 +46,46 @@ class _PagesScreenState extends State<PagesScreen> {
 
   Container _buildPageOptions() {
     return Container(
-          width: double.infinity,
-          padding: EdgeInsets.symmetric(vertical: kDefaultPadding),
-          child: SingleChildScrollView(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                TopBarOption(
-                  isActive: currentOption == 0,
-                  option: "Posts",
-                  onPress: changeOption,
-                  optionNum: 0,
-                ),
-                TopBarOption(
-                  isActive: currentOption == 1,
-                  option: "Following",
-                  onPress: changeOption,
-                  optionNum: 1,
-                ),
-                TopBarOption(
-                  isActive: currentOption == 2,
-                  option: "My Pages",
-                  onPress: changeOption,
-                  optionNum: 2,
-                ),
-              ],
+      width: double.infinity,
+      padding: EdgeInsets.symmetric(vertical: kDefaultPadding),
+      child: SingleChildScrollView(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            TopBarOption(
+              isActive: currentOption == 0,
+              option: "Posts",
+              onPress: changeOption,
+              optionNum: 0,
             ),
-          ),
-        );
+            TopBarOption(
+              isActive: currentOption == 1,
+              option: "Following",
+              onPress: changeOption,
+              optionNum: 1,
+            ),
+            TopBarOption(
+              isActive: currentOption == 2,
+              option: "My Pages",
+              onPress: changeOption,
+              optionNum: 2,
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   AppBar _buildAppBar() {
     return AppBar(
-      title: Text("Pages", style: TextStyle(fontWeight: FontWeight.w600, color: kTextColor)),
+      title: Text("Pages",
+          style: TextStyle(fontWeight: FontWeight.w600, color: kTextColor)),
       actions: [
         IconButton(
-          icon: Icon(
-            Icons.search_rounded
-          ),
+          icon: Icon(Icons.search_rounded),
           onPressed: () {
-            Navigator.of(context).push(MaterialPageRoute(builder: (_)=>PagesSearchScreen()));
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: (_) => PagesSearchScreen()));
           },
         ),
       ],
@@ -101,8 +100,11 @@ class _PagesScreenState extends State<PagesScreen> {
       case 2:
         return CreatedPagesComponent();
       case 0:
-        //ToDo:: MyPages Widget
         return PagePostsHome();
+      default:
+        return Center(
+          child: Text("Something went wrong."),
+        );
     }
   }
 }

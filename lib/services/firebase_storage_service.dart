@@ -69,6 +69,22 @@ class FirebaseStorageService{
     return null;
   }
 
+  Future<String> storeClassPostFile(File image) async {
+    final ext = p.extension(image.path);
+    String uid = _auth.currentUser.uid;
+    String filepath = "classposts/$uid/${DateTime.now().toString()}$ext";
+    _uploadTask = _storage.ref().child(filepath).putFile(image);
+
+    final StreamSubscription<StorageTaskEvent> streamSubscription =
+    _uploadTask.events.listen((event) {});
+
+    await _uploadTask.onComplete;
+    final url = await _storage.ref().child(filepath).getDownloadURL();
+    streamSubscription.cancel();
+    if (_uploadTask.isSuccessful) return "$url";
+    return null;
+  }
+
 
 
 

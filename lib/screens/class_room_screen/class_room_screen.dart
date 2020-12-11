@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:random_color/random_color.dart';
 import 'package:share/share.dart';
+import 'package:social_media/screens/single_class_screen/single_class_screen.dart';
 import '../../constants.dart';
 import '../create_class_screen/create_class_screen.dart';
 
@@ -101,7 +102,7 @@ class ClassRoomScreen extends StatelessWidget {
                             Navigator.of(context).push(MaterialPageRoute(
                                 builder: (_) => CreateClassScreen()));
                           },
-                          child: Text("Create Group"),
+                          child: Text("Create Class"),
                           color: kPrimaryColor,
                         ),
                       ],
@@ -178,9 +179,12 @@ class ClassRoomScreen extends StatelessWidget {
                                             .doc(classRoomsList[i].id)
                                             .delete();
                                         _scaffoldState.currentState
-                                            .showSnackBar(SnackBar(
-                                                content: Text(
-                                                    "Class room deleted sucessfully.")));
+                                            .showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                                "Class room deleted sucessfully."),
+                                          ),
+                                        );
                                       } catch (err) {
                                         _scaffoldState.currentState
                                             .showSnackBar(
@@ -249,7 +253,12 @@ class ClassRoomScreen extends StatelessWidget {
                       footer: GridTileBar(
                         title: FlatButton(
                           onPressed: () {
-                            //Todo: Navigate to single classroom screen
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) =>
+                                    SingleClassScreen(classRoomsList[i]),
+                              ),
+                            );
                           },
                           child: Text(
                             "Explore",
@@ -266,7 +275,9 @@ class ClassRoomScreen extends StatelessWidget {
                         trailing: IconButton(
                           onPressed: () {
                             Share.share(
-                                "Join the classroom using code : ${_classRoom["classId"]}");
+                              "You are invited to join the classroom using code : ${_classRoom["classId"]} on $kAppName.",
+                              subject: "Invitation to join Friendzit classroom",
+                            );
                           },
                           icon: Icon(Icons.share),
                           color: kAccentColor,

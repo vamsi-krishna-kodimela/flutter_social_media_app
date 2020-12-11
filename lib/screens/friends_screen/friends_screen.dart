@@ -11,11 +11,12 @@ class FriendsScreen extends StatelessWidget {
   List<String> likedBy;
 
   FriendsScreen({Key key, this.likedBy}) : super(key: key);
-  final _firestore = FirebaseFirestore.instance;
-  final _uid = FirebaseAuth.instance.currentUser.uid;
+
 
   @override
   Widget build(BuildContext context) {
+    final _firestore = FirebaseFirestore.instance;
+    final _uid = FirebaseAuth.instance.currentUser.uid;
     var _size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(

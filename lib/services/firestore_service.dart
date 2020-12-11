@@ -39,6 +39,27 @@ class FirestoreService {
   }
 
 
+  static Future<void> addClassPostToFireStore(
+      String description,
+      String resource,
+      int type,
+      String link,
+      String cId,
+      ) async {
+    String uid = FirebaseAuth.instance.currentUser.uid;
+
+    await FirebaseFirestore.instance.collection('class_posts').add({
+      "description": description,
+      "resources": resource,
+      "type": type,
+      "postedBy": uid,
+      "postedOn": Timestamp.now(),
+      "userData": FirebaseFirestore.instance.collection('users').doc(uid),
+      "link" : link,
+      "class": cId,
+    });
+  }
+
   static Future<void> addGroupPostToFireStore(
       String gid,
       String description,

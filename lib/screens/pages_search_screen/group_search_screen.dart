@@ -2,8 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:social_media/screens/single_page_screen/single_page_screen.dart';
-import '../single_group_screen/single_group_screen.dart';
+import '../single_page_screen/single_page_screen.dart';
+
 
 import '../../constants.dart';
 
