@@ -152,7 +152,7 @@ class CommentsScreen extends StatelessWidget {
 
 
   _addComment()async{
-    var _com = commentController.value.text;
+    var _com = commentController.value.text.trim();
     if(_com.length<1)
       return;
     await _firestore.collection("comments").add({

@@ -7,7 +7,7 @@ import 'package:social_media/screens/single_user_screen/single_user_screen.dart'
 import '../../constants.dart';
 
 class LikesScreen extends StatelessWidget {
-  final List<String> likedBy;
+  final  likedBy;
 
   LikesScreen({Key key, this.likedBy}) : super(key: key);
   final _firestore = FirebaseFirestore.instance;

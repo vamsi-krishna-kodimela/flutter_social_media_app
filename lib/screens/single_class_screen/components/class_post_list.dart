@@ -3,15 +3,18 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:social_media/screens/single_class_screen/components/class_post_component.dart';
 
-import '../../components/post_widget.dart';
+class ClassPostList extends StatefulWidget {
+  final String cid;
 
-class PostsScreen extends StatefulWidget {
+  const ClassPostList(this.cid);
+
   @override
-  _PostsScreenState createState() => _PostsScreenState();
+  _ClassPostListState createState() => _ClassPostListState();
 }
 
-class _PostsScreenState extends State<PostsScreen> {
+class _ClassPostListState extends State<ClassPostList> {
   ScrollController _scrollController = ScrollController();
   final int perPage = 4;
   final String uid = FirebaseAuth.instance.currentUser.uid;
@@ -35,7 +38,7 @@ class _PostsScreenState extends State<PostsScreen> {
       StreamController<List<QueryDocumentSnapshot>>.broadcast();
 
   var _postsCollectionReference = FirebaseFirestore.instance
-      .collection("posts")
+      .collection("class_posts")
       .orderBy("postedOn", descending: true);
 
   Stream listenToPostsRealTime() {
@@ -45,7 +48,7 @@ class _PostsScreenState extends State<PostsScreen> {
   }
 
   void _requestPosts() {
-    var pagePostsQuery = _postsCollectionReference.limit(perPage);
+    var pagePostsQuery = _postsCollectionReference.where("class",isEqualTo: widget.cid).limit(perPage);
     if (_lastDocument != null)
       pagePostsQuery = pagePostsQuery.startAfterDocument(_lastDocument);
 
@@ -75,53 +78,31 @@ class _PostsScreenState extends State<PostsScreen> {
         // Determine if there's more posts to request
         _hasMorePosts = (posts.length == perPage);
       }
-      // else if (_allPagedResults.length == 1 && postsSnapshot.docs.isEmpty) {
-      //   _allPagedResults = List<List<QueryDocumentSnapshot>>();
-      //   _lastDocument = null;
-      //   _hasMorePosts = false;
-      // }
+
     });
   }
+
   final _firestore = FirebaseFirestore.instance;
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<DocumentSnapshot>(
-      future: _firestore.collection("users").doc(uid).get(),
-      builder: (_, info){
-        if(info.connectionState == ConnectionState.waiting)
-          return Center(child: CircularProgressIndicator(),);
-        final data = info.data.data();
-
-        List<String> _frnds = [];
-        if(data["friends"]!=null){
-          Map<String, dynamic> _all = data["friends"];
-          _all.removeWhere((key, value) => value != 3);
-          _frnds = _all.keys.toList();
-        }
-
-
-        if(_frnds.length==0)
-          return Center(child: Text("Make friends to see their Posts."),);
-        _postsCollectionReference= _postsCollectionReference.where("postedBy",whereIn: _frnds);
-        return StreamBuilder<List<QueryDocumentSnapshot>>(
+    return StreamBuilder<List<QueryDocumentSnapshot>>(
           stream: listenToPostsRealTime(),
           builder: (ctx, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting)
               return Center(
                 child: CircularProgressIndicator(),
               );
-            
+
             if (snapshot.hasData) {
               var data = snapshot.data;
               if (data.length > 0)
                 return ListView.builder(
                   controller: _scrollController,
                   itemCount: data.length,
-                  itemBuilder: (ctx, i) => PostWidget(
-                    key: Key(data[i].id),
-                    post: data[i],
-                  ),
+                  itemBuilder: (ctx, i) {
+                    return ClassPostComponent(key: Key(data[i].id),post: data[i],);
+                  },
                 );
             }
 
@@ -130,8 +111,6 @@ class _PostsScreenState extends State<PostsScreen> {
             );
           },
         );
-      },
 
-    );
   }
 }

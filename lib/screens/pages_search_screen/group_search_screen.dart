@@ -119,8 +119,8 @@ class _PagesSearchScreenState extends State<PagesSearchScreen> {
                         Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (_) => SinglePageScreen(
-                              pageId: _data[i].id,
-                              pageName: _data[i].data()["name"],
+                              pageId: _results[i].id,
+                              pageName: _data["name"],
                             ),
                           ),
                         );
