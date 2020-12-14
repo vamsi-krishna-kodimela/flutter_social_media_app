@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
@@ -32,13 +33,13 @@ class FirebaseAuthService {
       final User currentUser = _firebaseAuth.currentUser;
 
       assert(user.uid == currentUser.uid);
-
+      var notificationToken = await _firebaseMessaging.getToken();
       if (authResult.additionalUserInfo.isNewUser) {
         await currentUser.updateProfile(
             displayName: user.displayName, photoURL: user.photoURL);
         var keys = SocialUtils.keyWordGenerator(user.displayName);
         await _firebaseMessaging.requestNotificationPermissions();
-        var notificationToken = await _firebaseMessaging.getToken();
+
         await FirestoreService.createUser(
           currentUser.uid,
           UserModel(
@@ -46,9 +47,14 @@ class FirebaseAuthService {
             description: "",
             photoUrl: user.photoURL,
             keys: keys,
-            messageToken: notificationToken,
+            messageToken: [notificationToken],
           ),
         );
+      }else{
+
+        await FirebaseFirestore.instance.collection("users").doc(authResult.user.uid).update({
+        "messageToken":FieldValue.arrayUnion([notificationToken]),
+        });
       }
       return '$user';
     }
@@ -60,6 +66,13 @@ class FirebaseAuthService {
       email: email,
       password: password,
     );
+    var notificationToken = await _firebaseMessaging.getToken();
+    await FirebaseFirestore.instance
+        .collection("users")
+        .doc(authResult.user.uid)
+        .update({
+      "messageToken": FieldValue.arrayUnion([notificationToken]),
+    });
     return authResult.user != null;
   }
 
@@ -85,7 +98,7 @@ class FirebaseAuthService {
       description: "",
       photoUrl: photoUrl,
       keys: SocialUtils.keyWordGenerator(name),
-      messageToken: notificationToken,
+      messageToken: [notificationToken],
     );
     await FirestoreService.createUser(
       credentials.user.uid,

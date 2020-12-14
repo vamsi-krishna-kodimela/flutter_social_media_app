@@ -1,0 +1,51 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+  	allow write,read: if request.auth.uid != null;
+  
+		match /users/{userId}{
+			allow write,read: if request.auth.uid != null;
+		}
+		match /posts/{postId}{
+			allow write,read: if  request.auth.uid!=null;
+		}
+		match /comments/{commentId}{
+			allow read,write: if request.auth.uid !=null;
+		}
+		match /chatRooms/{chatRoomId}{
+			allow read,write: if request.auth.uid !=null;
+      
+      match /chats/{chatId}{
+      	allow read,write: if request.auth.uid !=null;
+      }
+		}
+    match /entertainment/{eId}{
+    	allow read,write: if request.auth.uid !=null;
+    }
+    match /groups/{gId}{
+    allow read,write: if request.auth.uid !=null;
+    }
+    match /group_posts/{pId}{
+    allow read,write: if request.auth.uid != null;
+    }
+    match /pages/{pId}{
+    allow read,write: if request.auth.uid !=null;
+    }
+    match /app_info/{pId}{
+    allow read,write: if request.auth.uid !=null;
+    }
+    match /promotions/{pId}{
+    allow read,write: if request.auth.uid !=null;
+    }
+    match /page_posts/{pId}{
+    allow read,write: if request.auth.uid !=null;
+    }
+    match /class_rooms/{cId}{
+    allow read,write: if request.auth.uid !=null;
+    }
+    match /class_posts/{pId}{
+    allow read,write: if request.auth.uid !=null;
+    }
+  }
+
+}

@@ -35,6 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
   int tab = 0;
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   final uid = FirebaseAuth.instance.currentUser.uid;
+  final _firestore = FirebaseFirestore.instance;
 
   _configureFirebaseListeners() {
     _firebaseMessaging.configure(
@@ -67,6 +68,11 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     _configureFirebaseListeners();
     checkUserPresence();
+    _firebaseMessaging.onTokenRefresh.listen((String fcmToken) {
+      _firestore.collection("users").doc(uid).update({
+        "messageToken": FieldValue.arrayUnion([fcmToken]),
+      });
+    });
   }
 
   @override
@@ -177,9 +183,9 @@ class _HomeScreenState extends State<HomeScreen> {
       child: IconButton(
         onPressed: () {
           if (val == 3) {
-            // Navigator.of(context)
-            //     .push(MaterialPageRoute(builder: (_) => EntertainmentScreen()));
-            // return;
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: (_) => EntertainmentScreen()));
+            return;
           }
           if (tab != val) {
             setState(() {
@@ -372,7 +378,10 @@ class _HomeScreenState extends State<HomeScreen> {
                             //         "Classrooms Screen is under construction!"),
                             //   ),
                             // );
-                            Navigator.of(context).push(MaterialPageRoute(builder: (_)=>ClassRoomScreen()),);
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                  builder: (_) => ClassRoomScreen()),
+                            );
                           },
                           leading: Icon(
                             FeatherIcons.bookOpen,

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:share/share.dart';
 import 'package:social_media/constants.dart';
 import 'package:social_media/screens/create_class_post_screen/create_class_post_screen.dart';
+import 'package:social_media/screens/create_class_screen/edit_class_screen.dart';
 import 'package:social_media/screens/single_class_screen/components/class_post_list.dart';
 import 'package:social_media/screens/students_screen/students_screen.dart';
 
@@ -23,13 +24,13 @@ class _SingleClassScreenState extends State<SingleClassScreen> {
     final _classinfo = widget.classRoom.data();
     return Scaffold(
       appBar: _buildAppBar(_classinfo),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: (_uid == _classinfo["createdBy"]) ?FloatingActionButton(
         onPressed: () {
           Navigator.of(context).push(MaterialPageRoute(
               builder: (_) => CreateClassPostScreen(widget.classRoom.id)));
         },
         child: Icon(Icons.edit_outlined),
-      ),
+      ):null,
       body: ClassPostList(widget.classRoom.id),
     );
   }
@@ -64,6 +65,7 @@ class _SingleClassScreenState extends State<SingleClassScreen> {
           onSelected: (val) {
             switch (val) {
               case 0:
+                Navigator.of(context).push(MaterialPageRoute(builder: (_)=>EditClassScreen(widget.classRoom)));
                 break;
               case 1:
                 Navigator.of(context).push(

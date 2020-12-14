@@ -16,8 +16,9 @@ import '../../../constants.dart';
 
 class ClassPostComponent extends StatefulWidget {
   final QueryDocumentSnapshot post;
+  final Function emptyStream;
 
-  const ClassPostComponent({Key key, this.post}) : super(key: key);
+  const ClassPostComponent({Key key, this.post,this.emptyStream}) : super(key: key);
 
   @override
   _ClassPostComponentState createState() => _ClassPostComponentState();
@@ -134,6 +135,7 @@ class _ClassPostComponentState extends State<ClassPostComponent> {
                   postedOnString: postedOnString,
                   uid: snapshot.data.id,
                   postId: widget.post.id,
+                  emptyStream: widget.emptyStream,
                 );
               },
             ),
@@ -265,6 +267,7 @@ class _AuthorDetails extends StatelessWidget {
     @required this.postedOnString,
     @required this.uid,
     @required this.postId,
+    @required this.emptyStream,
   })  : _size = size,
         _userInfo = userInfo,
         super(key: key);
@@ -274,6 +277,7 @@ class _AuthorDetails extends StatelessWidget {
   final String postedOnString;
   final String uid;
   final String postId;
+  final Function emptyStream;
 
   @override
   Widget build(BuildContext context) {
@@ -337,6 +341,7 @@ class _AuthorDetails extends StatelessWidget {
                           .collection("class_posts")
                           .doc(postId)
                           .delete();
+                      emptyStream();
                       Navigator.of(ctx).pop();
                     },
                     child: Text(

@@ -3,9 +3,7 @@ const admin = require("firebase-admin");
 admin.initializeApp(functions.config().firebase);
 const db = admin.firestore();
 
-exports.postCountIncrease = functions.firestore
-  .document("posts/{postId}")
-  .onCreate((change, context) => {
+exports.postCountIncrease = functions.firestore.document("posts/{postId}").onCreate((change, context) => {
     // Retrieve the current and previous value
     const data = change.data();
     context.params.user_id;
@@ -35,9 +33,7 @@ exports.postCountIncrease = functions.firestore
     });
   });
 
-exports.postCountDecrement = functions.firestore
-  .document("posts/{postId}")
-  .onDelete((change, context) => {
+exports.postCountDecrement = functions.firestore.document("posts/{postId}").onDelete((change, context) => {
     // Retrieve the current and previous value
     const data = change.data();
     let uid = data.postedBy;
@@ -55,9 +51,9 @@ exports.postCountDecrement = functions.firestore
     });
   });
 
-exports.userUpdated = functions.firestore
-  .document("users/{userId}")
-  .onUpdate(async (change, context)=>{
+
+
+exports.userUpdated = functions.firestore.document("users/{userId}").onUpdate(async (change, context)=>{
     const oldData = change.before.data();
     const newData = change.after.data();
     const friendsOld = oldData.friends;
@@ -116,7 +112,6 @@ exports.userUpdated = functions.firestore
       }
     }
   });
-
 
 exports.updateChatTime = functions.firestore.document("chatRooms/{roomId}/chats/{chatId}").onCreate(
   (snapshot,context)=>{

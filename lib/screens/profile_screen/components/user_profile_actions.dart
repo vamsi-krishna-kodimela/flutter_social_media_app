@@ -2,6 +2,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:social_media/screens/chat_screen/chat_screen.dart';
+import 'package:social_media/screens/edit_profile_screen/edit_profile_screen.dart';
 import 'package:social_media/services/firestore_service.dart';
 
 import '../../../constants.dart';
@@ -149,7 +150,9 @@ class UserProfileActions extends StatelessWidget {
 
         if (id == _current.uid)
           FlatButton.icon(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(builder: (_)=>EditProfileScreen(data)));
+            },
             icon: Icon(
               Icons.edit_rounded,
               color: kWhite,

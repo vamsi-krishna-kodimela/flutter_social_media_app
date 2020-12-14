@@ -3,6 +3,7 @@ import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:social_media/screens/create_page_post_screen/create_page_post_screen.dart';
+import 'package:social_media/screens/create_page_screen/edit_page_screen.dart';
 import 'package:social_media/screens/page_post_list/page_post_list.dart';
 import '../../constants.dart';
 
@@ -203,7 +204,7 @@ class _SinglePageScreenState extends State<SinglePageScreen> {
                                       ),
                                       OutlineButton.icon(
                                         onPressed: () {
-                                          //Todo: Navigate to Edit info page
+                                          Navigator.of(context).push(MaterialPageRoute(builder: (_)=>EditPageScreen(snapshot.data)));
                                         },
                                         icon: Icon(Icons.edit),
                                         label: Text("Edit Info"),

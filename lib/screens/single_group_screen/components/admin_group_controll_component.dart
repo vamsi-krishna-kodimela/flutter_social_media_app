@@ -1,6 +1,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:social_media/screens/create_group_screen/edit_group_screen.dart';
 
 import '../../../constants.dart';
 
@@ -8,9 +9,12 @@ class AdminGroupControllComponent extends StatelessWidget {
   const AdminGroupControllComponent({
     Key key,
     this.gid,
+    this.gData,
+
   }) : super(key: key);
 
   final gid;
+  final gData;
 
 
   @override
@@ -22,7 +26,9 @@ class AdminGroupControllComponent extends StatelessWidget {
       children: [
         FlatButton.icon(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.of(context).push(MaterialPageRoute(builder: (_)=>EditGroupScreen(groupData: gData,gid: gid,)));
+          },
           icon: Icon(Icons.edit_outlined,color: kWhite,),
           label: Text(
             "Edit Info",

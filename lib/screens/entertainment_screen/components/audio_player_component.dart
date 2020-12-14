@@ -37,7 +37,6 @@ class _AudioPlayerComponentState extends State<AudioPlayerComponent> {
   }
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     audioPlayer.dispose();
   }
@@ -64,7 +63,7 @@ class _AudioPlayerComponentState extends State<AudioPlayerComponent> {
             ClipRRect(
               borderRadius: BorderRadius.circular(20.0),
               child: AspectRatio(
-                aspectRatio: 4 / 3,
+                aspectRatio: 5 / 4,
                 child: Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20.0),

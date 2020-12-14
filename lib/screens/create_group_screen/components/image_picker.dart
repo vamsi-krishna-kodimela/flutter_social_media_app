@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
 import 'package:social_media/components/image_source_selector.dart';
 
@@ -8,8 +9,9 @@ import '../../../constants.dart';
 class ImagePicker extends StatelessWidget {
   final Function setImage;
   final File profilePic;
+  final String picUrl;
 
-  const ImagePicker({Key key, this.setImage, this.profilePic})
+  const ImagePicker({Key key, this.setImage, this.profilePic, this.picUrl})
       : super(key: key);
 
   @override
@@ -38,19 +40,26 @@ class ImagePicker extends StatelessWidget {
         },
         title: Text("Upload Group Display Pic"),
         leading: (profilePic == null)
-            ? Container(
-          height: 40,
-          width: 40,
-          color: kBGColor,
-          child: Center(child: FittedBox(child: Text("40X40"))),
-        )
+            ? (picUrl != null)
+                ? FancyShimmerImage(
+                    imageUrl: picUrl,
+                    boxFit: BoxFit.cover,
+                    height: 40,
+                    width: 40,
+                  )
+                : Container(
+                    height: 40,
+                    width: 40,
+                    color: kBGColor,
+                    child: Center(child: FittedBox(child: Text("40X40"))),
+                  )
             : Image.file(
-          profilePic,
-          height: 40,
-          width: 40,
-          fit: BoxFit.cover,
-          alignment: Alignment.center,
-        ),
+                profilePic,
+                height: 40,
+                width: 40,
+                fit: BoxFit.cover,
+                alignment: Alignment.center,
+              ),
         trailing: Icon(Icons.photo),
       ),
     );

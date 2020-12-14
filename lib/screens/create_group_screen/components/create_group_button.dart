@@ -5,8 +5,9 @@ import '../../../constants.dart';
 
 class CreateGroupButton extends StatelessWidget {
   final Function createGroup;
+  final bool isUpdate;
 
-  const CreateGroupButton({Key key, this.createGroup}) : super(key: key);
+  const CreateGroupButton({Key key, this.createGroup,this.isUpdate=false,}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +24,7 @@ class CreateGroupButton extends StatelessWidget {
           width: double.infinity,
           child: Center(
             child: Text(
-              "Create",
+              isUpdate? "Update Group Info":"Create Group",
               style: TextStyle(
                 color: kWhite,
                 fontWeight: FontWeight.w600,

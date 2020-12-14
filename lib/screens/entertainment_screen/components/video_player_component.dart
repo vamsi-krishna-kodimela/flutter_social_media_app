@@ -10,7 +10,8 @@ class VideoPlayerComponent extends StatefulWidget {
   final Map<String, dynamic> data;
   final DocumentReference reference;
 
-  const VideoPlayerComponent({Key key, this.data,this.reference}) : super(key: key);
+  const VideoPlayerComponent({Key key, this.data, this.reference})
+      : super(key: key);
 
   @override
   _VideoPlayerComponentState createState() => _VideoPlayerComponentState();
@@ -29,7 +30,7 @@ class _VideoPlayerComponentState extends State<VideoPlayerComponent> {
   void initState() {
     super.initState();
     data = widget.data;
-    isLiked = !(data["likes"]==null||data["likes"][uid]!=true);
+    isLiked = !(data["likes"] == null || data["likes"][uid] != true);
     likesCount = likesCounter(data["likes"]);
     _videoPlayerController = VideoPlayerController.network(data["resource"])
       ..initialize().then((_) {
@@ -43,7 +44,6 @@ class _VideoPlayerComponentState extends State<VideoPlayerComponent> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     _videoPlayerController.dispose();
   }
@@ -52,11 +52,10 @@ class _VideoPlayerComponentState extends State<VideoPlayerComponent> {
   Widget build(BuildContext context) {
     return VisibilityDetector(
       key: Key(DateTime.now().toString()),
-      onVisibilityChanged: (info){
-        if(mounted)
-        if(info.visibleFraction>0.8){
+      onVisibilityChanged: (info) {
+        if (mounted) if (info.visibleFraction > 0.8) {
           _videoPlayerController.play();
-        }else{
+        } else {
           _videoPlayerController.pause();
         }
       },
@@ -69,16 +68,37 @@ class _VideoPlayerComponentState extends State<VideoPlayerComponent> {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(20.0),
-              child: AspectRatio(
-                aspectRatio: 4 / 3,
-                child: (_videoPlayerController.value.initialized)
-                    ? VideoPlayer(_videoPlayerController)
-                    : Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20.0),
-                          color: kGrey,
+              child: GestureDetector(
+                onTap: () {
+                  if (_videoPlayerController.value.isPlaying) {
+                    _videoPlayerController.pause();
+                  } else {
+                    _videoPlayerController.play();
+                  }
+                },
+                child: AspectRatio(
+                  aspectRatio: 5 / 4,
+                  child: (_videoPlayerController.value.initialized)
+                      ? SizedBox.expand(
+                          child: FittedBox(
+                            fit: BoxFit.cover,
+                            child: SizedBox(
+                              width:
+                                  _videoPlayerController.value.size?.width ?? 0,
+                              height:
+                                  _videoPlayerController.value.size?.height ??
+                                      0,
+                              child: VideoPlayer(_videoPlayerController),
+                            ),
+                          ),
+                        )
+                      : Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20.0),
+                            color: kGrey,
+                          ),
                         ),
-                      ),
+                ),
               ),
             ),
             Positioned(
@@ -86,14 +106,15 @@ class _VideoPlayerComponentState extends State<VideoPlayerComponent> {
                 children: [
                   Text("$likesCount Likes"),
                   IconButton(
-                    onPressed: (){
+                    onPressed: () {
                       toogleLikes();
                     },
                     icon: Icon(
-                      (!isLiked)?Icons.favorite_border_rounded:Icons.favorite_rounded,
+                      (!isLiked)
+                          ? Icons.favorite_border_rounded
+                          : Icons.favorite_rounded,
                       color: kAccentColor,
                     ),
-
                   ),
                 ],
               ),
@@ -106,20 +127,20 @@ class _VideoPlayerComponentState extends State<VideoPlayerComponent> {
     );
   }
 
-  int likesCounter(Map<String, dynamic> likes){
-    if(likes == null)
-      return 0;
+  int likesCounter(Map<String, dynamic> likes) {
+    if (likes == null) return 0;
     var _likes = likes.values.toList();
-    _likes.removeWhere((element) => element==false);
+    _likes.removeWhere((element) => element == false);
     return _likes.length;
   }
 
-  void toogleLikes()async{
+  void toogleLikes() async {
     isLiked = !isLiked;
-    if(isLiked)likesCount++;else likesCount--;
-    await widget.reference.update({"likes.$uid":isLiked});
-    setState(() {
-
-    });
+    if (isLiked)
+      likesCount++;
+    else
+      likesCount--;
+    await widget.reference.update({"likes.$uid": isLiked});
+    setState(() {});
   }
 }

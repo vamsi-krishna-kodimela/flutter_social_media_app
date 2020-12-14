@@ -20,7 +20,7 @@ class _StoreScreenState extends State<StoreScreen> {
     return Column(
       children: [
         Expanded(
-          child: WebView(initialUrl: "https://ebeemart.com"),
+          child: WebView(initialUrl: "http://ebeemart.com"),
         ),
       ],
     );

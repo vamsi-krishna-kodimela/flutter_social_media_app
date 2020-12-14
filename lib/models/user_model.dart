@@ -9,7 +9,7 @@ class UserModel {
   final Timestamp time = Timestamp.now();
   final List<String> keys;
   final String uid = FirebaseAuth.instance.currentUser.uid;
-  final String messageToken;
+  final List<String> messageToken;
 
   UserModel({
     @required this.name,

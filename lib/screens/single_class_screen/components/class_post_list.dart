@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:social_media/screens/single_class_screen/components/class_post_component.dart';
 
@@ -23,6 +24,15 @@ class _ClassPostListState extends State<ClassPostList> {
   List<List<QueryDocumentSnapshot>> _allPagedResults =
       List<List<QueryDocumentSnapshot>>();
 
+  emptyState(){
+    if(_allPagedResults.length ==1)
+    setState(() {
+      _lastDocument=null;
+      _allPagedResults=List<List<QueryDocumentSnapshot>>();
+      _hasMorePosts=false;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -43,7 +53,6 @@ class _ClassPostListState extends State<ClassPostList> {
 
   Stream listenToPostsRealTime() {
     _requestPosts();
-
     return _postsController.stream;
   }
 
@@ -56,6 +65,7 @@ class _ClassPostListState extends State<ClassPostList> {
 
     pagePostsQuery.snapshots().listen((postsSnapshot) {
       if (postsSnapshot.docs.isNotEmpty) {
+
         var posts = postsSnapshot.docs;
         var pageExists = currentRequestIndex < _allPagedResults.length;
 
@@ -78,9 +88,17 @@ class _ClassPostListState extends State<ClassPostList> {
         // Determine if there's more posts to request
         _hasMorePosts = (posts.length == perPage);
       }
+      else{
+        emptyState();
+      }
 
     });
+
+
   }
+
+
+
 
   final _firestore = FirebaseFirestore.instance;
 
@@ -89,10 +107,10 @@ class _ClassPostListState extends State<ClassPostList> {
     return StreamBuilder<List<QueryDocumentSnapshot>>(
           stream: listenToPostsRealTime(),
           builder: (ctx, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting)
-              return Center(
-                child: CircularProgressIndicator(),
-              );
+            // if (snapshot.connectionState == )
+            //   return Center(
+            //     child: CircularProgressIndicator(),
+            //   );
 
             if (snapshot.hasData) {
               var data = snapshot.data;
@@ -101,7 +119,7 @@ class _ClassPostListState extends State<ClassPostList> {
                   controller: _scrollController,
                   itemCount: data.length,
                   itemBuilder: (ctx, i) {
-                    return ClassPostComponent(key: Key(data[i].id),post: data[i],);
+                    return ClassPostComponent(key: Key(data[i].id),post: data[i],emptyStream: emptyState,);
                   },
                 );
             }
