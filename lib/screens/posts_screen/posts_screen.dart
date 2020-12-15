@@ -19,6 +19,7 @@ class _PostsScreenState extends State<PostsScreen> {
   DocumentSnapshot _lastDocument;
   List<List<QueryDocumentSnapshot>> _allPagedResults =
       List<List<QueryDocumentSnapshot>>();
+  List<String> _frnds = [];
 
   @override
   void initState() {
@@ -66,7 +67,10 @@ class _PostsScreenState extends State<PostsScreen> {
             List<QueryDocumentSnapshot>(),
             (initialValue, pageItems) => initialValue..addAll(pageItems));
 
-        _postsController.add(allPosts);
+        _postsController.add(allPosts.where((element) {
+          final _data = element.data();
+          return _frnds.contains(_data["postedBy"]);
+        }).toList());
 
         // Save the last document from the results only if it's the current last page
         if (currentRequestIndex == _allPagedResults.length - 1) {
@@ -93,7 +97,7 @@ class _PostsScreenState extends State<PostsScreen> {
           return Center(child: CircularProgressIndicator(),);
         final data = info.data.data();
 
-        List<String> _frnds = [];
+
         if(data["friends"]!=null){
           Map<String, dynamic> _all = data["friends"];
           _all.removeWhere((key, value) => value != 3);
@@ -103,7 +107,6 @@ class _PostsScreenState extends State<PostsScreen> {
 
         if(_frnds.length==0)
           return Center(child: Text("Make friends to see their Posts."),);
-        _postsCollectionReference= _postsCollectionReference.where("postedBy",whereIn: _frnds);
         return StreamBuilder<List<QueryDocumentSnapshot>>(
           stream: listenToPostsRealTime(),
           builder: (ctx, snapshot) {

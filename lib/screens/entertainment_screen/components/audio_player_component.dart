@@ -23,6 +23,7 @@ class _AudioPlayerComponentState extends State<AudioPlayerComponent> {
   final AudioPlayer audioPlayer = AudioPlayer();
 
   bool isLiked;
+  bool _isDisposed=false;
   int likesCount;
 
   @override
@@ -31,14 +32,23 @@ class _AudioPlayerComponentState extends State<AudioPlayerComponent> {
     data = widget.data;
     isLiked = !(data["likes"] == null || data["likes"][uid] != true);
     likesCount = likesCounter(data["likes"]);
-    audioPlayer.setUrl(data["resource"]).then((value) async {
-      // int result = await audioPlayer.resume();
-    });
+
+    // audioPlayer.setUrl(data["resource"]).then((value) async {
+    //   // int result = await audioPlayer.resume();
+    //   print(value);
+    // });
+    audioPlayer.setUrl(data["resource"]);
+
+    // audioPlayer.play(data["resource"]);
+    // audioPlayer.pause();
   }
   @override
   void dispose() {
-    super.dispose();
     audioPlayer.dispose();
+    _isDisposed = true;
+    super.dispose();
+
+
   }
 
   @override
@@ -46,8 +56,9 @@ class _AudioPlayerComponentState extends State<AudioPlayerComponent> {
     return VisibilityDetector(
       key: Key(DateTime.now().toString()),
       onVisibilityChanged: (info) async {
-        if(mounted)
-        if(info.visibleFraction>0.8){
+        if(_isDisposed)
+          return;
+        if(info.visibleFraction>0.95){
           await audioPlayer.resume();
         }else{
           await audioPlayer.pause();
@@ -64,13 +75,18 @@ class _AudioPlayerComponentState extends State<AudioPlayerComponent> {
               borderRadius: BorderRadius.circular(20.0),
               child: AspectRatio(
                 aspectRatio: 5 / 4,
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20.0),
-                    color: kGrey,
-                    image: DecorationImage(
-                      image: AssetImage("assets/audio_bg.jpg"),
-                      fit: BoxFit.cover,
+                child: GestureDetector(
+                  onTap: (){
+
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20.0),
+                      color: kGrey,
+                      image: DecorationImage(
+                        image: AssetImage("assets/audio_bg.jpg"),
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                 ),

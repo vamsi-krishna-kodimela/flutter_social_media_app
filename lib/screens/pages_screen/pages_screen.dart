@@ -100,7 +100,7 @@ class _PagesScreenState extends State<PagesScreen> {
       case 2:
         return CreatedPagesComponent();
       case 0:
-        return PagePostsHome();
+        return PagePostsScreen();
       default:
         return Center(
           child: Text("Something went wrong."),

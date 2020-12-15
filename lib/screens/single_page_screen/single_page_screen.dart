@@ -42,7 +42,7 @@ class _SinglePageScreenState extends State<SinglePageScreen> {
           DocumentSnapshot _doc = snapshot.data;
           Map<String, dynamic> _data = _doc.data();
           List<dynamic> _followers = [];
-          if (_data["followers"] == null) _followers = _data["followers"];
+          if (_data["followers"] != null) _followers = _data["followers"];
 
           return Column(
             children: [

@@ -41,7 +41,7 @@ popListItem(){
           .orderBy("postedOn", descending: true);
     else
       _postsCollectionReference = FirebaseFirestore.instance
-          .collection("group_posts").where("group",whereIn: widget.groups)
+          .collection("group_posts")
           .orderBy("postedOn", descending: true);
     _scrollController.addListener(() {
       double maxScroll = _scrollController.position.maxScrollExtent;
@@ -86,7 +86,7 @@ popListItem(){
             List<QueryDocumentSnapshot>(),
             (initialValue, pageItems) => initialValue..addAll(pageItems));
 
-        _postsController.add(allPosts);
+        _postsController.add(allPosts.where((element){return widget.groups.contains(element.data()["group"]);}).toList());
 
         // Save the last document from the results only if it's the current last page
         if (currentRequestIndex == _allPagedResults.length - 1) {

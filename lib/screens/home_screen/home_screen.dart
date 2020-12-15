@@ -34,7 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   int tab = 0;
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
-  final uid = FirebaseAuth.instance.currentUser.uid;
+  final _user = FirebaseAuth.instance.currentUser;
   final _firestore = FirebaseFirestore.instance;
 
   _configureFirebaseListeners() {
@@ -51,7 +51,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void checkUserPresence() async {
     if (FirebaseAuth.instance.currentUser != null) {
       final databaseReference =
-          FirebaseDatabase.instance.reference().child("status/$uid");
+          FirebaseDatabase.instance.reference().child("status/${_user.uid}");
       databaseReference.set(1).then((value) {
         databaseReference.onDisconnect().set(0);
       });
@@ -69,7 +69,7 @@ class _HomeScreenState extends State<HomeScreen> {
     _configureFirebaseListeners();
     checkUserPresence();
     _firebaseMessaging.onTokenRefresh.listen((String fcmToken) {
-      _firestore.collection("users").doc(uid).update({
+      _firestore.collection("users").doc(_user.uid).update({
         "messageToken": FieldValue.arrayUnion([fcmToken]),
       });
     });
@@ -158,12 +158,7 @@ class _HomeScreenState extends State<HomeScreen> {
           },
         ),
         IconButton(icon: Icon(FeatherIcons.bell), onPressed: () {}),
-        // IconButton(
-        //     icon: Icon(FeatherIcons.user),
-        //     onPressed: () {
-        //       Navigator.of(context)
-        //           .push(MaterialPageRoute(builder: (_) => ProfileScreen()));
-        //     }),
+
       ],
       elevation: 0.0,
     );
@@ -238,45 +233,34 @@ class _HomeScreenState extends State<HomeScreen> {
                         color: Color(0xFF2a608c),
                       ),
                     ),
-                    FutureBuilder<DocumentSnapshot>(
-                      future: FirebaseFirestore.instance
-                          .collection("users")
-                          .doc(uid)
-                          .get(),
-                      builder: (ctx, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting)
-                          return Text("Loading...");
-                        final data = snapshot.data.data();
-                        return ListTile(
-                          contentPadding: EdgeInsets.symmetric(
-                              horizontal: kDefaultPadding,
-                              vertical: kDefaultPadding / 2),
-                          title: Text(
-                            data["name"],
-                            style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 16.0,
-                              color: kPrimaryColor,
-                            ),
-                          ),
-                          onTap: () {
-                            Navigator.of(context).pop();
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (_) => ProfileScreen()));
-                          },
-                          leading: AspectRatio(
-                            aspectRatio: 1.0,
-                            child: ClipRRect(
-                              borderRadius:
-                                  BorderRadius.circular(kDefaultPadding),
-                              child: FancyShimmerImage(
-                                imageUrl: data["photoUrl"],
-                                boxFit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
-                        );
+                    ListTile(
+                      contentPadding: EdgeInsets.symmetric(
+                          horizontal: kDefaultPadding,
+                          vertical: kDefaultPadding / 2),
+                      title: Text(
+                        _user.displayName.trim(),
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16.0,
+                          color: kPrimaryColor,
+                        ),
+                      ),
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (_) => ProfileScreen()));
                       },
+                      leading: AspectRatio(
+                        aspectRatio: 1.0,
+                        child: ClipRRect(
+                          borderRadius:
+                          BorderRadius.circular(kDefaultPadding),
+                          child: FancyShimmerImage(
+                            imageUrl: _user.photoURL,
+                            boxFit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -372,12 +356,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: ListTile(
                           onTap: () {
                             Navigator.of(context).pop();
-                            // _scaffold.currentState.showSnackBar(
-                            //   SnackBar(
-                            //     content: Text(
-                            //         "Classrooms Screen is under construction!"),
-                            //   ),
-                            // );
+
                             Navigator.of(context).push(
                               MaterialPageRoute(
                                   builder: (_) => ClassRoomScreen()),

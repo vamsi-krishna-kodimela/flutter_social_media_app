@@ -97,13 +97,11 @@ class _EntertainmentScreenState extends State<EntertainmentScreen> {
 
   Stream listenToVideosRealTime() {
     _requestVideos();
-
     return _videosController.stream;
   }
 
   Stream listenToAudiosRealTime() {
     _requestAudios();
-
     return _audiosController.stream;
   }
 
@@ -212,12 +210,12 @@ class _EntertainmentScreenState extends State<EntertainmentScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: kPrimaryColor,
       appBar: AppBar(
         title: Text(
           "Entertainment",
           style: TextStyle(
             fontWeight: FontWeight.w600,
+            color: kTextColor,
           ),
         ),
         elevation: 0.0,
@@ -233,8 +231,7 @@ class _EntertainmentScreenState extends State<EntertainmentScreen> {
         children: [
           Container(
             width: double.infinity,
-            color: kPrimaryColor,
-            padding: EdgeInsets.symmetric(vertical: kDefaultPadding),
+            padding: EdgeInsets.symmetric(vertical: kDefaultPadding*2),
             child: SingleChildScrollView(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -262,57 +259,52 @@ class _EntertainmentScreenState extends State<EntertainmentScreen> {
             ),
           ),
           Expanded(
-            child: ClipRRect(
-              borderRadius: BorderRadius.vertical(
-                top: Radius.circular(20),
-              ),
-              child: Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(20),
-                  ),
-                  color: kBGColor,
+            child: Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.vertical(
+                  top: Radius.circular(20),
                 ),
-                child: StreamBuilder<List<QueryDocumentSnapshot>>(
-                    stream: (currentOption == 0)
-                        ? listenToPostsRealTime()
-                        : (currentOption == 1)
-                            ? listenToVideosRealTime()
-                            : listenToAudiosRealTime(),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting)
-                        return Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      if (!snapshot.hasData)
-                        return Center(
-                          child: Text("No content found.."),
-                        );
-                      List<QueryDocumentSnapshot> _data = snapshot.data;
-                      return ListView.builder(
-                        controller: _scrollController,
-                        padding: EdgeInsets.all(kDefaultPadding),
-                        itemCount: _data.length,
-                        itemBuilder: (ctx, i) {
-                          Map<String, dynamic> resourceData = _data[i].data();
-                          if (resourceData["type"] == 0) {
-                            return VideoPlayerComponent(
-                              data: resourceData,
-                              key: Key(_data[i].id),
-                              reference: _data[i].reference,
-                            );
-                          }
-                          // return Text("Audio");
-                          return AudioPlayerComponent(
-                            reference: _data[i].reference,
-                            key: Key(_data[i].id),
-                            data: _data[i].data(),
-                          );
-                        },
-                      );
-                    }),
+                color: kBGColor,
               ),
+              child: StreamBuilder<List<QueryDocumentSnapshot>>(
+                  stream: (currentOption == 0)
+                      ? listenToPostsRealTime()
+                      : (currentOption == 1)
+                          ? listenToVideosRealTime()
+                          : listenToAudiosRealTime(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting)
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    if (!snapshot.hasData)
+                      return Center(
+                        child: Text("No content found.."),
+                      );
+                    List<QueryDocumentSnapshot> _data = snapshot.data;
+                    return ListView.builder(
+                      controller: _scrollController,
+                      padding: EdgeInsets.all(kDefaultPadding),
+                      itemCount: _data.length,
+                      itemBuilder: (ctx, i) {
+                        Map<String, dynamic> resourceData = _data[i].data();
+                        if (resourceData["type"] == 0) {
+                          return VideoPlayerComponent(
+                            data: resourceData,
+                            key: Key(_data[i].id),
+                            reference: _data[i].reference,
+                          );
+                        }
+                        // return Text("Audio");
+                        return AudioPlayerComponent(
+                          reference: _data[i].reference,
+                          key: Key(_data[i].id),
+                          data: _data[i].data(),
+                        );
+                      },
+                    );
+                  }),
             ),
           ),
         ],

@@ -84,7 +84,7 @@ class _ChatScreenState extends State<ChatScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            message["message"],
+            message["message"].trim(),
             style: TextStyle(
               color: (isMe) ? kWhite : kTextColor,
               fontSize: 15.0,
@@ -233,7 +233,7 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   void _sendMessage() async {
-    String _message = messageController.value.text;
+    String _message = messageController.value.text.trim();
     if (_message.length < 1 || _message == null) return;
     await _firestore
         .collection("chatRooms")

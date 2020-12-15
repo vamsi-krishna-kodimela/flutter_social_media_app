@@ -44,8 +44,8 @@ class _VideoPlayerComponentState extends State<VideoPlayerComponent> {
 
   @override
   void dispose() {
-    super.dispose();
     _videoPlayerController.dispose();
+    super.dispose();
   }
 
   @override
@@ -53,7 +53,7 @@ class _VideoPlayerComponentState extends State<VideoPlayerComponent> {
     return VisibilityDetector(
       key: Key(DateTime.now().toString()),
       onVisibilityChanged: (info) {
-        if (mounted) if (info.visibleFraction > 0.8) {
+        if (mounted) if (info.visibleFraction > 0.95) {
           _videoPlayerController.play();
         } else {
           _videoPlayerController.pause();
