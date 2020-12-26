@@ -1,5 +1,6 @@
 const functions = require("firebase-functions");
 const admin = require("firebase-admin");
+const { FieldValue } = require("@google-cloud/firestore");
 admin.initializeApp(functions.config().firebase);
 const db = admin.firestore();
 
@@ -53,6 +54,47 @@ exports.postCountDecrement = functions.firestore.document("posts/{postId}").onDe
 
 
 
+  exports.pagePostCountIncrease = functions.firestore.document("page_posts/{postId}").onCreate(async(change, context) => {
+    // Retrieve the current and previous value
+    const data = change.data();
+    let pid = data.page;
+    return db.collection("pages").doc(pid).update({
+      posts : FieldValue.increment(1),
+    });
+  });
+
+
+exports.pagePostCountDecrement = functions.firestore.document("page_posts/{postId}").onDelete(
+async (change, context)=>{
+  const data = change.data();
+  let pid = data.page;
+  return db.collection("pages").doc(pid).update({
+    posts : FieldValue.increment(-1),
+  });
+}
+);
+
+
+exports.groupPostCountIncrease = functions.firestore.document("group_posts/{postId}").onCreate(
+  async (change, context)=>{
+    const data = change.data();
+    let pid = data.group;
+    return db.collection("groups").doc(pid).update({
+      posts : FieldValue.increment(1),
+    });
+  }
+  );
+  
+  exports.groupPostCountDecrement = functions.firestore.document("group_posts/{postId}").onDelete(
+    async (change, context)=>{
+      const data = change.data();
+      let pid = data.group;
+      return db.collection("groups").doc(pid).update({
+        posts : FieldValue.increment(-1),
+      });
+    }
+    );
+
 exports.userUpdated = functions.firestore.document("users/{userId}").onUpdate(async (change, context)=>{
     const oldData = change.before.data();
     const newData = change.after.data();
@@ -76,6 +118,7 @@ exports.userUpdated = functions.firestore.document("users/{userId}").onUpdate(as
                 lastPostedOn: admin.firestore.FieldValue.serverTimestamp(),
                 userRef: userRef,
                 status: 1,
+                lastPostedOn:0,
               });
 
               let p1 = db
@@ -116,17 +159,75 @@ exports.userUpdated = functions.firestore.document("users/{userId}").onUpdate(as
 exports.updateChatTime = functions.firestore.document("chatRooms/{roomId}/chats/{chatId}").onCreate(
   (snapshot,context)=>{
     let lastPostedOn = snapshot.data().postedOn;
+    let uid = context.params.userId;
+
+
     return db.collection("chatRooms").doc(context.params.roomId).update({
-      lastPostedOn : lastPostedOn
+      lastPostedOn : lastPostedOn,
+      lastMessage: snapshot.data(),
+      unreadMessages : FieldValue.increment(1),
     }).then((res)=>{
       console.log("Recent chat Time updated");
     });
   }
 );
 
+
+exports.sendChatNotification = functions.firestore.document("chatRooms/{roomId}").onUpdate(
+  async (snapshot,context)=>{
+    const data = snapshot.after.data();
+    let messageData = data.lastMessage;
+    let senderId = data.lastMessage.postedBy;
+
+    let receiverId;
+    let users = data.users;
+
+    for(i = 0;i<users.length; i++){
+      if(users[i]!= senderId)
+      {
+        receiverId = users[i];
+      }else{
+        senderId = users[i];
+      }
+    }
+    let senderRef = await db.collection("users").doc(senderId).get();
+    let senderInfo = senderRef.data();
+    let receiverRef = await db.collection("users").doc(receiverId).get();
+    let receiverInfo = receiverRef.data();
+    let messageToken = receiverInfo.messageToken;
+
+    const payload = {
+      notification:{
+        title : senderInfo.name,
+        body : messageData.message,
+        icon: senderInfo.photoUrl, 
+        badge : "1",
+        click_action : "FLUTTER_NOTIFICATION_CLICK",
+      },
+      data:{
+        type : "USER_CHAT",
+        roomId : context.params.roomId,
+        friendId : senderId,
+        friendData : senderInfo,
+      }
+      
+    };
+
+    const options ={
+    };
+
+    return admin.messaging().sendToDevice(messageToken,payload,options).then((res)=>console.log("Notification Sent Successfully."));
+
+
+
+
+  }
+);
+
+
 exports.userPresenceToggle = functions.database.ref("/status/{uid}").onWrite(
   async(change,context)=>{
-    let userstatus = change.after.val().trim();
+    let userstatus = change.after.val();
     // return db.collection("users").doc(context.params.uid).update({status : userstatus});
     console.log(userstatus+":"+context.params.uid);
     const uid = context.params.uid;
