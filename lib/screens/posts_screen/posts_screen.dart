@@ -13,7 +13,7 @@ class PostsScreen extends StatefulWidget {
 
 class _PostsScreenState extends State<PostsScreen> {
   ScrollController _scrollController = ScrollController();
-  final int perPage = 4;
+  final int perPage = 20;
   final String uid = FirebaseAuth.instance.currentUser.uid;
   bool _hasMorePosts = true;
   DocumentSnapshot _lastDocument;
@@ -79,11 +79,7 @@ class _PostsScreenState extends State<PostsScreen> {
         // Determine if there's more posts to request
         _hasMorePosts = (posts.length == perPage);
       }
-      // else if (_allPagedResults.length == 1 && postsSnapshot.docs.isEmpty) {
-      //   _allPagedResults = List<List<QueryDocumentSnapshot>>();
-      //   _lastDocument = null;
-      //   _hasMorePosts = false;
-      // }
+
     });
   }
   final _firestore = FirebaseFirestore.instance;

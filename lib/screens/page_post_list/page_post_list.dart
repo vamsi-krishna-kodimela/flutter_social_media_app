@@ -4,6 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:social_media/screens/page_post_list/components/page_post_widget.dart';
 
+import '../../constants.dart';
+
 class PagePostListScreen extends StatelessWidget {
 
   final String pid;
@@ -34,3 +36,7 @@ class PagePostListScreen extends StatelessWidget {
     );
   }
 }
+
+
+
+
