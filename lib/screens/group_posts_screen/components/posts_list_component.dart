@@ -8,7 +8,7 @@ class PostsListComponent extends StatefulWidget {
   final gid;
   final groups;
 
-  const PostsListComponent({this.groups,this.gid});
+  const PostsListComponent({this.groups, this.gid});
 
   @override
   _PostsListComponentState createState() => _PostsListComponentState();
@@ -22,14 +22,14 @@ class _PostsListComponentState extends State<PostsListComponent> {
   DocumentSnapshot _lastDocument;
   List<List<QueryDocumentSnapshot>> _allPagedResults =
       List<List<QueryDocumentSnapshot>>();
-popListItem(){
-  if(_allPagedResults.length==1)
-  setState(() {
-    _allPagedResults =
-        List<List<QueryDocumentSnapshot>>();
-  });
 
-}
+  popListItem() {
+    if (_allPagedResults.length == 1)
+      setState(() {
+        _allPagedResults = List<List<QueryDocumentSnapshot>>();
+      });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -86,7 +86,13 @@ popListItem(){
             List<QueryDocumentSnapshot>(),
             (initialValue, pageItems) => initialValue..addAll(pageItems));
 
-        _postsController.add(allPosts.where((element){return widget.groups.contains(element.data()["group"]);}).toList());
+        if (widget.gid == null)
+          _postsController.add(allPosts
+              .where(
+                  (element) => widget.groups.contains(element.data()["group"]))
+              .toList());
+        else
+          _postsController.add(allPosts);
 
         // Save the last document from the results only if it's the current last page
         if (currentRequestIndex == _allPagedResults.length - 1) {
@@ -115,8 +121,10 @@ popListItem(){
         return StreamBuilder<List<QueryDocumentSnapshot>>(
           stream: listenToPostsRealTime(),
           builder: (ctx, snapshot) {
-            if(!snapshot.hasData)
-              return Center(child: Text("No Posts found"),);
+            if (!snapshot.hasData)
+              return Center(
+                child: Text("No Posts found"),
+              );
             if (snapshot.connectionState == ConnectionState.waiting)
               return Center(
                 child: CircularProgressIndicator(),
@@ -131,7 +139,7 @@ popListItem(){
                   itemBuilder: (ctx, i) => GroupPostWidgetComponent(
                     key: Key(data[i].id),
                     post: data[i],
-                    function:popListItem,
+                    function: popListItem,
                   ),
                 );
               return Center(

@@ -37,7 +37,7 @@ class _VideoPlayerComponentState extends State<VideoPlayerComponent> {
         if (mounted)
           setState(() {
             _videoPlayerController.setLooping(true);
-            _videoPlayerController.play();
+            // _videoPlayerController.play();
           });
       });
   }

@@ -46,6 +46,8 @@ class _HomeScreenState extends State<HomeScreen> {
     }, onLaunch: (Map<String, dynamic> message) async {
       print("onLaunch Called: $message");
     });
+    _firebaseMessaging.requestNotificationPermissions(
+        const IosNotificationSettings(sound: true, alert: true, badge: true));
   }
 
   void checkUserPresence() async {
@@ -62,6 +64,8 @@ class _HomeScreenState extends State<HomeScreen> {
       });
     }
   }
+
+
 
   @override
   void initState() {
@@ -158,7 +162,6 @@ class _HomeScreenState extends State<HomeScreen> {
           },
         ),
         IconButton(icon: Icon(FeatherIcons.bell), onPressed: () {}),
-
       ],
       elevation: 0.0,
     );
@@ -247,14 +250,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       onTap: () {
                         Navigator.of(context).pop();
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (_) => ProfileScreen()));
+                        Navigator.of(context).push(
+                            MaterialPageRoute(builder: (_) => ProfileScreen()));
                       },
                       leading: AspectRatio(
                         aspectRatio: 1.0,
                         child: ClipRRect(
-                          borderRadius:
-                          BorderRadius.circular(kDefaultPadding),
+                          borderRadius: BorderRadius.circular(kDefaultPadding),
                           child: FancyShimmerImage(
                             imageUrl: _user.photoURL,
                             boxFit: BoxFit.cover,

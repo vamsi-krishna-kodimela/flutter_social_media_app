@@ -1,5 +1,6 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:visibility_detector/visibility_detector.dart';
@@ -23,7 +24,7 @@ class _AudioPlayerComponentState extends State<AudioPlayerComponent> {
   final AudioPlayer audioPlayer = AudioPlayer();
 
   bool isLiked;
-  bool _isDisposed=false;
+  bool _isDisposed = false;
   int likesCount;
 
   @override
@@ -33,22 +34,14 @@ class _AudioPlayerComponentState extends State<AudioPlayerComponent> {
     isLiked = !(data["likes"] == null || data["likes"][uid] != true);
     likesCount = likesCounter(data["likes"]);
 
-    // audioPlayer.setUrl(data["resource"]).then((value) async {
-    //   // int result = await audioPlayer.resume();
-    //   print(value);
-    // });
     audioPlayer.setUrl(data["resource"]);
-
-    // audioPlayer.play(data["resource"]);
-    // audioPlayer.pause();
   }
+
   @override
   void dispose() {
     audioPlayer.dispose();
     _isDisposed = true;
     super.dispose();
-
-
   }
 
   @override
@@ -56,11 +49,10 @@ class _AudioPlayerComponentState extends State<AudioPlayerComponent> {
     return VisibilityDetector(
       key: Key(DateTime.now().toString()),
       onVisibilityChanged: (info) async {
-        if(_isDisposed)
-          return;
-        if(info.visibleFraction>0.95){
+        if (_isDisposed) return;
+        if (info.visibleFraction > 0.95) {
           await audioPlayer.resume();
-        }else{
+        } else {
           await audioPlayer.pause();
         }
       },
@@ -76,9 +68,7 @@ class _AudioPlayerComponentState extends State<AudioPlayerComponent> {
               child: AspectRatio(
                 aspectRatio: 5 / 4,
                 child: GestureDetector(
-                  onTap: (){
-
-                  },
+                  onTap: () {},
                   child: Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20.0),
@@ -97,9 +87,8 @@ class _AudioPlayerComponentState extends State<AudioPlayerComponent> {
                 children: [
                   Text("$likesCount Likes"),
                   IconButton(
-                    onPressed: (){
-                      if(mounted)
-                      toogleLikes();
+                    onPressed: () {
+                      if (mounted) toogleLikes();
                     },
                     icon: Icon(
                       (!isLiked)
@@ -135,7 +124,4 @@ class _AudioPlayerComponentState extends State<AudioPlayerComponent> {
     await widget.reference.update({"likes.$uid": isLiked});
     setState(() {});
   }
-
-
 }
-
