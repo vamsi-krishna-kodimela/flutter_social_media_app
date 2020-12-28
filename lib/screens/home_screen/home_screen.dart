@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -6,7 +8,10 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:social_media/providers/chats_provider.dart';
 import 'package:social_media/screens/app_info_screen/app_info_screen.dart';
+import 'package:social_media/screens/chat_screen/chat_screen.dart';
 import 'package:social_media/screens/class_room_screen/class_room_screen.dart';
 import 'package:social_media/screens/entertainment_screen/entertainment_Screen.dart';
 
@@ -36,15 +41,34 @@ class _HomeScreenState extends State<HomeScreen> {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   final _user = FirebaseAuth.instance.currentUser;
   final _firestore = FirebaseFirestore.instance;
+  dynamic _provider;
 
   _configureFirebaseListeners() {
     _firebaseMessaging.configure(
         onMessage: (Map<String, dynamic> message) async {
-      print("onMessage Called: $message");
+      final _data = message["data"];
+      if (_data["type"] == "USER_CHAT" && tab != 1)
+        _provider.addChatRoom(_data["friendId"]);
     }, onResume: (Map<String, dynamic> message) async {
-      print("onResume Called: $message");
+      final _data = message["data"];
+      final _friend = json.decode(_data["friendData"]);
+      final _friendId = _data["friendId"];
+      if (_data["type"] == "USER_CHAT") {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (_) => ChatScreen(_friend, _friendId)));
+        });
+      }
     }, onLaunch: (Map<String, dynamic> message) async {
-      print("onLaunch Called: $message");
+      final _data = message["data"];
+      final _friend = json.decode(_data["friendData"]);
+      final _friendId = _data["friendId"];
+      if (_data["type"] == "USER_CHAT") {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (_) => ChatScreen(_friend, _friendId)));
+        });
+      }
     });
     _firebaseMessaging.requestNotificationPermissions(
         const IosNotificationSettings(sound: true, alert: true, badge: true));
@@ -65,12 +89,11 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-
-
   @override
   void initState() {
     super.initState();
     _configureFirebaseListeners();
+
     checkUserPresence();
     _firebaseMessaging.onTokenRefresh.listen((String fcmToken) {
       _firestore.collection("users").doc(_user.uid).update({
@@ -81,6 +104,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    _provider = Provider.of<ChatsProvider>(context, listen: false);
     return Scaffold(
       key: _scaffold,
       backgroundColor: kBGColor,
@@ -99,8 +123,6 @@ class _HomeScreenState extends State<HomeScreen> {
         return MessagingListScreen();
       case 2:
         return StoreScreen();
-      case 3:
-        return EntertainmentScreen();
       default:
         return PostsScreen();
     }
@@ -172,30 +194,54 @@ class _HomeScreenState extends State<HomeScreen> {
       decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(
-            // color: (val == tab) ? kPrimaryColor : Colors.transparent,
             color: Colors.transparent,
             // width: 2,
           ),
         ),
       ),
-      child: IconButton(
-        onPressed: () {
-          if (val == 3) {
-            Navigator.of(context)
-                .push(MaterialPageRoute(builder: (_) => EntertainmentScreen()));
-            return;
-          }
-          if (tab != val) {
-            setState(() {
-              tab = val;
-            });
-          }
-        },
-        icon: Icon(
-          icon,
-          size: (val == tab) ? 30.0 : 24.0,
+      child: Consumer<ChatsProvider>(
+        builder: (ctx, data, __) => Stack(
+          children: [
+            IconButton(
+              onPressed: () {
+                if (val == 3) {
+                  Navigator.of(context).push(
+                      MaterialPageRoute(builder: (_) => EntertainmentScreen()));
+                  return;
+                }
+                if (tab != val) {
+                  setState(() {
+                    tab = val;
+                  });
+                }
+              },
+              icon: Icon(
+                icon,
+                size: (val == tab) ? 30.0 : 24.0,
+              ),
+              color: (val == tab) ? kPrimaryColor : kTextColor,
+            ),
+            if (data.getCurrentChatsCount() != 0 && val == 1)
+              Positioned(
+                right: 4,
+                top: 4,
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 4),
+                  decoration: BoxDecoration(
+                    color: kAccentColor,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Text(
+                    data.getCurrentChatsCount().toString(),
+                    style: TextStyle(
+                      color: kWhite,
+                      fontSize: 10,
+                    ),
+                  ),
+                ),
+              ),
+          ],
         ),
-        color: (val == tab) ? kPrimaryColor : kTextColor,
       ),
     );
   }
@@ -385,9 +431,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: ListTile(
                           onTap: () {
                             Navigator.of(context).pop();
-                            setState(() {
-                              tab = 3;
-                            });
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (_) => EntertainmentScreen()));
                           },
                           leading: Icon(
                             Icons.local_fire_department_outlined,

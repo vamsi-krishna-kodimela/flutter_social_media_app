@@ -27,6 +27,9 @@ class _ChatScreenState extends State<ChatScreen> {
   _buildMessage(Map<String, dynamic> message, bool isMe) {
     final DateTime postedOn = message["postedOn"].toDate();
     final Duration _dur = DateTime.now().difference(postedOn);
+    _firestore.collection("chatRooms").doc(_chatRoomId).update({
+      "unreadMessages": 0,
+    });
     String postedOnString;
     if (_dur.inSeconds < 2) {
       postedOnString = "Just Now";
@@ -37,12 +40,8 @@ class _ChatScreenState extends State<ChatScreen> {
     } else if (_dur.inHours < 24) {
       postedOnString = "${_dur.inHours} hrs ago";
     } else {
-      postedOnString =
-      "${DateFormat("dd MMM, yyyy").format(postedOn)}";
+      postedOnString = "${DateFormat("dd MMM, yyyy").format(postedOn)}";
     }
-
-
-
 
     final Container msg = Container(
       margin: isMe
@@ -64,7 +63,7 @@ class _ChatScreenState extends State<ChatScreen> {
           BoxShadow(
             color: kGrey,
             blurRadius: 4.0,
-            offset: Offset(0.0,0.0),
+            offset: Offset(0.0, 0.0),
             spreadRadius: 0.0,
           ),
         ],
@@ -118,8 +117,10 @@ class _ChatScreenState extends State<ChatScreen> {
     return Scaffold(
       appBar: AppBar(
         title: GestureDetector(
-          onTap: (){
-            Navigator.of(context).push(MaterialPageRoute(builder: (_)=>SingleUserScreen(widget.frienId, widget.friend["name"])));
+          onTap: () {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (_) =>
+                    SingleUserScreen(widget.frienId, widget.friend["name"])));
           },
           child: Row(
             children: [
@@ -151,7 +152,6 @@ class _ChatScreenState extends State<ChatScreen> {
             child: Container(
               decoration: BoxDecoration(
                 color: kBGColor,
-
               ),
               child: StreamBuilder<QuerySnapshot>(
                   stream: _firestore
@@ -209,7 +209,7 @@ class _ChatScreenState extends State<ChatScreen> {
           // ),
           Expanded(
             child: TextField(
-              onSubmitted: (val){
+              onSubmitted: (val) {
                 _sendMessage();
               },
               controller: messageController,
@@ -223,7 +223,7 @@ class _ChatScreenState extends State<ChatScreen> {
             icon: Icon(Icons.send),
             iconSize: 25.0,
             color: Theme.of(context).primaryColor,
-            onPressed: (){
+            onPressed: () {
               _sendMessage();
             },
           ),

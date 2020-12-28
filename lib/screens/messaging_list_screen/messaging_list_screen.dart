@@ -5,7 +5,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:social_media/providers/chats_provider.dart';
 import 'package:social_media/screens/chat_screen/chat_screen.dart';
 
 import '../../constants.dart';
@@ -29,7 +31,7 @@ class MessagingListScreen extends StatelessWidget {
           return Center(
             child: CircularProgressIndicator(),
           );
-
+          Provider.of<ChatsProvider>(context).clearChats();
         if (snapshot.data == null)
           return Center(
             child: Text("Start making friends to chat..."),
@@ -46,19 +48,21 @@ class MessagingListScreen extends StatelessWidget {
             var chat = _chats[i].data();
             List<dynamic> friends = chat["users"];
             String postedOnString;
+            final String _message = (chat["lastMessage"] == null)
+                ? ""
+                : chat["lastMessage"]["message"];
             final DateTime postedOn = chat["lastPostedOn"].toDate();
             final Duration _dur = DateTime.now().difference(postedOn);
             if (_dur.inSeconds < 2) {
               postedOnString = "Just Now";
             } else if (_dur.inSeconds < 60) {
-              postedOnString = "${_dur.inSeconds} seconds ago";
+              postedOnString = "${_dur.inSeconds} secs";
             } else if (_dur.inMinutes < 60) {
-              postedOnString = "${_dur.inMinutes} minutes ago";
+              postedOnString = "${_dur.inMinutes} mins";
             } else if (_dur.inHours < 24) {
-              postedOnString = "Posted ${_dur.inHours} hours ago";
+              postedOnString = "Posted ${_dur.inHours} hrs";
             } else {
-              postedOnString =
-                  "Posted on ${DateFormat("dd MMM, yyyy").format(postedOn)}";
+              postedOnString = "${DateFormat("dd MMM, yyyy").format(postedOn)}";
             }
             friends.removeWhere((element) => element == uid);
             return Card(
@@ -105,6 +109,8 @@ class MessagingListScreen extends StatelessWidget {
                     userInfo: _userInfo,
                     postedOnString: postedOnString,
                     uid: snapshot.data.id,
+                    message: _message,
+                    key: Key(snapshot.data.id),
                   );
                 },
               ),
@@ -123,6 +129,7 @@ class _AuthorDetails extends StatelessWidget {
     @required Map<String, dynamic> userInfo,
     @required this.postedOnString,
     @required this.uid,
+    this.message = null,
   })  : _size = size,
         _userInfo = userInfo,
         super(key: key);
@@ -130,10 +137,12 @@ class _AuthorDetails extends StatelessWidget {
   final Size _size;
   final Map<String, dynamic> _userInfo;
   final String postedOnString;
+  final String message;
   final String uid;
 
   @override
   Widget build(BuildContext context) {
+    Provider.of<ChatsProvider>(context, listen: false).clearChats();
     return ListTile(
       onTap: () {
         Navigator.of(context).push(
@@ -163,10 +172,9 @@ class _AuthorDetails extends StatelessWidget {
               height: 10.0,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(40.0),
-                color: (_userInfo["status"]==1)?kGreen:kAccentColor,
-                border: Border.all(color: kWhite,width: 2.0),
+                color: (_userInfo["status"] == 1) ? kGreen : kAccentColor,
+                border: Border.all(color: kWhite, width: 2.0),
               ),
-
             ),
           ),
         ],
@@ -175,13 +183,28 @@ class _AuthorDetails extends StatelessWidget {
         _userInfo["name"],
         style: TextStyle(
           color: kTextColor,
-          fontWeight: FontWeight.w600,
+          fontWeight: FontWeight.normal,
+          fontSize: 17,
         ),
         overflow: TextOverflow.ellipsis,
       ),
-      subtitle: Text(
+      subtitle: (message != null)
+          ? Text(
+            message,
+            style: TextStyle(
+              color: Color(0x99000000),
+              fontSize: 14,
+            ),
+            overflow: TextOverflow.ellipsis,
+          )
+          : null,
+      trailing: Text(
         postedOnString,
-        style: TextStyle(color: kGrey),
+        style: TextStyle(
+          color: kGrey,
+          fontSize: 12,
+        ),
+        overflow: TextOverflow.ellipsis,
       ),
     );
   }

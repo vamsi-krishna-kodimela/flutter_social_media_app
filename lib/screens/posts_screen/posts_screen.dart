@@ -93,11 +93,11 @@ class _PostsScreenState extends State<PostsScreen> {
           return Center(child: CircularProgressIndicator(),);
         final data = info.data.data();
 
-
         if(data["friends"]!=null){
           Map<String, dynamic> _all = data["friends"];
-          _all.removeWhere((key, value) => value != 3);
+          _all.removeWhere((key, value) => value !=3);
           _frnds = _all.keys.toList();
+          _frnds.add(uid);
         }
 
 

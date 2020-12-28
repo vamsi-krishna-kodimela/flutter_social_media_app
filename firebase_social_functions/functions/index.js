@@ -200,7 +200,6 @@ exports.sendChatNotification = functions.firestore.document("chatRooms/{roomId}"
       notification:{
         title : senderInfo.name,
         body : messageData.message,
-        icon: senderInfo.photoUrl, 
         badge : "1",
         click_action : "FLUTTER_NOTIFICATION_CLICK",
       },
@@ -208,15 +207,16 @@ exports.sendChatNotification = functions.firestore.document("chatRooms/{roomId}"
         type : "USER_CHAT",
         roomId : context.params.roomId,
         friendId : senderId,
-        friendData : senderInfo,
+        friendData : JSON.stringify(senderInfo),
+        click_action: "FLUTTER_NOTIFICATION_CLICK"
       }
       
     };
 
-    const options ={
-    };
+    if(messageToken.length ==0)
+      return console.log("No Token FOund");
 
-    return admin.messaging().sendToDevice(messageToken,payload,options).then((res)=>console.log("Notification Sent Successfully."));
+    return admin.messaging().sendToDevice(messageToken,payload).then((res)=>console.log("Notification Sent Successfully."));
 
 
 

@@ -107,10 +107,10 @@ class _ClassPostListState extends State<ClassPostList> {
     return StreamBuilder<List<QueryDocumentSnapshot>>(
           stream: listenToPostsRealTime(),
           builder: (ctx, snapshot) {
-            // if (snapshot.connectionState == )
-            //   return Center(
-            //     child: CircularProgressIndicator(),
-            //   );
+            if (snapshot.connectionState == ConnectionState.waiting)
+              return Center(
+                child: CircularProgressIndicator(),
+              );
 
             if (snapshot.hasData) {
               var data = snapshot.data;
