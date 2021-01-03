@@ -132,7 +132,7 @@ class _CreatePageScreenState extends State<CreatePageScreen> {
     try {
       final _store = FirebaseStorageService();
       final _grpPic = await _store.storePagePic(_profilePic);
-      final keys = SocialUtils.keyWordGenerator(_groupName);
+      final keys = keyWordGenerator(_groupName);
       await _firestore.collection("pages").add({
         "name": _groupName,
         "description": _groupDescription,

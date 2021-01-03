@@ -14,6 +14,8 @@ import 'package:social_media/screens/app_info_screen/app_info_screen.dart';
 import 'package:social_media/screens/chat_screen/chat_screen.dart';
 import 'package:social_media/screens/class_room_screen/class_room_screen.dart';
 import 'package:social_media/screens/entertainment_screen/entertainment_Screen.dart';
+import 'package:social_media/screens/notifications_screen/notifications_screen.dart';
+import 'package:social_media/utils.dart';
 
 import '../../constants.dart';
 import '../ads_screen/ads_screen.dart';
@@ -68,10 +70,15 @@ class _HomeScreenState extends State<HomeScreen> {
           Navigator.of(context).push(MaterialPageRoute(
               builder: (_) => ChatScreen(_friend, _friendId)));
         });
+      }else{
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          notificationNavigator(id: _data["id"],ctx: context,type: _data["type"],name: _data["name"]);
+        });
       }
     });
     _firebaseMessaging.requestNotificationPermissions(
         const IosNotificationSettings(sound: true, alert: true, badge: true));
+
   }
 
   void checkUserPresence() async {
@@ -183,7 +190,13 @@ class _HomeScreenState extends State<HomeScreen> {
             );
           },
         ),
-        IconButton(icon: Icon(FeatherIcons.bell), onPressed: () {}),
+        IconButton(
+            icon: Icon(FeatherIcons.bell),
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (_) => NotificationsScreen(),
+              ));
+            }),
       ],
       elevation: 0.0,
     );
@@ -533,12 +546,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: ListTile(
                           onTap: () {
                             Navigator.of(context).pop();
-                            _scaffold.currentState.showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                    "Notifications Screen is under construction!"),
-                              ),
-                            );
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (_) => NotificationsScreen()));
                           },
                           leading: Icon(
                             FeatherIcons.bell,

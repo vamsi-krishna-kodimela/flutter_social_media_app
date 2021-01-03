@@ -15,7 +15,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../../constants.dart';
 
 class ClassPostComponent extends StatefulWidget {
-  final QueryDocumentSnapshot post;
+  final post;
   final Function emptyStream;
 
   const ClassPostComponent({Key key, this.post,this.emptyStream}) : super(key: key);

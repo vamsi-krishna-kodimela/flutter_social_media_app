@@ -142,11 +142,12 @@ class _EditPageScreenState extends State<EditPageScreen> {
     try {
       final _store = FirebaseStorageService();
       if (_profilePic != null) _picUrl = await _store.storePagePic(_profilePic);
-      final keys = SocialUtils.keyWordGenerator(_groupName);
+      final keys = keyWordGenerator(_groupName);
       await widget.pageData.reference.update({
         "name": _groupName,
         "description": _groupDescription,
         "pic": _picUrl,
+        "keys":keys,
       });
 
       Navigator.of(context).pop();

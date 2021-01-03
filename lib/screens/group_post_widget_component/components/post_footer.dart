@@ -30,55 +30,57 @@ class PostFooter extends StatelessWidget {
         if (likedList[key] == true) likesList.add(key);
       }
     }
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Row(
-          children: [
-            FlatButton.icon(
-              onPressed: toogleLikes,
-              icon: Icon(
-                (isLiked) ? Icons.favorite : Icons.favorite_border,
-                color: kAccentColor,
-              ),
-              label: GestureDetector(
-                  onTap: () {
-                    if (likesCount > 0)
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (_) => LikesScreen(
-                            likedBy: likesList,
+    return Container(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              FlatButton.icon(
+                onPressed: toogleLikes,
+                icon: Icon(
+                  (isLiked) ? Icons.favorite : Icons.favorite_border,
+                  color: kAccentColor,
+                ),
+                label: GestureDetector(
+                    onTap: () {
+                      if (likesCount > 0)
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (_) => LikesScreen(
+                              likedBy: likesList,
+                            ),
                           ),
-                        ),
-                      );
-                  },
-                  child: Text("$likesCount likes")),
-            ),
-            IconButton(
-              icon: Icon(
-                Icons.comment_outlined,
-                color: kPrimaryColor,
+                        );
+                    },
+                    child: Text("$likesCount likes")),
               ),
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (_) => CommentsScreen(
-                      postId: widget.post.id,
+              IconButton(
+                icon: Icon(
+                  Icons.comment_outlined,
+                  color: kPrimaryColor,
+                ),
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => CommentsScreen(
+                        postId: widget.post.id,
+                      ),
                     ),
-                  ),
-                );
-              },
-            ),
-          ],
-        ),
-        IconButton(
-          icon: Icon(
-            Icons.share,
-            color: kTextColor,
+                  );
+                },
+              ),
+            ],
           ),
-          onPressed: () {},
-        ),
-      ],
+          IconButton(
+            icon: Icon(
+              Icons.share,
+              color: kTextColor,
+            ),
+            onPressed: () {},
+          ),
+        ],
+      ),
     );
   }
 }

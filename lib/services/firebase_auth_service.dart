@@ -37,7 +37,7 @@ class FirebaseAuthService {
       if (authResult.additionalUserInfo.isNewUser) {
         await currentUser.updateProfile(
             displayName: user.displayName, photoURL: user.photoURL);
-        var keys = SocialUtils.keyWordGenerator(user.displayName);
+        var keys = keyWordGenerator(user.displayName);
         await _firebaseMessaging.requestNotificationPermissions();
 
         await FirestoreService.createUser(
@@ -97,7 +97,7 @@ class FirebaseAuthService {
       name: name,
       description: "",
       photoUrl: photoUrl,
-      keys: SocialUtils.keyWordGenerator(name),
+      keys: keyWordGenerator(name),
       messageToken: [notificationToken],
     );
     await FirestoreService.createUser(

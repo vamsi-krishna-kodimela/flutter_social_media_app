@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:social_media/components/image_source_selector.dart';
 import 'package:social_media/services/firebase_storage_service.dart';
+import 'package:social_media/utils.dart';
 import '../../constants.dart';
 
 class EditProfileScreen extends StatefulWidget {
@@ -46,13 +47,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       String _description = _descriptionController.value.text.trim();
       if (_name.length < 5) {
         _scaffoldState.currentState.showSnackBar(
-            SnackBar(content: Text("Name must 5 or more characters.")));
+            SnackBar(content: Text("Name must be 5 or more characters.")));
         return;
       }
       await _fireStore.collection("users").doc(_uid).update({
         "name": _name,
         "description": _description,
         "photoUrl": _picUrl,
+        "keys":keyWordGenerator(_name),
       });
       await FirebaseAuth.instance.currentUser.updateProfile(
         displayName: _name,

@@ -133,7 +133,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
       final userRef = _firestore.collection("users").doc(_uid);
       final _store = FirebaseStorageService();
       final _grpPic = await _store.storeGroupPic(_profilePic);
-      final keys = SocialUtils.keyWordGenerator(_groupName);
+      final keys = keyWordGenerator(_groupName);
       await _firestore.collection("groups").add({
         "name": _groupName,
         "description": _groupDescription,

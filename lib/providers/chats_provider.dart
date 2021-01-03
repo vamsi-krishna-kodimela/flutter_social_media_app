@@ -14,7 +14,6 @@ class ChatsProvider with ChangeNotifier{
 
   void clearChats(){
     _chats=[];
-    notifyListeners();
   }
 
 

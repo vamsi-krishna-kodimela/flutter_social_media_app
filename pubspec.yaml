@@ -46,6 +46,7 @@ dependencies:
   url_launcher: ^5.7.10
 
   nanoid: ^0.1.0
+  uuid: ^2.2.2
   random_color: ^1.0.5
   share: ^0.6.5+4
   string_validator: ^0.1.4

@@ -14,7 +14,7 @@ import 'package:visibility_detector/visibility_detector.dart';
 import '../../../constants.dart';
 
 class PagePostWidget extends StatefulWidget {
-  final QueryDocumentSnapshot post;
+  final post;
 
   PagePostWidget({Key key, this.post}) : super(key: key);
 

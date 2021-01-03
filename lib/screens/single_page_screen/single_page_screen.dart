@@ -188,9 +188,11 @@ class _SinglePageScreenState extends State<SinglePageScreen> {
                                             Icons.add,
                                             color: kWhite,
                                           ),
-                                          label: Text(
-                                            "Create Post",
-                                            style: TextStyle(color: kWhite),
+                                          label: FittedBox(
+                                            child: Text(
+                                              "Post",
+                                              style: TextStyle(color: kWhite),
+                                            ),
                                           ),
                                           color: kPrimaryColor,
                                           shape: RoundedRectangleBorder(

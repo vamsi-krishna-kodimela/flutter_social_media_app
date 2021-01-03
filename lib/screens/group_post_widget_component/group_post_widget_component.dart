@@ -14,7 +14,7 @@ import 'components/post_footer.dart';
 
 
 class GroupPostWidgetComponent extends StatefulWidget {
-  final QueryDocumentSnapshot post;
+  final post;
   final Function function;
 
   GroupPostWidgetComponent({Key key, this.post,this.function}) : super(key: key);
@@ -173,7 +173,9 @@ class _GroupPostWidgetComponent extends State<GroupPostWidgetComponent> {
             horizontal: kDefaultPadding * 2,
             vertical: kDefaultPadding,
           ),
+
           child: Column(
+
             children: [
               FutureBuilder<DocumentSnapshot>(
                 future: _postData["userData"].get(),
@@ -271,6 +273,7 @@ class _GroupPostWidgetComponent extends State<GroupPostWidgetComponent> {
               Container(
                 padding: EdgeInsets.symmetric(vertical: kDefaultPadding),
                 width: double.infinity,
+
                 child: RichText(
                   text: TextSpan(
                     children: [

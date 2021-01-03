@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:social_media/constants.dart';
 import 'package:social_media/services/firebase_storage_service.dart';
+import 'package:social_media/utils.dart';
 
 import 'components/create_group_button.dart';
 import 'components/group_text_field.dart';
@@ -146,10 +147,12 @@ class _EditGroupScreenState extends State<EditGroupScreen> {
       final _store = FirebaseStorageService();
       if(_profilePic !=null)
       _picUrl = await _store.storeGroupPic(_profilePic);
+      final keys = keyWordGenerator(_groupName);
       await _firestore.collection("groups").doc(widget.gid).update({
         "name": _groupName,
         "description": _groupDescription,
         "pic": _picUrl,
+        "keys":keys,
       });
 
       Navigator.of(context).pop();

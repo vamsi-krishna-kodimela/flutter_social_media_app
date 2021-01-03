@@ -24,7 +24,7 @@ class MessagingListScreen extends StatelessWidget {
           .collection("chatRooms")
           .orderBy("lastPostedOn", descending: true)
           .where("users", arrayContains: uid)
-          .where("status", isEqualTo: 1)
+      .where("status",isEqualTo: 1)
           .snapshots(),
       builder: (ctx, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting)
@@ -37,6 +37,10 @@ class MessagingListScreen extends StatelessWidget {
             child: Text("Start making friends to chat..."),
           );
         List<QueryDocumentSnapshot> _chats = snapshot.data.docs;
+        if (_chats.length==0)
+          return Center(
+            child: Text("Start making friends to chat..."),
+          );
         return ListView.builder(
           padding: EdgeInsets.only(
             top: kDefaultPadding,
@@ -51,7 +55,9 @@ class MessagingListScreen extends StatelessWidget {
             final String _message = (chat["lastMessage"] == null)
                 ? ""
                 : chat["lastMessage"]["message"];
+
             final DateTime postedOn = chat["lastPostedOn"].toDate();
+
             final Duration _dur = DateTime.now().difference(postedOn);
             if (_dur.inSeconds < 2) {
               postedOnString = "Just Now";
@@ -60,7 +66,7 @@ class MessagingListScreen extends StatelessWidget {
             } else if (_dur.inMinutes < 60) {
               postedOnString = "${_dur.inMinutes} mins";
             } else if (_dur.inHours < 24) {
-              postedOnString = "Posted ${_dur.inHours} hrs";
+              postedOnString = "${_dur.inHours} hrs";
             } else {
               postedOnString = "${DateFormat("dd MMM, yyyy").format(postedOn)}";
             }
