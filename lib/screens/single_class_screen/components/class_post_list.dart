@@ -99,9 +99,6 @@ class _ClassPostListState extends State<ClassPostList> {
 
 
 
-
-  final _firestore = FirebaseFirestore.instance;
-
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<QueryDocumentSnapshot>>(

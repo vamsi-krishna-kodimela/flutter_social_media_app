@@ -24,12 +24,16 @@ class SinglePagePost extends StatelessWidget {
           final data = snapshot.data;
           if (!data.exists)
             return Center(
-              child: Text(
-                "POST NOT FOUND!",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 24.0,
-                ),
+              child: Column(
+                children: [
+                  Image.asset("assets/empty_state.png",fit: BoxFit.fitWidth, width: MediaQuery.of(context).size.width*0.7,),
+                  Text(
+                    "POST NOT FOUND!",
+                    style: TextStyle(
+                      fontSize: 24.0,
+                    ),
+                  ),
+                ],
               ),
             );
           return SingleChildScrollView(child: PagePostWidget(post: data,key: Key(data.id),));

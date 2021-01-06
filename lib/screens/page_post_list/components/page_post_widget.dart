@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:share/share.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:social_media/screens/comments_screen/comments_screen.dart';
 import 'package:social_media/screens/likes_screen/likes_screen.dart';
@@ -393,7 +394,11 @@ class _PostFooter extends StatelessWidget {
             Icons.share,
             color: kTextColor,
           ),
-          onPressed: () {},
+          onPressed: () {
+            Share.share(
+                "https://friendzit.in/pg/${widget.post.id}"
+            );
+          },
         ),
       ],
     );

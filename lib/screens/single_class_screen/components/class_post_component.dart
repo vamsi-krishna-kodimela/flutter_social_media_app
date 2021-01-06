@@ -26,7 +26,6 @@ class ClassPostComponent extends StatefulWidget {
 
 class _ClassPostComponentState extends State<ClassPostComponent> {
   final _uid = FirebaseAuth.instance.currentUser.uid;
-  final _firestore = FirebaseFirestore.instance;
   bool isExpanded = false;
   GestureRecognizer _gestureRecognizer;
   bool isLiked = false;

@@ -719,18 +719,15 @@ class _HomeScreenState extends State<HomeScreen> {
 
     // Get the latest link
     String initialLink;
-    Uri initialUri;
+
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
       initialLink = await getInitialLink();
       print('initial link: $initialLink');
-      if (initialLink != null) initialUri = Uri.parse(initialLink);
     } on PlatformException {
       initialLink = 'Failed to get initial link.';
-      initialUri = null;
     } on FormatException {
       initialLink = 'Failed to parse the initial link as Uri.';
-      initialUri = null;
     }
 
     // If the widget was removed from the tree while the asynchronous platform
@@ -740,7 +737,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if (initialLink != null) _deepLinkParser(initialLink);
   }
 
-  List<String> _deepLinkParser(String link) {
+  _deepLinkParser(String link) {
     Uri _link = Uri.parse(link);
     List<String> _params = _link.path.split("/");
     _params.remove("");

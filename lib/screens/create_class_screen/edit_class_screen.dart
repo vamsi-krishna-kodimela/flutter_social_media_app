@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../../constants.dart';
 import './components/class_text_field.dart';
@@ -20,9 +19,7 @@ class _EditClassScreenState extends State<EditClassScreen> {
 
   final _scaffoldState = GlobalKey<ScaffoldState>();
 
-  final _firestore = FirebaseFirestore.instance;
 
-  final _uid = FirebaseAuth.instance.currentUser.uid;
   Map<String, dynamic> _classInfo;
   bool _isLoading = false;
 

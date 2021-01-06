@@ -7,7 +7,6 @@ import 'package:social_media/utils.dart';
 
 class NotificationTile extends StatelessWidget {
   final QueryDocumentSnapshot data;
-  final _firestore = FirebaseFirestore.instance;
 
   NotificationTile({@required Key key, @required this.data}) : super(key: key);
 

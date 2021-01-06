@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:social_media/constants.dart';
 import 'package:social_media/services/firebase_storage_service.dart';
@@ -22,7 +21,6 @@ class EditGroupScreen extends StatefulWidget {
 
 class _EditGroupScreenState extends State<EditGroupScreen> {
   final GlobalKey<ScaffoldState> _scaffold = GlobalKey<ScaffoldState>();
-  final String _uid = FirebaseAuth.instance.currentUser.uid;
   final _firestore = FirebaseFirestore.instance;
   File _profilePic;
   String _picUrl;
@@ -143,7 +141,6 @@ class _EditGroupScreenState extends State<EditGroupScreen> {
     });
 
     try {
-      final userRef = _firestore.collection("users").doc(_uid);
       final _store = FirebaseStorageService();
       if(_profilePic !=null)
       _picUrl = await _store.storeGroupPic(_profilePic);

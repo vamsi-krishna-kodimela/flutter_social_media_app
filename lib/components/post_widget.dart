@@ -395,7 +395,7 @@ class _PostFooter extends StatelessWidget {
           ),
           onPressed: () {
             Share.share(
-              "https://friendzit.in"
+              "https://friendzit.in/posts/${widget.post.id}"
             );
           },
         ),

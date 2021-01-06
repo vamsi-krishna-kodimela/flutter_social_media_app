@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:share/share.dart';
 import 'package:social_media/screens/comments_screen/comments_screen.dart';
 import 'package:social_media/screens/likes_screen/likes_screen.dart';
 
@@ -77,7 +78,11 @@ class PostFooter extends StatelessWidget {
               Icons.share,
               color: kTextColor,
             ),
-            onPressed: () {},
+            onPressed: () {
+              Share.share(
+                  "https://friendzit.in/grp/${widget.post.id}"
+              );
+            },
           ),
         ],
       ),

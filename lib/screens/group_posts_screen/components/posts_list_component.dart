@@ -16,7 +16,7 @@ class PostsListComponent extends StatefulWidget {
 
 class _PostsListComponentState extends State<PostsListComponent> {
   ScrollController _scrollController = ScrollController();
-  final int perPage = 4;
+  final int perPage = 20;
   String uid;
   bool _hasMorePosts = true;
   DocumentSnapshot _lastDocument;
@@ -93,6 +93,7 @@ class _PostsListComponentState extends State<PostsListComponent> {
               .toList());
         else
           _postsController.add(allPosts);
+
 
         // Save the last document from the results only if it's the current last page
         if (currentRequestIndex == _allPagedResults.length - 1) {

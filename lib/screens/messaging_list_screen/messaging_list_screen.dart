@@ -135,7 +135,7 @@ class _AuthorDetails extends StatelessWidget {
     @required Map<String, dynamic> userInfo,
     @required this.postedOnString,
     @required this.uid,
-    this.message = null,
+    this.message,
   })  : _size = size,
         _userInfo = userInfo,
         super(key: key);

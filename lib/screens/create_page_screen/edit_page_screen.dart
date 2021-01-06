@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:social_media/constants.dart';
 import 'package:social_media/services/firebase_storage_service.dart';
@@ -22,8 +21,6 @@ class EditPageScreen extends StatefulWidget {
 
 class _EditPageScreenState extends State<EditPageScreen> {
   final GlobalKey<ScaffoldState> _scaffold = GlobalKey<ScaffoldState>();
-  final String _uid = FirebaseAuth.instance.currentUser.uid;
-  final _firestore = FirebaseFirestore.instance;
   File _profilePic;
   bool isLoading = false;
   Map<String, dynamic> _pageInfo;
