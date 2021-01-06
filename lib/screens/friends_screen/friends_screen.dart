@@ -116,7 +116,7 @@ class _AuthorDetails extends StatelessWidget {
         onTap: () {
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (_) => SingleUserScreen(uid, _userInfo["name"]),
+              builder: (_) => SingleUserScreen(uid),
             ),
           );
         },

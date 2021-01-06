@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -6,6 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -15,7 +17,15 @@ import 'package:social_media/screens/chat_screen/chat_screen.dart';
 import 'package:social_media/screens/class_room_screen/class_room_screen.dart';
 import 'package:social_media/screens/entertainment_screen/entertainment_Screen.dart';
 import 'package:social_media/screens/notifications_screen/notifications_screen.dart';
+import 'package:social_media/screens/pages_screen/components/page_posts_home.dart';
+import 'package:social_media/screens/single_group_post/single_group_post.dart';
+import 'package:social_media/screens/single_group_screen/single_group_screen.dart';
+import 'package:social_media/screens/single_page_post/single_page_post.dart';
+import 'package:social_media/screens/single_page_screen/single_page_screen.dart';
+import 'package:social_media/screens/single_user_post/single_user_post.dart';
+import 'package:social_media/screens/single_user_screen/single_user_screen.dart';
 import 'package:social_media/utils.dart';
+import 'package:uni_links/uni_links.dart';
 
 import '../../constants.dart';
 import '../ads_screen/ads_screen.dart';
@@ -45,6 +55,8 @@ class _HomeScreenState extends State<HomeScreen> {
   final _firestore = FirebaseFirestore.instance;
   dynamic _provider;
 
+  StreamSubscription _sub;
+
   _configureFirebaseListeners() {
     _firebaseMessaging.configure(
         onMessage: (Map<String, dynamic> message) async {
@@ -70,15 +82,18 @@ class _HomeScreenState extends State<HomeScreen> {
           Navigator.of(context).push(MaterialPageRoute(
               builder: (_) => ChatScreen(_friend, _friendId)));
         });
-      }else{
+      } else {
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          notificationNavigator(id: _data["id"],ctx: context,type: _data["type"],name: _data["name"]);
+          notificationNavigator(
+              id: _data["id"],
+              ctx: context,
+              type: _data["type"],
+              name: _data["name"]);
         });
       }
     });
     _firebaseMessaging.requestNotificationPermissions(
         const IosNotificationSettings(sound: true, alert: true, badge: true));
-
   }
 
   void checkUserPresence() async {
@@ -100,6 +115,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _configureFirebaseListeners();
+    initPlatformStateForStringUniLinks();
 
     checkUserPresence();
     _firebaseMessaging.onTokenRefresh.listen((String fcmToken) {
@@ -107,6 +123,12 @@ class _HomeScreenState extends State<HomeScreen> {
         "messageToken": FieldValue.arrayUnion([fcmToken]),
       });
     });
+  }
+
+  @override
+  void dispose() {
+    if (_sub != null) _sub.cancel();
+    super.dispose();
   }
 
   @override
@@ -674,5 +696,131 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
     );
+  }
+
+  initPlatformStateForStringUniLinks() async {
+    // Attach a listener to the links stream
+    _sub = getLinksStream().listen((String link) {
+      if (!mounted) return;
+      try {
+        if (link != null) print(link);
+      } on FormatException {}
+    }, onError: (err) {
+      if (!mounted) return;
+      print('Failed to get latest link: $err.');
+    });
+
+    // Attach a second listener to the stream
+    getLinksStream().listen((String link) {
+      _deepLinkParser(link);
+    }, onError: (err) {
+      print('got err: $err');
+    });
+
+    // Get the latest link
+    String initialLink;
+    Uri initialUri;
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      initialLink = await getInitialLink();
+      print('initial link: $initialLink');
+      if (initialLink != null) initialUri = Uri.parse(initialLink);
+    } on PlatformException {
+      initialLink = 'Failed to get initial link.';
+      initialUri = null;
+    } on FormatException {
+      initialLink = 'Failed to parse the initial link as Uri.';
+      initialUri = null;
+    }
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) return;
+    if (initialLink != null) _deepLinkParser(initialLink);
+  }
+
+  List<String> _deepLinkParser(String link) {
+    Uri _link = Uri.parse(link);
+    List<String> _params = _link.path.split("/");
+    _params.remove("");
+    switch (_params[0]) {
+      case "posts":
+        if (_params.length == 2)
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => SingleUserPost(_params[1]),
+            ),
+          );
+        break;
+      case "group":
+        if (_params.length == 2)
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => SingleGroupScreen(_params[1]),
+            ),
+          );
+        else
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => GroupPostsScreen(),
+            ),
+          );
+
+        break;
+      case "page":
+        if (_params.length == 2)
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => SinglePageScreen(
+                pageId: _params[1],
+              ),
+            ),
+          );
+        else
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => PagePostsScreen(),
+            ),
+          );
+        break;
+      case "pg":
+        if (_params.length == 2)
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => SinglePagePost(_params[1]),
+            ),
+          );
+        else
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => PagePostsScreen(),
+            ),
+          );
+        break;
+      case "grp":
+        if (_params.length == 2)
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => SingleGroupPost(_params[1]),
+            ),
+          );
+        else
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => GroupPostsScreen(),
+            ),
+          );
+        break;
+      case "user":
+        if (_params.length == 2)
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => SingleUserScreen(_params[1]),
+            ),
+          );
+        break;
+
+    }
   }
 }

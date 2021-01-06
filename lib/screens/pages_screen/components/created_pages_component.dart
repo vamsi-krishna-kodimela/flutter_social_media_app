@@ -98,8 +98,7 @@ class CreatedPagesComponent extends StatelessWidget {
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (_) => SinglePageScreen(
-                            pageId: _data[i].id,
-                            pageName: _data[i].data()["name"],
+                            pageId: _data[i].id
                           ),
                         ),
                       );

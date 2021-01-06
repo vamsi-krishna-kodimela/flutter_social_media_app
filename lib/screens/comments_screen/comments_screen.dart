@@ -83,7 +83,7 @@ class CommentsScreen extends StatelessWidget {
                             child: ListTile(
                               leading: GestureDetector(
                                 onTap: (){
-                                  if(_userInfo != null)Navigator.of(context).push(MaterialPageRoute(builder: (_)=>SingleUserScreen(res.data.id, _userInfo["name"])));
+                                  if(_userInfo != null)Navigator.of(context).push(MaterialPageRoute(builder: (_)=>SingleUserScreen(res.data.id)));
                                 },
                                 child: Container(
                                   width: _size.width * 0.1,

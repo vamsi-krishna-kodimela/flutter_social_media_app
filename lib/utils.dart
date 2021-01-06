@@ -34,10 +34,10 @@ void notificationNavigator({String type, BuildContext ctx, String id,String name
       _nav = (_)=>SingleClassPost(id);
       break;
     case "ACCEPTED":
-      _nav = (_)=>SingleUserScreen(id, name);
+      _nav = (_)=>SingleUserScreen(id);
       break;
     case "RECEIVED":
-      _nav = (_)=>SingleUserScreen(id, name);
+      _nav = (_)=>SingleUserScreen(id);
       break;
     default:
       print("Some thing went wrong");

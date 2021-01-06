@@ -120,7 +120,6 @@ class _PagesSearchScreenState extends State<PagesSearchScreen> {
                           MaterialPageRoute(
                             builder: (_) => SinglePageScreen(
                               pageId: _results[i].id,
-                              pageName: _data["name"],
                             ),
                           ),
                         );

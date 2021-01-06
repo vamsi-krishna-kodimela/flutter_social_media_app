@@ -8,6 +8,6 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleUserScreen(_user.uid, _user.displayName);
+    return SingleUserScreen(_user.uid);
   }
 }

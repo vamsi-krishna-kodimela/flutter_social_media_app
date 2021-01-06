@@ -18,12 +18,12 @@ class GroupTileComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: kDefaultPadding/2),
+      margin: EdgeInsets.symmetric(horizontal: kDefaultPadding / 2),
       child: GestureDetector(
         onTap: () {
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (_) => SingleGroupScreen(gid, data),
+              builder: (_) => SingleGroupScreen(gid),
             ),
           );
         },

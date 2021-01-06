@@ -4,9 +4,8 @@ import '../profile_screen/components/user_feed.dart';
 
 class SingleUserScreen extends StatelessWidget {
   final String uid;
-  final String name;
 
-  const SingleUserScreen(this.uid,this.name);
+  const SingleUserScreen(this.uid);
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +14,6 @@ class SingleUserScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: kWhite,
-        title: Text(name,style: TextStyle(color: kTextColor,fontWeight: FontWeight.w600),),
       ),
       body: Container(
         width: _size.width,

@@ -11,9 +11,8 @@ import 'components/group_tab_option_component.dart';
 
 class SingleGroupScreen extends StatefulWidget {
   final String gid;
-  final Map<String, dynamic> gData;
 
-  SingleGroupScreen(this.gid, this.gData);
+  SingleGroupScreen(this.gid);
 
   @override
   _SingleGroupScreenState createState() => _SingleGroupScreenState();
@@ -21,26 +20,76 @@ class SingleGroupScreen extends StatefulWidget {
 
 class _SingleGroupScreenState extends State<SingleGroupScreen> {
   final uid = FirebaseAuth.instance.currentUser.uid;
-  List<dynamic> members = [];
-  List<dynamic> admins = [];
+
   int option = 0;
   final _firestore = FirebaseFirestore.instance;
 
   void optionChanger(val) {
-    setState(() {
-      option = val;
-    });
+    if (option != val)
+      setState(() {
+        option = val;
+      });
   }
 
   @override
-  void initState() {
-    super.initState();
+  Widget build(BuildContext context) {
+    return StreamBuilder<DocumentSnapshot>(
+        stream: _firestore.collection("groups").doc(widget.gid).snapshots(),
+        builder: (ctx, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting)
+            return Scaffold(
+              body: Center(
+                child: CircularProgressIndicator(),
+              ),
+            );
 
-    if(widget.gData != null){
-      members = widget.gData["members"];
-      admins = widget.gData["admins"];
-    }
+          var _data = snapshot.data;
+          if(!_data.exists)
+
+            return Scaffold(
+
+              appBar: AppBar(
+                elevation: 0.0,
+              ),
+              body: Center(
+                child: Text("GROUP NOT FOUND."),
+              ),
+            );
+
+          var gData = _data.data();
+          if (gData == null) Navigator.of(context).pop();
+
+          return _GroupScreen(
+            key: Key(widget.gid),
+            gid: widget.gid,
+            gData: gData,
+            option: option,
+            optionChanger: optionChanger,
+            uid: uid,
+            members: gData["members"],
+          );
+        },
+      );
   }
+}
+
+class _GroupScreen extends StatelessWidget {
+  final gData;
+  final uid;
+  final gid;
+  final option;
+  final optionChanger;
+  final members;
+
+  const _GroupScreen(
+      {Key key,
+      this.gData,
+      this.uid,
+      this.gid,
+      this.option,
+      this.optionChanger,
+      this.members})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -49,64 +98,51 @@ class _SingleGroupScreenState extends State<SingleGroupScreen> {
         elevation: 0.0,
         backgroundColor: kWhite,
       ),
-      body: StreamBuilder<DocumentSnapshot>(
-        stream: _firestore.collection("groups").doc(widget.gid).snapshots(),
-        builder: (ctx, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting)
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          var _data = snapshot.data;
-          var gData = _data.data();
-          if (gData == null) Navigator.of(context).pop();
-
-          return Column(
-            children: [
-              GroupInfoComponent(gData: gData, uid: uid, gid: widget.gid),
-              SizedBox(
-                height: kDefaultPadding,
-              ),
-              Container(
-                width: double.infinity,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    GroupTabOptionComponent(
-                      title: "About",
-                      currentState: option,
-                      setOption: optionChanger,
-                      option: 0,
-                    ),
-                    GroupTabOptionComponent(
-                      title: "Posts",
-                      currentState: option,
-                      setOption: optionChanger,
-                      option: 1,
-                    ),
-                    GroupTabOptionComponent(
-                      title: "Members",
-                      currentState: option,
-                      setOption: optionChanger,
-                      option: 2,
-                    ),
-                  ],
+      body: Column(
+        children: [
+          GroupInfoComponent(gData: gData, uid: uid, gid: gid),
+          SizedBox(
+            height: kDefaultPadding,
+          ),
+          Container(
+            width: double.infinity,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                GroupTabOptionComponent(
+                  title: "About",
+                  currentState: option,
+                  setOption: optionChanger,
+                  option: 0,
                 ),
-              ),
-              SizedBox(
-                height: kDefaultPadding,
-              ),
-              Expanded(
-                child: widgetSwitch(),
-              ),
-            ],
-          );
-        },
+                GroupTabOptionComponent(
+                  title: "Posts",
+                  currentState: option,
+                  setOption: optionChanger,
+                  option: 1,
+                ),
+                GroupTabOptionComponent(
+                  title: "Members",
+                  currentState: option,
+                  setOption: optionChanger,
+                  option: 2,
+                ),
+              ],
+            ),
+          ),
+          SizedBox(
+            height: kDefaultPadding,
+          ),
+          Expanded(
+            child: widgetSwitch(),
+          ),
+        ],
       ),
       floatingActionButton: (members.contains(uid))?FloatingActionButton(
         onPressed: () {
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (_) => CreateGroupPostScreen(widget.gid),
+              builder: (_) => CreateGroupPostScreen(gid),
             ),
           );
         },
@@ -118,12 +154,11 @@ class _SingleGroupScreenState extends State<SingleGroupScreen> {
   widgetSwitch() {
     switch (option) {
       case 1:
-        return PostsListComponent(gid: widget.gid);
+        return PostsListComponent(gid: gid);
       case 2:
-        return GroupMembersComponent(gid: widget.gid);
+        return GroupMembersComponent(gid: gid);
       default:
-        return GroupDescriptionComponent(
-            description: widget.gData["description"]);
+        return GroupDescriptionComponent(description: gData["description"]);
     }
   }
 }

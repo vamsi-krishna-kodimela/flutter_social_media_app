@@ -9,9 +9,8 @@ import '../../constants.dart';
 
 class SinglePageScreen extends StatefulWidget {
   final String pageId;
-  final String pageName;
 
-  const SinglePageScreen({@required this.pageId, @required this.pageName});
+  const SinglePageScreen({@required this.pageId});
 
   @override
   _SinglePageScreenState createState() => _SinglePageScreenState();

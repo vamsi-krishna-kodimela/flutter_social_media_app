@@ -58,7 +58,7 @@ class GroupMembersComponent extends StatelessWidget {
                         Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (_) =>
-                                SingleUserScreen(members[i], _userinfo["name"]),
+                                SingleUserScreen(members[i]),
                           ),
                         );
                       },
@@ -105,7 +105,7 @@ class GroupMembersComponent extends StatelessWidget {
                         Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (_) =>
-                                SingleUserScreen(members[i], _userinfo["name"]),
+                                SingleUserScreen(members[i]),
                           ),
                         );
                       },

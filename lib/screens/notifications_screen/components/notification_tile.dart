@@ -48,7 +48,7 @@ class NotificationTile extends StatelessWidget {
               fontSize: 18.0,
             ),
           ),
-          trailing: (_info["photoUrl"] != null)
+          trailing: (_info["photoUrl"] != null && _info["type"]==0)
               ? AspectRatio(
                   aspectRatio: 1.0,
                   child: ClipRRect(

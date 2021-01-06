@@ -93,10 +93,7 @@ class _SearchScreenState extends State<SearchScreen> {
         elevation: 0.0,
         title: Text(
           "Search",
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: kTextColor
-          ),
+          style: TextStyle(fontWeight: FontWeight.bold, color: kTextColor),
         ),
       ),
       body: Column(
@@ -117,8 +114,8 @@ class _SearchScreenState extends State<SearchScreen> {
                             onTap: () {
                               Navigator.of(context).push(
                                 MaterialPageRoute(
-                                  builder: (_) => SingleUserScreen(
-                                      _results[i].id, _data["name"]),
+                                  builder: (_) =>
+                                      SingleUserScreen(_results[i].id),
                                 ),
                               );
                             },

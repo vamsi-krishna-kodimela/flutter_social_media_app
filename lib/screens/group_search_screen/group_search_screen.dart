@@ -15,7 +15,7 @@ class _GroupSearchScreenState extends State<GroupSearchScreen> {
   final TextEditingController _searchController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   final CollectionReference _firestore =
-  FirebaseFirestore.instance.collection("groups");
+      FirebaseFirestore.instance.collection("groups");
   final uid = FirebaseAuth.instance.currentUser.uid;
   final int perPage = 10;
   bool hasMoreResults = true;
@@ -91,11 +91,7 @@ class _GroupSearchScreenState extends State<GroupSearchScreen> {
         elevation: 0.0,
         title: Text(
           "Search For Groups",
-          style: TextStyle(
-            fontWeight: FontWeight.w600,
-            color: kTextColor
-
-          ),
+          style: TextStyle(fontWeight: FontWeight.w600, color: kTextColor),
         ),
       ),
       body: Column(
@@ -105,46 +101,46 @@ class _GroupSearchScreenState extends State<GroupSearchScreen> {
             child: (_results.length == 0)
                 ? Text("No Results Found")
                 : ListView.builder(
-              controller: _scrollController,
-              itemBuilder: (ctx, i) {
-                Map<String, dynamic> _data = _results[i].data();
-                return Container(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Card(
-                    child: ListTile(
-                      contentPadding: EdgeInsets.all(kDefaultPadding),
-                      onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (_) => SingleGroupScreen(
-                                _results[i].id, _data),
-                          ),
-                        );
-                      },
-                      title: Text(
-                        _data["name"],
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                            color: kTextColor,
-                            fontWeight: FontWeight.w600),
-                      ),
-                      leading: Container(
-                        width: kDefaultPadding * 6,
-                        child: ClipRRect(
-                          borderRadius:
-                          BorderRadius.circular(kDefaultPadding),
-                          child: FancyShimmerImage(
-                            imageUrl: _data["pic"],
-                            boxFit: BoxFit.cover,
+                    controller: _scrollController,
+                    itemBuilder: (ctx, i) {
+                      Map<String, dynamic> _data = _results[i].data();
+                      return Container(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Card(
+                          child: ListTile(
+                            contentPadding: EdgeInsets.all(kDefaultPadding),
+                            onTap: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (_) =>
+                                      SingleGroupScreen(_results[i].id),
+                                ),
+                              );
+                            },
+                            title: Text(
+                              _data["name"],
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                  color: kTextColor,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                            leading: Container(
+                              width: kDefaultPadding * 6,
+                              child: ClipRRect(
+                                borderRadius:
+                                    BorderRadius.circular(kDefaultPadding),
+                                child: FancyShimmerImage(
+                                  imageUrl: _data["pic"],
+                                  boxFit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                    ),
+                      );
+                    },
+                    itemCount: _results.length,
                   ),
-                );
-              },
-              itemCount: _results.length,
-            ),
           ),
         ],
       ),

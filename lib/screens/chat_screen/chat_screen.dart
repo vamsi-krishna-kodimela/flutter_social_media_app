@@ -120,7 +120,7 @@ class _ChatScreenState extends State<ChatScreen> {
           onTap: () {
             Navigator.of(context).push(MaterialPageRoute(
                 builder: (_) =>
-                    SingleUserScreen(widget.frienId, widget.friend["name"])));
+                    SingleUserScreen(widget.frienId)));
           },
           child: Row(
             children: [

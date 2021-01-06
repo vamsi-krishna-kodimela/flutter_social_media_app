@@ -61,7 +61,7 @@ exports.pagePostCountIncrease = functions.firestore
         db.collection("notifications").add({
           recievers: page.followers,
           notificationType: "PAGE_POST",
-          message: "Published a new post",
+          message: page.name+" Published a new post",
           title:page.name,
           id: context.params.postId,
           pageId: pid,
@@ -137,7 +137,8 @@ exports.classPostCreated = functions.firestore
         db.collection("notifications").add({
           recievers: page.students,
           notificationType: "CLASS_POST",
-          message: "message",
+          message: data.name+" Plublished a new post",
+          title:data.name,
           id: context.params.postId,
           pageId: pid,
           photoUrl: data.resources,
@@ -326,7 +327,7 @@ exports.sendChatNotification = functions.firestore
         click_action: "FLUTTER_NOTIFICATION_CLICK",
       },
     };
-
+    if(! messageToken)return console.log("No Token FOund");
     if (messageToken.length == 0) return console.log("No Token FOund");
     return admin
       .messaging()
@@ -352,7 +353,7 @@ exports.notificationManager = functions.firestore
 
     let payload = {
       notification: {
-        title: "title",
+        title: data.title,
         body: data.message,
         badge: "1",
         click_action: "FLUTTER_NOTIFICATION_CLICK",
@@ -365,7 +366,7 @@ exports.notificationManager = functions.firestore
 if(data.name){
     payload = {
       notification: {
-        title: "title",
+        title: data.title,
         body: data.message,
         badge: "1",
         click_action: "FLUTTER_NOTIFICATION_CLICK",
@@ -373,28 +374,28 @@ if(data.name){
       data: {
         type: data.notificationType,
         data: JSON.stringify(data),
-        name: data.name,
+        name: data.title,
       },
     };}
 
-    // if (data.type == 0) {
-    //   payload = {
-    //     notification: {
-    //       title: "title",
-    //       body: data.message,
-    //       badge: "1",
-    //       click_action: "FLUTTER_NOTIFICATION_CLICK",
-    //       image : data.photoUrl,
+    if (data.photoUrl != null && data.type==0) {
+      payload = {
+        notification: {
+          title: "title",
+          body: data.message,
+          badge: "1",
+          click_action: "FLUTTER_NOTIFICATION_CLICK",
+          image : data.photoUrl,
 
-    //     },
-    //     data: {
-    //       type: data.notificationType,
-    //       id: data.id,
-    //       data: JSON.stringify(data),
-    //       name:data.name,
-    //     },
-    //   };
-    // }
+        },
+        data: {
+          type: data.notificationType,
+          id: data.id,
+          data: JSON.stringify(data),
+          name:data.title,
+        },
+      };
+    }
 
     let userTokens = [];
 
@@ -414,7 +415,6 @@ if(data.name){
     userTokens = userTokens.filter(function (el) {
       return el != null;
     });
-    console.log(user + " : " + userTokens);
     if (userTokens.length == 0) return console.log(userTokens);
     return admin
       .messaging()

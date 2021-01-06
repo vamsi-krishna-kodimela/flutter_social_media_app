@@ -15,7 +15,7 @@ import 'package:visibility_detector/visibility_detector.dart';
 import '../constants.dart';
 
 class PostWidget extends StatefulWidget {
-  final QueryDocumentSnapshot post;
+  final post;
 
   PostWidget({Key key, this.post}) : super(key: key);
 
@@ -142,8 +142,8 @@ class _PostWidgetState extends State<PostWidget> {
 
     return Container(
       margin: EdgeInsets.symmetric(
-        horizontal: kDefaultPadding ,
         vertical: kDefaultPadding,
+        horizontal: kDefaultPadding
       ),
       decoration: BoxDecoration(
         color: kWhite,
@@ -429,7 +429,7 @@ class _AuthorDetails extends StatelessWidget {
         if (uid != FirebaseAuth.instance.currentUser.uid) {
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (_) => SingleUserScreen(uid, _userInfo["name"]),
+              builder: (_) => SingleUserScreen(uid),
             ),
           );
         }

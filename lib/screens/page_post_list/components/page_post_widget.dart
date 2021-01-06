@@ -425,7 +425,7 @@ class _AuthorDetails extends StatelessWidget {
         if (uid != FirebaseAuth.instance.currentUser.uid) {
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (_) => SinglePageScreen(pageId: uid, pageName: _userInfo["name"]),
+              builder: (_) => SinglePageScreen(pageId: uid),
             ),
           );
         }
