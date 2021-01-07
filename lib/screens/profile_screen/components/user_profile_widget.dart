@@ -46,84 +46,94 @@ class UserProfileWidget extends StatelessWidget {
               ],
             ),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     _UserProfilePic(size: _size, photoUrl: data["photoUrl"]),
+
                     Expanded(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                (data["postCount"] == null)
-                                    ? "0"
-                                    : data["postCount"].toString(),
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: kTextColor,
-                                  fontSize: 18.0,
-                                ),
-                              ),
-                              Text(
-                                "Posts",
-                                style: TextStyle(
-                                  color: kTextColor,
-                                ),
-                              )
-                            ],
+                          Padding(
+                            padding: const EdgeInsets.only(left: kDefaultPadding*2,bottom: kDefaultPadding),
+                            child: _UserNameWidget(name: data["name"]),
                           ),
-                          GestureDetector(
-                            onTap: () {
-                              List<String> friendsList = [];
-                              for (String key in _friends.keys) {
-                                if (_friends[key] == 3) {
-                                  friendsList.add(key);
-                                }
-                              }
-                              if (friends.length > 0)
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (_) => FriendsScreen(
-                                      likedBy: friendsList,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    (data["postCount"] == null)
+                                        ? "0"
+                                        : data["postCount"].toString(),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: kTextColor,
+                                      fontSize: 18.0,
                                     ),
                                   ),
-                                );
-                            },
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text(
-                                  friends.length.toString(),
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: kTextColor,
-                                    fontSize: 18.0,
-                                  ),
+                                  Text(
+                                    "Posts",
+                                    style: TextStyle(
+                                      color: kTextColor,
+                                    ),
+                                  )
+                                ],
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  List<String> friendsList = [];
+                                  for (String key in _friends.keys) {
+                                    if (_friends[key] == 3) {
+                                      friendsList.add(key);
+                                    }
+                                  }
+                                  if (friends.length > 0)
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (_) => FriendsScreen(
+                                          likedBy: friendsList,
+                                        ),
+                                      ),
+                                    );
+                                },
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      friends.length.toString(),
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: kTextColor,
+                                        fontSize: 18.0,
+                                      ),
+                                    ),
+                                    Text(
+                                      "Friends",
+                                      style: TextStyle(
+                                        color: kTextColor,
+                                      ),
+                                    )
+                                  ],
                                 ),
-                                Text(
-                                  "Friends",
-                                  style: TextStyle(
-                                    color: kTextColor,
-                                  ),
-                                )
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
+                          if (data["description"] != null &&
+                              data["description"].length > 0)
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: kDefaultPadding*2,vertical: kDefaultPadding),
+                              child: UserDescriptionWidget(description: data["description"]),
+                            ),
                         ],
                       ),
                     ),
                   ],
                 ),
-                _UserNameWidget(name: data["name"]),
-                SizedBox(height: kDefaultPadding * 2),
-                if (data["description"] != null &&
-                    data["description"].length > 0)
-                  UserDescriptionWidget(description: data["description"]),
                 UserProfileActions(
                   data: data,
                   current: _current,
@@ -173,7 +183,6 @@ class _UserNameWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: double.infinity,
       child: Text(
         name,
         style: TextStyle(
@@ -201,7 +210,6 @@ class _UserProfilePic extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: kDefaultPadding),
       width: _size.width * 0.2,
       height: _size.width * 0.2,
       child: ClipRRect(

@@ -213,12 +213,15 @@ class _HomeScreenState extends State<HomeScreen> {
           },
         ),
         IconButton(
-            icon: Icon(FeatherIcons.bell),
-            onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(
+          icon: Icon(FeatherIcons.bell),
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
                 builder: (_) => NotificationsScreen(),
-              ));
-            }),
+              ),
+            );
+          },
+        ),
       ],
       elevation: 0.0,
     );
@@ -252,9 +255,9 @@ class _HomeScreenState extends State<HomeScreen> {
               },
               icon: Icon(
                 icon,
-                size: (val == tab) ? 30.0 : 24.0,
+                size: (val == tab) ? 26.0 : 24.0,
               ),
-              color: (val == tab) ? kPrimaryColor : kTextColor,
+              color: (val == tab) ? kPrimaryColor : kTextColor.withAlpha(160),
             ),
             if (data.getCurrentChatsCount() != 0 && val == 1)
               Positioned(

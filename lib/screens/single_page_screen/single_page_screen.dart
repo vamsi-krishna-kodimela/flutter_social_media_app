@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:share/share.dart';
 import 'package:social_media/screens/create_page_post_screen/create_page_post_screen.dart';
 import 'package:social_media/screens/create_page_screen/edit_page_screen.dart';
 import 'package:social_media/screens/page_post_list/page_post_list.dart';
@@ -28,7 +30,16 @@ class _SinglePageScreenState extends State<SinglePageScreen> {
 
     return Scaffold(
       key: _scaffold,
-      appBar: AppBar(),
+      appBar: AppBar(
+        actions: [
+          IconButton(
+            icon: Icon(FeatherIcons.share2),
+            onPressed: () {
+              Share.share("https://friendzit.in/page/${widget.pageId}");
+            },
+          ),
+        ],
+      ),
       body: StreamBuilder<DocumentSnapshot>(
         stream: _firestore.collection("pages").doc(widget.pageId).snapshots(),
         builder: (_, snapshot) {

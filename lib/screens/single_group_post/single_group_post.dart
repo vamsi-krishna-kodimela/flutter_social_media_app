@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:social_media/screens/group_post_widget_component/group_post_widget_component.dart';
+
+import '../../constants.dart';
 
 class SingleGroupPost extends StatelessWidget {
   final String pId;
@@ -10,7 +13,17 @@ class SingleGroupPost extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text(
+          kAppName,
+          style: TextStyle(
+            color: kTextColor,
+            fontFamily: GoogleFonts.lobster().fontFamily,
+            fontSize: 26.0,
+          ),
+        ),
+
+      ),
       body: StreamBuilder<DocumentSnapshot>(
         stream: FirebaseFirestore.instance
             .collection("group_posts")

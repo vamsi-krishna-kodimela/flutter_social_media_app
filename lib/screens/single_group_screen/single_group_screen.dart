@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:share/share.dart';
 import 'package:social_media/constants.dart';
 import 'package:social_media/screens/create_group_post_screen/create_group_post_screen.dart';
 import 'package:social_media/screens/group_posts_screen/components/posts_list_component.dart';
@@ -50,6 +52,7 @@ class _SingleGroupScreenState extends State<SingleGroupScreen> {
 
               appBar: AppBar(
                 elevation: 0.0,
+
               ),
               body: Center(
                 child: Text("GROUP NOT FOUND."),
@@ -97,6 +100,14 @@ class _GroupScreen extends StatelessWidget {
       appBar: AppBar(
         elevation: 0.0,
         backgroundColor: kWhite,
+        actions: [
+          IconButton(
+            icon: Icon(FeatherIcons.share2),
+            onPressed: () {
+              Share.share("https://friendzit.in/group/$gid");
+            },
+          ),
+        ],
       ),
       body: Column(
         children: [

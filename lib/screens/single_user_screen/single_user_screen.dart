@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:share/share.dart';
 import 'package:social_media/constants.dart';
 import '../profile_screen/components/user_feed.dart';
 
@@ -14,6 +17,23 @@ class SingleUserScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: kWhite,
+        title: Text(
+          kAppName,
+          style: TextStyle(
+            color: kTextColor,
+            fontFamily: GoogleFonts.lobster().fontFamily,
+            fontSize: 26.0,
+          ),
+        ),
+
+        actions: [
+          IconButton(
+            icon: Icon(FeatherIcons.share2),
+            onPressed: () {
+              Share.share("https://friendzit.in/user/$uid");
+            },
+          ),
+        ],
       ),
       body: Container(
         width: _size.width,
