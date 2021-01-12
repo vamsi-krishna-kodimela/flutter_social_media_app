@@ -2,7 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../constants.dart';
 import '../single_user_screen/single_user_screen.dart';
 
@@ -27,9 +29,7 @@ class _ChatScreenState extends State<ChatScreen> {
   _buildMessage(Map<String, dynamic> message, bool isMe) {
     final DateTime postedOn = message["postedOn"].toDate();
     final Duration _dur = DateTime.now().difference(postedOn);
-    _firestore.collection("chatRooms").doc(_chatRoomId).update({
-      "unreadMessages": 0,
-    });
+
     String postedOnString;
     if (_dur.inSeconds < 2) {
       postedOnString = "Just Now";
@@ -82,15 +82,32 @@ class _ChatScreenState extends State<ChatScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text(
-            message["message"].trim(),
+          SelectableLinkify(
+            onOpen: (link) async {
+              if (await canLaunch(link.url)) {
+                await launch(link.url);
+              } else {
+                throw 'Could not launch $link';
+              }
+            },
+            text: message["message"].trim(),
             style: TextStyle(
               color: (isMe) ? kWhite : kTextColor,
               fontSize: 15.0,
               fontWeight: FontWeight.w500,
             ),
-            textAlign: TextAlign.start,
+            linkStyle: TextStyle(color: kAccentColor),
+            options: LinkifyOptions(humanize: false),
           ),
+          // Text(
+          //   message["message"].trim(),
+          //   style: TextStyle(
+          //     color: (isMe) ? kWhite : kTextColor,
+          //     fontSize: 15.0,
+          //     fontWeight: FontWeight.w500,
+          //   ),
+          //   textAlign: TextAlign.start,
+          // ),
           SizedBox(height: 4.0),
           Text(
             postedOnString,
@@ -119,8 +136,7 @@ class _ChatScreenState extends State<ChatScreen> {
         title: GestureDetector(
           onTap: () {
             Navigator.of(context).push(MaterialPageRoute(
-                builder: (_) =>
-                    SingleUserScreen(widget.frienId)));
+                builder: (_) => SingleUserScreen(widget.frienId)));
           },
           child: Row(
             children: [

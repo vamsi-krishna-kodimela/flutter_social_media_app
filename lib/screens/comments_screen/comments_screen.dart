@@ -2,7 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../constants.dart';
 import '../single_user_screen/single_user_screen.dart';
 
@@ -97,7 +99,18 @@ class CommentsScreen extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                              title: Text("${data["comment"]}"),
+                              title: Linkify(
+                                onOpen: (link) async {
+                                  if (await canLaunch(link.url)) {
+                                    await launch(link.url);
+                                  } else {
+                                    throw 'Could not launch $link';
+                                  }
+                                },
+                                text: data["comment"],
+                                style: TextStyle(color: kTextColor),
+                                linkStyle: TextStyle(color: Colors.red),
+                              ),
                               subtitle: Text(postedOnString),
                             ),
                           );
