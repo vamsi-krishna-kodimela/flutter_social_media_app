@@ -10,11 +10,13 @@ class AdminGroupControllComponent extends StatelessWidget {
     Key key,
     this.gid,
     this.gData,
+    @required this.ctx,
 
   }) : super(key: key);
 
   final gid;
   final gData;
+  final ctx;
 
 
   @override
@@ -39,8 +41,8 @@ class AdminGroupControllComponent extends StatelessWidget {
         FlatButton.icon(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
           onPressed: () async{
-            await _firestore.collection("groups").doc(gid).delete();
-            Navigator.of(context).pop();
+            _firestore.collection("groups").doc(gid).delete();
+            Navigator.of(ctx).pop();
           },
           icon: Icon(Icons.delete,color: kWhite,),
           label: Text(

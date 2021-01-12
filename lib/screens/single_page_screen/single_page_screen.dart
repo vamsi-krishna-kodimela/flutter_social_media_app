@@ -51,6 +51,10 @@ class _SinglePageScreenState extends State<SinglePageScreen> {
               child: Text("Page Not Found in Our Records."),
             );
           DocumentSnapshot _doc = snapshot.data;
+          if (!_doc.exists)
+            return Center(
+              child: Text("Page Not Found in Our Records."),
+            );
           Map<String, dynamic> _data = _doc.data();
           List<dynamic> _followers = [];
           if (_data["followers"] != null) _followers = _data["followers"];
@@ -81,14 +85,16 @@ class _SinglePageScreenState extends State<SinglePageScreen> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Text(
-                                (_data["name"] == null) ? "" : _data["name"],
-                                style: TextStyle(
-                                  color: kTextColor,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 16.0,
+                              Expanded(
+                                child: Text(
+                                  (_data["name"] == null) ? "" : _data["name"],
+                                  style: TextStyle(
+                                    color: kTextColor,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 16.0,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
                                 ),
-                                overflow: TextOverflow.ellipsis,
                               ),
                               IconButton(
                                   icon: Icon(
@@ -142,6 +148,13 @@ class _SinglePageScreenState extends State<SinglePageScreen> {
                                       );
                                     });
                                   }),
+                              IconButton(
+                                icon: Icon(FeatherIcons.delete,color: kAccentColor,size: 20.0,),
+                                onPressed: () {
+                                  _firestore.collection("pages").doc(widget.pageId).delete();
+                                  Navigator.of(context).pop();
+                                },
+                              ),
                             ],
                           ),
                           SizedBox(height: kDefaultPadding),

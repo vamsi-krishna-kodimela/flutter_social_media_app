@@ -46,7 +46,7 @@ class GroupInfoComponent extends StatelessWidget {
 
 
           SizedBox(height: kDefaultPadding),
-          if (admins.contains(uid)) AdminGroupControllComponent(gid: gid,gData: gData,),
+          if (admins.contains(uid)) AdminGroupControllComponent(gid: gid,gData: gData,ctx: context,),
           if (members.contains(uid) &&
               (!admins.contains(uid) || admins.length > 1))
             FlatButton.icon(

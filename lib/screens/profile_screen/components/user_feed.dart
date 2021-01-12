@@ -97,30 +97,6 @@ class _UserFeedState extends State<UserFeed> {
             ],
           );
 
-        // if (snapshot.hasData) {
-        //   var data = snapshot.data;
-        //   return Column(
-        //     children: [
-        //       UserProfileWidget(uid),
-        //       Expanded(
-        //         child: GridView.builder(
-        //           padding: EdgeInsets.all(kDefaultPadding/2),
-        //           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        //             childAspectRatio: 1.0,
-        //             crossAxisCount: 3,
-        //             crossAxisSpacing: kDefaultPadding/2,
-        //             mainAxisSpacing: kDefaultPadding/2,
-        //           ),
-        //           itemBuilder: (ctx, i) {
-        //             final info = data[i].data();
-        //             return FancyShimmerImage(imageUrl: info["resources"],boxFit: BoxFit.cover,);
-        //           },
-        //           itemCount: data.length,
-        //         ),
-        //       ),
-        //     ],
-        //   );
-        // }
         if (snapshot.hasData) {
           var data = snapshot.data;
           return ListView.builder(

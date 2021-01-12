@@ -60,7 +60,6 @@ class _SingleGroupScreenState extends State<SingleGroupScreen> {
             );
 
           var gData = _data.data();
-          if (gData == null) Navigator.of(context).pop();
 
           return _GroupScreen(
             key: Key(widget.gid),

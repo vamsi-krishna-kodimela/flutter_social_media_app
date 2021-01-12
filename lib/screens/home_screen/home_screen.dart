@@ -1,6 +1,8 @@
+//Dart imports
 import 'dart:async';
 import 'dart:convert';
 
+//Flutter Package imports
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -11,22 +13,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:social_media/providers/chats_provider.dart';
-import 'package:social_media/screens/app_info_screen/app_info_screen.dart';
-import 'package:social_media/screens/chat_screen/chat_screen.dart';
-import 'package:social_media/screens/class_room_screen/class_room_screen.dart';
-import 'package:social_media/screens/entertainment_screen/entertainment_Screen.dart';
-import 'package:social_media/screens/notifications_screen/notifications_screen.dart';
-import 'package:social_media/screens/pages_screen/components/page_posts_home.dart';
-import 'package:social_media/screens/single_group_post/single_group_post.dart';
-import 'package:social_media/screens/single_group_screen/single_group_screen.dart';
-import 'package:social_media/screens/single_page_post/single_page_post.dart';
-import 'package:social_media/screens/single_page_screen/single_page_screen.dart';
-import 'package:social_media/screens/single_user_post/single_user_post.dart';
-import 'package:social_media/screens/single_user_screen/single_user_screen.dart';
-import 'package:social_media/utils.dart';
 import 'package:uni_links/uni_links.dart';
 
+//Custom imports
 import '../../constants.dart';
 import '../ads_screen/ads_screen.dart';
 import '../create_post_screen/create_post_screen.dart';
@@ -40,6 +29,20 @@ import '../profile_screen/profile_screen.dart';
 import '../search_screen/search_screen.dart';
 import '../store_screen/store_screen.dart';
 import '../../services/firebase_auth_service.dart';
+import '../../utils.dart';
+import '../../providers/chats_provider.dart';
+import '../app_info_screen/app_info_screen.dart';
+import '../chat_screen/chat_screen.dart';
+import '../class_room_screen/class_room_screen.dart';
+import '../entertainment_screen/entertainment_Screen.dart';
+import '../notifications_screen/notifications_screen.dart';
+import '../pages_screen/components/page_posts_home.dart';
+import '../single_group_post/single_group_post.dart';
+import '../single_group_screen/single_group_screen.dart';
+import '../single_page_post/single_page_post.dart';
+import '../single_page_screen/single_page_screen.dart';
+import '../single_user_post/single_user_post.dart';
+import '../single_user_screen/single_user_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -257,7 +260,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 icon,
                 size: (val == tab) ? 26.0 : 24.0,
               ),
-              color: (val == tab) ? kPrimaryColor : kTextColor.withAlpha(160),
+              color: (val == tab) ? kPrimaryColor : kTextColor.withAlpha(200),
             ),
             if (data.getCurrentChatsCount() != 0 && val == 1)
               Positioned(
@@ -291,8 +294,8 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
             children: [
               Container(
-                padding: EdgeInsets.only(
-                  top: 50.0,
+                padding: EdgeInsets.symmetric(
+                  vertical: 50.0,
                 ),
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
@@ -320,34 +323,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         color: Color(0xFF2a608c),
                       ),
                     ),
-                    ListTile(
-                      contentPadding: EdgeInsets.symmetric(
-                          horizontal: kDefaultPadding,
-                          vertical: kDefaultPadding / 2),
-                      title: Text(
-                        _user.displayName.trim(),
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 16.0,
-                          color: kPrimaryColor,
-                        ),
-                      ),
-                      onTap: () {
-                        Navigator.of(context).pop();
-                        Navigator.of(context).push(
-                            MaterialPageRoute(builder: (_) => ProfileScreen()));
-                      },
-                      leading: AspectRatio(
-                        aspectRatio: 1.0,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(kDefaultPadding),
-                          child: FancyShimmerImage(
-                            imageUrl: _user.photoURL,
-                            boxFit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                    ),
                   ],
                 ),
               ),
@@ -357,6 +332,46 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: ListView(
                     padding: EdgeInsets.all(0.0),
                     children: [
+                      Card(
+
+                        child: ListTile(
+                          contentPadding: EdgeInsets.symmetric(
+                            horizontal: kDefaultPadding,
+                            vertical: kDefaultPadding / 2,
+                          ),
+
+                          title: Text(
+                            _user.displayName.trim(),
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 16.0,
+                              color: kPrimaryColor,
+                            ),
+                          ),
+                          onTap: () {
+                            Navigator.of(context).pop();
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (_) => ProfileScreen()));
+                          },
+                          leading: AspectRatio(
+                            aspectRatio: 1.0,
+                            child: ClipRRect(
+                              borderRadius:
+                                  BorderRadius.circular(kDefaultPadding),
+                              child: FancyShimmerImage(
+                                imageUrl: _user.photoURL,
+                                boxFit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                        ),
+                        elevation: 0.0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(0.0),
+                        ),
+                        margin: EdgeInsets.only(top: 1.0),
+                      ),
                       Card(
                         child: ListTile(
                           onTap: () {
@@ -821,7 +836,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           );
         break;
-
     }
   }
 }

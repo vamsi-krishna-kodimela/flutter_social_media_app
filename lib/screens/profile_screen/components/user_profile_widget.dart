@@ -73,6 +73,7 @@ class UserProfileWidget extends StatelessWidget {
                                     style: TextStyle(
                                       color: kTextColor,
                                       fontSize: 16.0,
+                                      fontStyle: FontStyle.italic
                                     ),
                                   ),
                                   Text(
@@ -107,9 +108,9 @@ class UserProfileWidget extends StatelessWidget {
                                     Text(
                                       friends.length.toString(),
                                       style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: kTextColor,
-                                        fontSize: 18.0,
+                                          color: kTextColor,
+                                          fontSize: 16.0,
+                                          fontStyle: FontStyle.italic
                                       ),
                                     ),
                                     Text(
