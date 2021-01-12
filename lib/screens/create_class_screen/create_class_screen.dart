@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -26,6 +28,8 @@ class _CreateClassScreenState extends State<CreateClassScreen> {
   Future<void> _createClass() async {
     final String className = _classNameController.value.text.trim();
     final String description = _descriptionController.value.text.trim();
+    Random random = new Random();
+    int randomNumber = random.nextInt(7);
 
     if (className.length < 5 || className.length > 15) {
       _alertDisplayer("Class Name must be between 5 to 15 characters.");
@@ -49,6 +53,7 @@ class _CreateClassScreenState extends State<CreateClassScreen> {
           "createdOn": Timestamp.now(),
           "classId": nanoid(8),
           "students" : [_uid],
+          "color":randomNumber,
         },
       );
       Navigator.of(context).pop();

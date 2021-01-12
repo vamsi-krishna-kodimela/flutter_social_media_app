@@ -71,9 +71,8 @@ class UserProfileWidget extends StatelessWidget {
                                         ? "0"
                                         : data["postCount"].toString(),
                                     style: TextStyle(
-                                      fontWeight: FontWeight.bold,
                                       color: kTextColor,
-                                      fontSize: 18.0,
+                                      fontSize: 16.0,
                                     ),
                                   ),
                                   Text(
@@ -92,6 +91,7 @@ class UserProfileWidget extends StatelessWidget {
                                       friendsList.add(key);
                                     }
                                   }
+
                                   if (friends.length > 0)
                                     Navigator.of(context).push(
                                       MaterialPageRoute(

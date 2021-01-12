@@ -73,10 +73,10 @@ class _ClassPostComponentState extends State<ClassPostComponent> {
 
 
     return ClipRRect(
-      borderRadius: BorderRadius.circular(kDefaultPadding),
+      // borderRadius: BorderRadius.circular(kDefaultPadding),
       child: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(kDefaultPadding),
+          // borderRadius: BorderRadius.circular(kDefaultPadding),
           color: kWhite,
           boxShadow: [
             BoxShadow(

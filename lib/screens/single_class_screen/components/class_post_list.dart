@@ -24,13 +24,13 @@ class _ClassPostListState extends State<ClassPostList> {
   List<List<QueryDocumentSnapshot>> _allPagedResults =
       List<List<QueryDocumentSnapshot>>();
 
-  emptyState(){
-    if(_allPagedResults.length ==1)
-    setState(() {
-      _lastDocument=null;
-      _allPagedResults=List<List<QueryDocumentSnapshot>>();
-      _hasMorePosts=false;
-    });
+  emptyState() {
+    if (_allPagedResults.length == 1)
+      setState(() {
+        _lastDocument = null;
+        _allPagedResults = List<List<QueryDocumentSnapshot>>();
+        _hasMorePosts = false;
+      });
   }
 
   @override
@@ -57,7 +57,9 @@ class _ClassPostListState extends State<ClassPostList> {
   }
 
   void _requestPosts() {
-    var pagePostsQuery = _postsCollectionReference.where("class",isEqualTo: widget.cid).limit(perPage);
+    var pagePostsQuery = _postsCollectionReference
+        .where("class", isEqualTo: widget.cid)
+        .limit(perPage);
     if (_lastDocument != null)
       pagePostsQuery = pagePostsQuery.startAfterDocument(_lastDocument);
 
@@ -65,7 +67,6 @@ class _ClassPostListState extends State<ClassPostList> {
 
     pagePostsQuery.snapshots().listen((postsSnapshot) {
       if (postsSnapshot.docs.isNotEmpty) {
-
         var posts = postsSnapshot.docs;
         var pageExists = currentRequestIndex < _allPagedResults.length;
 
@@ -88,44 +89,43 @@ class _ClassPostListState extends State<ClassPostList> {
         // Determine if there's more posts to request
         _hasMorePosts = (posts.length == perPage);
       }
-      else{
-        emptyState();
-      }
-
     });
-
-
   }
-
-
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<QueryDocumentSnapshot>>(
-          stream: listenToPostsRealTime(),
-          builder: (ctx, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting)
-              return Center(
-                child: CircularProgressIndicator(),
-              );
+      stream: listenToPostsRealTime(),
+      builder: (ctx, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting)
+          return Center(
+            child: CircularProgressIndicator(),
+          );
 
-            if (snapshot.hasData) {
-              var data = snapshot.data;
-              if (data.length > 0)
-                return ListView.builder(
-                  controller: _scrollController,
-                  itemCount: data.length,
-                  itemBuilder: (ctx, i) {
-                    return ClassPostComponent(key: Key(data[i].id),post: data[i],emptyStream: emptyState,);
-                  },
-                );
-            }
-
+        if (snapshot.hasData) {
+          var data = snapshot.data;
+          if (data.length == 0)
             return Center(
               child: Text("No Posts Found"),
             );
-          },
-        );
+          if (data.length > 0)
+            return ListView.builder(
+              controller: _scrollController,
+              itemCount: data.length,
+              itemBuilder: (ctx, i) {
+                return ClassPostComponent(
+                  key: Key(data[i].id),
+                  post: data[i],
+                  emptyStream: emptyState,
+                );
+              },
+            );
+        }
 
+        return Center(
+          child: Text("No Posts Found"),
+        );
+      },
+    );
   }
 }

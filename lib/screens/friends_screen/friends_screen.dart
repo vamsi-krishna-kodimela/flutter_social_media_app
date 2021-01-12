@@ -3,14 +3,16 @@ import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:social_media/screens/single_user_screen/single_user_screen.dart';
 import '../../constants.dart';
 
 class FriendsScreen extends StatelessWidget {
   List<String> likedBy;
+  String type= "Friends";
 
-  FriendsScreen({Key key, this.likedBy}) : super(key: key);
+  FriendsScreen({Key key, this.likedBy,this.type="Friends"}) : super(key: key);
 
 
   @override
@@ -21,10 +23,11 @@ class FriendsScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Friends",
+          type,
           style: TextStyle(
             color: kTextColor,
-            fontWeight: FontWeight.bold,
+            fontFamily: GoogleFonts.lobster().fontFamily,
+            fontSize: 26.0,
           ),
         ),
       ),
@@ -38,7 +41,7 @@ class FriendsScreen extends StatelessWidget {
           final data = snapshot.data.data();
           final Map<String,dynamic> friends = data["friends"];
           friends.removeWhere((key, value) => value!=3);
-          likedBy = friends.keys.toList();
+          if(likedBy.length==0)likedBy = friends.keys.toList();
           return ListView.builder(
             itemBuilder: (ctx, i) {
               return FutureBuilder<DocumentSnapshot>(

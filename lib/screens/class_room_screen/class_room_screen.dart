@@ -1,16 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:random_color/random_color.dart';
 import 'package:share/share.dart';
 import 'package:social_media/screens/single_class_screen/single_class_screen.dart';
+import 'package:social_media/utils.dart';
 import '../../constants.dart';
 import '../create_class_screen/create_class_screen.dart';
 
 class ClassRoomScreen extends StatelessWidget {
   final _firestore = FirebaseFirestore.instance;
   final _uid = FirebaseAuth.instance.currentUser.uid;
-  final _colorGenerator = RandomColor();
   final _scaffoldState = GlobalKey<ScaffoldState>();
   final _classCode = TextEditingController();
 
@@ -38,7 +37,7 @@ class ClassRoomScreen extends StatelessWidget {
                   builder: (ctx) {
                     return AlertDialog(
                       title: Text(
-                        "Join or Create Class",
+                        "Create or Join a Class",
                         style: TextStyle(
                           color: kAccentColor,
                           fontWeight: FontWeight.w600,
@@ -127,7 +126,7 @@ class ClassRoomScreen extends StatelessWidget {
 
           if (classRoomsList.length == 0)
             return Center(
-              child: Text("Join or Create Class room."),
+              child: Text("Create or Join a Class room."),
             );
           return Padding(
             padding: const EdgeInsets.all(kDefaultPadding),
@@ -142,9 +141,8 @@ class ClassRoomScreen extends StatelessWidget {
 
                 final _className = _classRoom["name"];
                 final _classDescription = _classRoom["description"];
-                final _tileColor = _colorGenerator.randomMaterialColor(
-                  colorSaturation: ColorSaturation.highSaturation,
-                );
+                final _tileColor = colorGenerator(_classRoom["color"]);
+                print(_tileColor);
 
                 return ClipRRect(
                   borderRadius: BorderRadius.circular(kDefaultPadding),

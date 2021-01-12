@@ -147,7 +147,7 @@ class _PostWidgetState extends State<PostWidget> {
       ),
       decoration: BoxDecoration(
         color: kWhite,
-        borderRadius: BorderRadius.circular(kDefaultPadding),
+        // borderRadius: BorderRadius.circular(kDefaultPadding),
         boxShadow: [
           BoxShadow(
             color: kGrey.withAlpha(50),

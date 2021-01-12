@@ -105,7 +105,7 @@ exports.groupPostCountIncrease = functions.firestore
         db.collection("notifications").add({
           recievers: group.members,
           notificationType: "GROUP_POST",
-          message: "Published a new post",
+          message: group.name+" Published a new post",
           title:group.name,
           id: context.params.postId,
           pageId: pid,
@@ -137,8 +137,8 @@ exports.classPostCreated = functions.firestore
         db.collection("notifications").add({
           recievers: page.students,
           notificationType: "CLASS_POST",
-          message: data.name+" Plublished a new post",
-          title:data.name,
+          message: data.class+" Plublished a new post",
+          title:data.class,
           id: context.params.postId,
           pageId: pid,
           photoUrl: data.resources,
@@ -181,7 +181,7 @@ exports.userUpdated = functions.firestore
             recievers: [friend_1],
             notificationType: "RECEIVED",
             id: frnd,
-            message: friendInfo.data().name+" Sent friend request",
+            message: friendInfo.data().name+" Sent you a friend request",
             title: friendInfo.data().name,
             photoUrl: friendInfo.data().photoUrl,
             type: 0,
@@ -248,7 +248,7 @@ exports.userUpdated = functions.firestore
                 recievers: [friend_1],
                 notificationType: "RECEIVED",
                 id: key,
-                message: friendInfo.data().name+" sent friend request.",
+                message: friendInfo.data().name+" sent you a friend request.",
                 title: friendInfo.data().name,
                 type: 0,
                 photoUrl: friendInfo.data().photoUrl,
@@ -381,7 +381,7 @@ if(data.name){
     if (data.photoUrl != null && data.type==0) {
       payload = {
         notification: {
-          title: "title",
+          title: data.title,
           body: data.message,
           badge: "1",
           click_action: "FLUTTER_NOTIFICATION_CLICK",

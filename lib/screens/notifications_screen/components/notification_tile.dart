@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:social_media/constants.dart';
@@ -7,6 +8,7 @@ import 'package:social_media/utils.dart';
 
 class NotificationTile extends StatelessWidget {
   final QueryDocumentSnapshot data;
+  final _uid = FirebaseAuth.instance.currentUser.uid;
 
   NotificationTile({@required Key key, @required this.data}) : super(key: key);
 
@@ -36,9 +38,15 @@ class NotificationTile extends StatelessWidget {
         ),
         child: ListTile(
           onTap: () {
-            data.reference.delete();
+            data.reference.update({
+              "recievers": FieldValue.arrayRemove([_uid])
+            });
             notificationNavigator(
-                type: _info["notificationType"].toString(), ctx: context, id: _info["id"],name : _info["name"],);
+              type: _info["notificationType"].toString(),
+              ctx: context,
+              id: _info["id"],
+              name: _info["name"],
+            );
           },
           title: Text(
             _info["message"],
@@ -47,7 +55,7 @@ class NotificationTile extends StatelessWidget {
               fontSize: 18.0,
             ),
           ),
-          trailing: (_info["photoUrl"] != null && _info["type"]==0)
+          trailing: (_info["photoUrl"] != null && _info["type"] == 0)
               ? AspectRatio(
                   aspectRatio: 1.0,
                   child: ClipRRect(

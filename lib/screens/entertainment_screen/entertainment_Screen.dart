@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:social_media/constants.dart';
 import 'package:social_media/screens/entertainment_screen/components/audio_player_component.dart';
 import 'package:social_media/screens/entertainment_upload_screen/entertainment_upload_screen.dart';
@@ -214,8 +215,9 @@ class _EntertainmentScreenState extends State<EntertainmentScreen> {
         title: Text(
           "Entertainment",
           style: TextStyle(
-            fontWeight: FontWeight.w600,
             color: kTextColor,
+            fontFamily: GoogleFonts.lobster().fontFamily,
+            fontSize: 26.0,
           ),
         ),
         elevation: 0.0,

@@ -6,6 +6,7 @@ import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:share/share.dart';
 import 'package:social_media/screens/create_page_post_screen/create_page_post_screen.dart';
 import 'package:social_media/screens/create_page_screen/edit_page_screen.dart';
+import 'package:social_media/screens/friends_screen/friends_screen.dart';
 import 'package:social_media/screens/page_post_list/page_post_list.dart';
 import '../../constants.dart';
 
@@ -53,6 +54,7 @@ class _SinglePageScreenState extends State<SinglePageScreen> {
           Map<String, dynamic> _data = _doc.data();
           List<dynamic> _followers = [];
           if (_data["followers"] != null) _followers = _data["followers"];
+          _followers = _followers.map((e) => e.toString()).toList();
 
           return Column(
             children: [
@@ -162,17 +164,30 @@ class _SinglePageScreenState extends State<SinglePageScreen> {
                                     Text("Posts"),
                                   ],
                                 ),
-                                Column(
-                                  children: [
-                                    Text(
-                                      _followers.length.toString(),
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontStyle: FontStyle.italic,
+                                GestureDetector(
+                                  onTap: () {
+                                    if (_followers.length > 0)
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (_) => FriendsScreen(
+                                            likedBy: _followers,
+                                            type: "Followers",
+                                          ),
+                                        ),
+                                      );
+                                  },
+                                  child: Column(
+                                    children: [
+                                      Text(
+                                        _followers.length.toString(),
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontStyle: FontStyle.italic,
+                                        ),
                                       ),
-                                    ),
-                                    Text("Followers"),
-                                  ],
+                                      Text("Followers"),
+                                    ],
+                                  ),
                                 ),
                               ],
                             ),
@@ -216,7 +231,11 @@ class _SinglePageScreenState extends State<SinglePageScreen> {
                                       ),
                                       OutlineButton.icon(
                                         onPressed: () {
-                                          Navigator.of(context).push(MaterialPageRoute(builder: (_)=>EditPageScreen(snapshot.data)));
+                                          Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                  builder: (_) =>
+                                                      EditPageScreen(
+                                                          snapshot.data)));
                                         },
                                         icon: Icon(Icons.edit),
                                         label: Text("Edit Info"),
@@ -238,17 +257,23 @@ class _SinglePageScreenState extends State<SinglePageScreen> {
                                         child: FlatButton(
                                           onPressed: () {
                                             if (_followers.contains(_uid)) {
-                                              _firestore.collection("pages").doc(widget.pageId).update(
-                                                {
-                                                  "followers":FieldValue.arrayRemove([_uid]),
-                                                }
-                                              );
+                                              _firestore
+                                                  .collection("pages")
+                                                  .doc(widget.pageId)
+                                                  .update({
+                                                "followers":
+                                                    FieldValue.arrayRemove(
+                                                        [_uid]),
+                                              });
                                             } else {
-                                              _firestore.collection("pages").doc(widget.pageId).update(
-                                                  {
-                                                    "followers":FieldValue.arrayUnion([_uid]),
-                                                  }
-                                              );
+                                              _firestore
+                                                  .collection("pages")
+                                                  .doc(widget.pageId)
+                                                  .update({
+                                                "followers":
+                                                    FieldValue.arrayUnion(
+                                                        [_uid]),
+                                              });
                                             }
                                           },
                                           child: Text(

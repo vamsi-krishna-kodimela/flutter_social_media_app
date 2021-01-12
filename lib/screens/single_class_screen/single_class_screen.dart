@@ -18,9 +18,10 @@ class SingleClassScreen extends StatefulWidget {
 }
 
 class _SingleClassScreenState extends State<SingleClassScreen> {
+  final _uid = FirebaseAuth.instance.currentUser.uid;
   @override
   Widget build(BuildContext context) {
-    final _uid = FirebaseAuth.instance.currentUser.uid;
+
     final _classinfo = widget.classRoom.data();
     return Scaffold(
       appBar: _buildAppBar(_classinfo),
@@ -48,7 +49,7 @@ class _SingleClassScreenState extends State<SingleClassScreen> {
         PopupMenuButton(
           itemBuilder: (_) {
             return [
-              PopupMenuItem(
+              if(_uid == _classinfo["createdBy"]) PopupMenuItem(
                 child: Text("Edit Info"),
                 value: 0,
               ),

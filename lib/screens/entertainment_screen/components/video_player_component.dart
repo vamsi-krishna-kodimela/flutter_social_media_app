@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:social_media/screens/likes_screen/likes_screen.dart';
 import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
@@ -37,7 +38,6 @@ class _VideoPlayerComponentState extends State<VideoPlayerComponent> {
         if (mounted)
           setState(() {
             _videoPlayerController.setLooping(true);
-            // _videoPlayerController.play();
           });
       });
   }
@@ -104,7 +104,22 @@ class _VideoPlayerComponentState extends State<VideoPlayerComponent> {
             Positioned(
               child: Row(
                 children: [
-                  Text("$likesCount Likes"),
+                  GestureDetector(
+                    child: Text("$likesCount Likes"),
+                    onTap: () {
+                      if (likesCount > 0) {
+                        final _likes = data["likes"].keys.toList();
+                        final lk = _likes
+                            .where((e) => data["likes"][e.toString()] == true)
+                            .toList();
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (_) => LikesScreen(
+                            likedBy: lk,
+                          ),
+                        ));
+                      }
+                    },
+                  ),
                   IconButton(
                     onPressed: () {
                       toogleLikes();
