@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:social_media/components/empty_state_component.dart';
 import '../single_group_screen/single_group_screen.dart';
 
 import '../../constants.dart';
@@ -99,7 +100,7 @@ class _GroupSearchScreenState extends State<GroupSearchScreen> {
           SearchBarWidget(searchController: _searchController),
           Expanded(
             child: (_results.length == 0)
-                ? Text("No Results Found")
+                ? (_searchController.value.text.length==0)?EmptyStateComponent("Start Searching for Results."):EmptyStateComponent("No Results Found")
                 : ListView.builder(
                     controller: _scrollController,
                     itemBuilder: (ctx, i) {

@@ -3,6 +3,7 @@ import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:social_media/components/empty_state_component.dart';
 import 'package:social_media/constants.dart';
 import 'package:social_media/screens/single_user_screen/single_user_screen.dart';
 
@@ -23,7 +24,7 @@ class GroupMembersComponent extends StatelessWidget {
       stream: firestore.collection("groups").doc(gid).snapshots(),
       builder: (ctx,snapshot){
         if(! snapshot.hasData)
-          return Center(child: Text("No members found."));
+          return Center(child: EmptyStateComponent("No Memebers Found."));
         if(snapshot.connectionState==ConnectionState.waiting)
           return Center(child: CircularProgressIndicator());
 

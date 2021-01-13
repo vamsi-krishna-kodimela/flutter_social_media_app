@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:social_media/components/empty_state_component.dart';
 import 'package:social_media/screens/single_user_screen/single_user_screen.dart';
 import '../../constants.dart';
 
@@ -39,9 +40,17 @@ class FriendsScreen extends StatelessWidget {
           if(snapshot.connectionState == ConnectionState.waiting)
             return Center(child: CircularProgressIndicator());
           final data = snapshot.data.data();
+          if(!snapshot.data.exists)
+            return Center(
+              child: EmptyStateComponent("Start Making Friends"),
+            );
           final Map<String,dynamic> friends = data["friends"];
           friends.removeWhere((key, value) => value!=3);
           if(likedBy.length==0)likedBy = friends.keys.toList();
+          if(likedBy.length==0)
+            return Center(
+              child: EmptyStateComponent("Start Making Friends"),
+            );
           return ListView.builder(
             itemBuilder: (ctx, i) {
               return FutureBuilder<DocumentSnapshot>(
@@ -79,6 +88,7 @@ class FriendsScreen extends StatelessWidget {
                     );
                   }
                   final _userInfo = snapshot.data.data();
+
                   return _AuthorDetails(
                     size: _size,
                     userInfo: _userInfo,

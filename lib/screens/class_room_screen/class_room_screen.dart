@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:share/share.dart';
+import 'package:social_media/components/empty_state_component.dart';
 import 'package:social_media/screens/single_class_screen/single_class_screen.dart';
 import 'package:social_media/utils.dart';
 import '../../constants.dart';
@@ -126,7 +127,7 @@ class ClassRoomScreen extends StatelessWidget {
 
           if (classRoomsList.length == 0)
             return Center(
-              child: Text("Create or Join a Class room."),
+              child: EmptyStateComponent("Create or Join a Class room."),
             );
           return Padding(
             padding: const EdgeInsets.all(kDefaultPadding),

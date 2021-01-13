@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:social_media/components/empty_state_component.dart';
 import 'package:social_media/constants.dart';
 import 'package:social_media/screens/group_posts_screen/components/posts_list_component.dart';
 import 'package:social_media/screens/group_search_screen/group_search_screen.dart';
@@ -41,7 +42,7 @@ class GroupPostsScreen extends StatelessWidget {
                 return Center(child: CircularProgressIndicator());
               final data = snapshot.data;
               if(! snapshot.hasData || data.size==0)
-                return Center(child: Text("No Groups Found for you."));
+                return Center(child: EmptyStateComponent("No Groups Found for you."),);
               final _groups = data.docs.map((e) => e.id).toList();
               return Column(
                 children: [

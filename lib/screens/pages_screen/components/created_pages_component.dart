@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:social_media/components/empty_state_component.dart';
 import 'package:social_media/constants.dart';
 import 'package:social_media/screens/single_page_screen/single_page_screen.dart';
 
@@ -19,9 +20,9 @@ class CreatedPagesComponent extends StatelessWidget {
       builder: (ctx, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting)
           return Center(child: CircularProgressIndicator());
-        if (!snapshot.hasData) return Center(child: Text("No Pages Created."));
+        if (!snapshot.hasData) return Center(child: EmptyStateComponent("Create Some Pages."));
         List<DocumentSnapshot> _data = snapshot.data.docs;
-        if (_data.length == 0) return Center(child: Text("No Pages Created."));
+        if (_data.length == 0) return Center(child: EmptyStateComponent("Create Some Pages."));
         return ListView.builder(
             padding: EdgeInsets.all(kDefaultPadding),
             itemCount: _data.length,

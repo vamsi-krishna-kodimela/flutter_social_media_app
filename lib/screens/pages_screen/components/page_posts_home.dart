@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:social_media/components/empty_state_component.dart';
 import '../../page_post_list/components/page_post_widget.dart';
 
 class PagePostsScreen extends StatefulWidget {
@@ -104,7 +105,7 @@ class _PagePostsScreenState extends State<PagePostsScreen> {
         }
         if (_frnds.length == 0)
           return Center(
-            child: Text("Follow pages to see their posts."),
+            child: EmptyStateComponent("Start Following Some Pages to see their posts."),
           );
         return StreamBuilder<List<QueryDocumentSnapshot>>(
           stream: listenToPostsRealTime(),
@@ -128,7 +129,7 @@ class _PagePostsScreenState extends State<PagePostsScreen> {
             }
 
             return Center(
-              child: Text("No Posts Found"),
+              child: EmptyStateComponent("No Posts Found."),
             );
           },
         );

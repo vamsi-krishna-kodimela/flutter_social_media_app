@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:share/share.dart';
+import 'package:social_media/components/empty_state_component.dart';
 import 'package:social_media/screens/create_page_post_screen/create_page_post_screen.dart';
 import 'package:social_media/screens/create_page_screen/edit_page_screen.dart';
 import 'package:social_media/screens/friends_screen/friends_screen.dart';
@@ -48,12 +49,12 @@ class _SinglePageScreenState extends State<SinglePageScreen> {
             return Center(child: CircularProgressIndicator());
           if (!snapshot.hasData)
             return Center(
-              child: Text("Page Not Found in Our Records."),
+              child: EmptyStateComponent("Page Not Found in Our Records."),
             );
           DocumentSnapshot _doc = snapshot.data;
           if (!_doc.exists)
             return Center(
-              child: Text("Page Not Found in Our Records."),
+              child: EmptyStateComponent("Page Not Found in Our Records."),
             );
           Map<String, dynamic> _data = _doc.data();
           List<dynamic> _followers = [];

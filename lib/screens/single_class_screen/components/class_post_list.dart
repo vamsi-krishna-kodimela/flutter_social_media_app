@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:social_media/components/empty_state_component.dart';
 import 'package:social_media/screens/single_class_screen/components/class_post_component.dart';
 
 class ClassPostList extends StatefulWidget {
@@ -106,7 +107,7 @@ class _ClassPostListState extends State<ClassPostList> {
           var data = snapshot.data;
           if (data.length == 0)
             return Center(
-              child: Text("No Posts Found"),
+              child: EmptyStateComponent("No Posts Found."),
             );
           if (data.length > 0)
             return ListView.builder(
@@ -123,7 +124,7 @@ class _ClassPostListState extends State<ClassPostList> {
         }
 
         return Center(
-          child: Text("No Posts Found"),
+          child: EmptyStateComponent("No Posts Found."),
         );
       },
     );

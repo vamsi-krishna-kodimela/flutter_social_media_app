@@ -536,7 +536,6 @@ class _HomeScreenState extends State<HomeScreen> {
                             Navigator.of(context).push(MaterialPageRoute(
                                 builder: (_) => PagesScreen()));
 
-                            // _scaffold.currentState.showSnackBar(SnackBar(content: Text("Page uder construction")));
                           },
                           leading: Icon(
                             FeatherIcons.layout,

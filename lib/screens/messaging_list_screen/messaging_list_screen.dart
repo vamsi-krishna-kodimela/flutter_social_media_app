@@ -7,6 +7,7 @@ import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:social_media/components/empty_state_component.dart';
 import 'package:social_media/providers/chats_provider.dart';
 import 'package:social_media/screens/chat_screen/chat_screen.dart';
 
@@ -34,12 +35,12 @@ class MessagingListScreen extends StatelessWidget {
           Provider.of<ChatsProvider>(context).clearChats();
         if (snapshot.data == null)
           return Center(
-            child: Text("Start making friends to chat..."),
+            child: EmptyStateComponent("Start Making Friends to Chat..."),
           );
         List<QueryDocumentSnapshot> _chats = snapshot.data.docs;
         if (_chats.length==0)
           return Center(
-            child: Text("Start making friends to chat..."),
+            child: EmptyStateComponent("Start making friends to chat..."),
           );
         return ListView.builder(
           padding: EdgeInsets.only(

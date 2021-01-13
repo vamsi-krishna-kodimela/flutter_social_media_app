@@ -3,6 +3,7 @@ import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:social_media/components/empty_state_component.dart';
 import 'package:social_media/screens/single_user_screen/single_user_screen.dart';
 import '../../constants.dart';
 
@@ -35,7 +36,7 @@ class StudentsScreen extends StatelessWidget {
           List<dynamic> _students = _data["students"];
           _students.remove(_teacher);
           if (_students.length == 0)
-            return Center(child: Text("No Students Found."));
+            return Center(child: EmptyStateComponent("No Students Found."));
           return Padding(
             padding: EdgeInsets.symmetric(horizontal: kDefaultPadding),
             child: ListView.builder(

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:social_media/components/empty_state_component.dart';
 import 'package:social_media/constants.dart';
 import 'package:social_media/screens/entertainment_screen/components/audio_player_component.dart';
 import 'package:social_media/screens/entertainment_upload_screen/entertainment_upload_screen.dart';
@@ -282,7 +283,7 @@ class _EntertainmentScreenState extends State<EntertainmentScreen> {
                       );
                     if (!snapshot.hasData)
                       return Center(
-                        child: Text("No content found.."),
+                        child: EmptyStateComponent("No Content Found."),
                       );
                     List<QueryDocumentSnapshot> _data = snapshot.data;
                     return ListView.builder(

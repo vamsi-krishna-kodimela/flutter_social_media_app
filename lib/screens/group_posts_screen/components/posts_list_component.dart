@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:social_media/components/empty_state_component.dart';
 import 'package:social_media/screens/group_post_widget_component/group_post_widget_component.dart';
 
 class PostsListComponent extends StatefulWidget {
@@ -124,7 +125,7 @@ class _PostsListComponentState extends State<PostsListComponent> {
           builder: (ctx, snapshot) {
             if (!snapshot.hasData)
               return Center(
-                child: Text("No Posts found"),
+                child: EmptyStateComponent("No Posts Found."),
               );
             if (snapshot.connectionState == ConnectionState.waiting)
               return Center(
@@ -144,11 +145,11 @@ class _PostsListComponentState extends State<PostsListComponent> {
                   ),
                 );
               return Center(
-                child: Text("No Posts Found"),
+                child: EmptyStateComponent("No Posts Found."),
               );
             }
             return Center(
-              child: Text("No Posts Found"),
+              child: EmptyStateComponent("No Posts Found."),
             );
           },
         );

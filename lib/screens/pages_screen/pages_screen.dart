@@ -78,8 +78,10 @@ class _PagesScreenState extends State<PagesScreen> {
 
   AppBar _buildAppBar() {
     return AppBar(
-      title: Text("Pages",
-          style: TextStyle(fontWeight: FontWeight.w600, color: kTextColor)),
+      title: Text(
+        "Pages",
+        style: TextStyle(fontWeight: FontWeight.w600, color: kTextColor),
+      ),
       actions: [
         IconButton(
           icon: Icon(Icons.search_rounded),

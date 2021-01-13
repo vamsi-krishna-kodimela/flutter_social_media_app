@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:social_media/components/empty_state_component.dart';
 import '../../../components/post_widget.dart';
 import 'user_profile_widget.dart';
 
@@ -111,7 +112,7 @@ class _UserFeedState extends State<UserFeed> {
           );
         }
         return Center(
-          child: Text("Not Posts Found"),
+          child: EmptyStateComponent("No Posts Found."),
         );
       },
     );

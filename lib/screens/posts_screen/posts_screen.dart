@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:social_media/components/empty_state_component.dart';
 
 import '../../components/post_widget.dart';
 
@@ -102,7 +103,7 @@ class _PostsScreenState extends State<PostsScreen> {
 
 
         if(_frnds.length==0)
-          return Center(child: Text("Make friends to see their Posts."),);
+          return EmptyStateComponent("Make some friends to see their Posts.");
         return StreamBuilder<List<QueryDocumentSnapshot>>(
           stream: listenToPostsRealTime(),
           builder: (ctx, snapshot) {
@@ -124,9 +125,7 @@ class _PostsScreenState extends State<PostsScreen> {
                 );
             }
 
-            return Center(
-              child: Text("No Posts Found"),
-            );
+            return EmptyStateComponent("No Posts Found.");
           },
         );
       },
