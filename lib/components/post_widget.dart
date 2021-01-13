@@ -147,7 +147,6 @@ class _PostWidgetState extends State<PostWidget> {
       ),
       decoration: BoxDecoration(
         color: kWhite,
-        // borderRadius: BorderRadius.circular(kDefaultPadding),
         boxShadow: [
           BoxShadow(
             color: kGrey.withAlpha(50),
@@ -184,8 +183,7 @@ class _PostWidgetState extends State<PostWidget> {
                         width: _size.width * 0.1,
                         height: _size.width * 0.1,
                         child: ClipRRect(
-                          borderRadius:
-                              BorderRadius.circular(_size.width * 0.1),
+
                           child: Shimmer.fromColors(
                             baseColor: Colors.grey[300],
                             highlightColor: Colors.grey[100],
@@ -225,7 +223,6 @@ class _PostWidgetState extends State<PostWidget> {
               if (_postData["resources"] != null &&
                   _postData["resources"] != "")
                 ClipRRect(
-                  borderRadius: BorderRadius.circular(kDefaultPadding),
                   child: (_postData["type"] == 0)
                       ? FancyShimmerImage(
                           width: _size.width - (kDefaultPadding * 4),

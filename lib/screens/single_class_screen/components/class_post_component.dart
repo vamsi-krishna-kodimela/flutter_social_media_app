@@ -18,7 +18,8 @@ class ClassPostComponent extends StatefulWidget {
   final post;
   final Function emptyStream;
 
-  const ClassPostComponent({Key key, this.post,this.emptyStream}) : super(key: key);
+  const ClassPostComponent({Key key, this.post, this.emptyStream})
+      : super(key: key);
 
   @override
   _ClassPostComponentState createState() => _ClassPostComponentState();
@@ -49,7 +50,7 @@ class _ClassPostComponentState extends State<ClassPostComponent> {
         });
       };
     List<dynamic> _likes = [];
-    if (_postData["likes"] != null)_likes = _postData["likes"];
+    if (_postData["likes"] != null) _likes = _postData["likes"];
 
     isLiked = _likes.contains(_uid);
     final DateTime postedOn = _postData["postedOn"].toDate();
@@ -68,191 +69,185 @@ class _ClassPostComponentState extends State<ClassPostComponent> {
       postedOnString = "Posted ${_dur.inDays} days ago";
     } else {
       postedOnString =
-      "Posted on ${DateFormat("dd MMM, yyyy").format(postedOn)}";
+          "Posted on ${DateFormat("dd MMM, yyyy").format(postedOn)}";
     }
 
-
-    return ClipRRect(
-      // borderRadius: BorderRadius.circular(kDefaultPadding),
-      child: Container(
-        decoration: BoxDecoration(
-          // borderRadius: BorderRadius.circular(kDefaultPadding),
-          color: kWhite,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black54,
-              blurRadius: 0.0,
-              offset: Offset(0, 0),
-            ),
-          ],
-        ),
-        padding: EdgeInsets.symmetric(horizontal: kDefaultPadding),
-        margin: EdgeInsets.all(kDefaultPadding),
-        child: Column(
-          children: [
-            FutureBuilder<DocumentSnapshot>(
-              future: _postData["userData"].get(),
-              builder: (ctx, snapshot) {
-                if (snapshot.data == null) {
-                  return ListTile(
-                    leading: Container(
-                      width: _size.width * 0.1,
-                      height: _size.width * 0.1,
-                      child: ClipRRect(
-                        borderRadius:
-                        BorderRadius.circular(_size.width * 0.1),
-                        child: Shimmer.fromColors(
-                          baseColor: Colors.grey[300],
-                          highlightColor: Colors.grey[100],
-                          child: Container(
-                            width: _size.width * 0.1,
-                            height: _size.width * 0.1,
-                            color: kAccentColor,
-                          ),
-                        ),
-                      ),
-                    ),
-                    title: Shimmer.fromColors(
+    return Container(
+      decoration: BoxDecoration(
+        color: kWhite,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black54,
+            blurRadius: 0.0,
+            offset: Offset(0, 0),
+          ),
+        ],
+      ),
+      padding: EdgeInsets.symmetric(horizontal: kDefaultPadding),
+      margin: EdgeInsets.all(kDefaultPadding),
+      child: Column(
+        children: [
+          FutureBuilder<DocumentSnapshot>(
+            future: _postData["userData"].get(),
+            builder: (ctx, snapshot) {
+              if (snapshot.data == null) {
+                return ListTile(
+                  leading: Container(
+                    width: _size.width * 0.1,
+                    height: _size.width * 0.1,
+                    child: Shimmer.fromColors(
                       baseColor: Colors.grey[300],
                       highlightColor: Colors.grey[100],
                       child: Container(
-                        width: _size.width * 0.2,
-                        height: 16.0,
+                        width: _size.width * 0.1,
+                        height: _size.width * 0.1,
                         color: kAccentColor,
                       ),
                     ),
-                    subtitle: Text(
-                      postedOnString,
-                      style: TextStyle(color: kGrey),
+                  ),
+                  title: Shimmer.fromColors(
+                    baseColor: Colors.grey[300],
+                    highlightColor: Colors.grey[100],
+                    child: Container(
+                      width: _size.width * 0.2,
+                      height: 16.0,
+                      color: kAccentColor,
                     ),
-                  );
-                }
-                final _userInfo = snapshot.data.data();
-                return _AuthorDetails(
-                  size: _size,
-                  userInfo: _userInfo,
-                  postedOnString: postedOnString,
-                  uid: snapshot.data.id,
-                  postId: widget.post.id,
-                  emptyStream: widget.emptyStream,
+                  ),
+                  subtitle: Text(
+                    postedOnString,
+                    style: TextStyle(color: kGrey),
+                  ),
                 );
-              },
+              }
+              final _userInfo = snapshot.data.data();
+              return _AuthorDetails(
+                size: _size,
+                userInfo: _userInfo,
+                postedOnString: postedOnString,
+                uid: snapshot.data.id,
+                postId: widget.post.id,
+                emptyStream: widget.emptyStream,
+              );
+            },
+          ),
+          if (_postData["resources"] != null && isURL(_postData["resources"]))
+            AspectRatio(
+              aspectRatio: 3 / 2,
+              child: FancyShimmerImage(
+                imageUrl: _postData["resources"],
+              ),
             ),
-            if (_postData["resources"] != null && isURL(_postData["resources"]))
-              AspectRatio(
-                aspectRatio: 3 / 2,
-                child: FancyShimmerImage(
-                  imageUrl: _postData["resources"],
+          if (_postData["link"] != null && isURL(_postData["link"]))
+            GestureDetector(
+              onTap: () {
+                _launchURL(_postData["link"]);
+              },
+              child: Container(
+                color: kBGColor,
+                padding: const EdgeInsets.all(kDefaultPadding),
+                child: FlutterLinkPreview(
+                  url: _postData["link"],
+                  titleStyle: TextStyle(
+                    color: kPrimaryColor,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 16.0,
+                  ),
+                  bodyStyle: TextStyle(color: kTextColor),
                 ),
               ),
-            if (_postData["link"] != null && isURL(_postData["link"]))
-              GestureDetector(
-                onTap: () {
-                  _launchURL(_postData["link"]);
-                },
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: kBGColor,
-                    borderRadius: BorderRadius.circular(kDefaultPadding),
-                  ),
-                  padding: const EdgeInsets.all(kDefaultPadding),
-                  child: FlutterLinkPreview(
-                    url: _postData["link"],
-                    titleStyle: TextStyle(
-                      color: kPrimaryColor,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 16.0,
-                    ),
-                    bodyStyle: TextStyle(color: kTextColor),
-                  ),
-                ),
-              ),
-            if (_postData["description"] != null)
-              Container(
-                padding: EdgeInsets.all(kDefaultPadding),
-                width: double.infinity,
-                child: RichText(
-                  text: TextSpan(
-                    children: [
-                      TextSpan(
-                        text: (_postData["description"] == null)
-                            ? ""
-                            : (isExpanded ||
-                                    _postData["description"].length <= 50)
-                                ? _postData["description"]
-                                : "${_postData["description"].substring(0, 50)} .....          ",
-                        style: TextStyle(color: kTextColor),
-                      ),
-                      TextSpan(
-                        text: (_postData["description"] == null)
-                            ? ""
-                            : (_postData["description"].length <= 50)
-                                ? ""
-                                : (isExpanded)
-                                    ? "        see less "
-                                    : "       see more ",
-                        style: TextStyle(
-                          color: kAccentColor,
-                          fontWeight: FontWeight.w600,
-                        ),
-                        recognizer: _gestureRecognizer,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            Row(
-              children: [
-                Row(
+            ),
+          if (_postData["description"] != null && _postData["description"] !="" )
+            Container(
+              padding: EdgeInsets.all(kDefaultPadding),
+              width: double.infinity,
+              child: RichText(
+                text: TextSpan(
                   children: [
-                    IconButton(
-                      icon: Icon(
-                        isLiked
-                            ? Icons.favorite_rounded
-                            : Icons.favorite_border_rounded,
-                        color: kAccentColor,
-                      ),
-                      onPressed: () async {
-                        if (!isLiked)
-                          await widget.post.reference.update({
-                            "likes": FieldValue.arrayUnion([_uid]),
-                          });
-                        else
-                          await widget.post.reference.update({
-                            "likes": FieldValue.arrayRemove([_uid]),
-                          });
-                      },
+                    TextSpan(
+                      text: (_postData["description"] == null)
+                          ? ""
+                          : (isExpanded ||
+                                  _postData["description"].length <= 50)
+                              ? _postData["description"]
+                              : "${_postData["description"].substring(0, 50)} .....          ",
+                      style: TextStyle(color: kTextColor),
                     ),
-                    GestureDetector(
-                      onTap: (){
-                        Navigator.of(context).push(MaterialPageRoute(builder: (_)=>LikesScreen(likedBy: _likes,)));
-                      },
-                      child: Text(
-                        "${_likes.length} likes",
-                        style: TextStyle(
-                          color: kTextColor,
-                          fontStyle: FontStyle.italic,
-                        ),
+                    TextSpan(
+                      text: (_postData["description"] == null)
+                          ? ""
+                          : (_postData["description"].length <= 50)
+                              ? ""
+                              : (isExpanded)
+                                  ? "        see less "
+                                  : "       see more ",
+                      style: TextStyle(
+                        color: kAccentColor,
+                        fontWeight: FontWeight.w600,
                       ),
-                    )
+                      recognizer: _gestureRecognizer,
+                    ),
                   ],
                 ),
-                SizedBox(
-                  width: kDefaultPadding,
-                ),
-                IconButton(
-                  icon: Icon(
-                    Icons.comment_outlined,
-                    color: kPrimaryColor,
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(builder: (_)=>CommentsScreen(postId: widget.post.id,)));
-                  },
-                ),
-              ],
+              ),
             ),
-          ],
-        ),
+          Row(
+            children: [
+              Row(
+                children: [
+                  IconButton(
+                    icon: Icon(
+                      isLiked
+                          ? Icons.favorite_rounded
+                          : Icons.favorite_border_rounded,
+                      color: kAccentColor,
+                    ),
+                    onPressed: () async {
+                      if (!isLiked)
+                        await widget.post.reference.update({
+                          "likes": FieldValue.arrayUnion([_uid]),
+                        });
+                      else
+                        await widget.post.reference.update({
+                          "likes": FieldValue.arrayRemove([_uid]),
+                        });
+                    },
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (_) => LikesScreen(
+                                likedBy: _likes,
+                              )));
+                    },
+                    child: Text(
+                      "${_likes.length} likes",
+                      style: TextStyle(
+                        color: kTextColor,
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
+                  )
+                ],
+              ),
+              SizedBox(
+                width: kDefaultPadding,
+              ),
+              IconButton(
+                icon: Icon(
+                  Icons.comment_outlined,
+                  color: kPrimaryColor,
+                ),
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (_) => CommentsScreen(
+                            postId: widget.post.id,
+                          )));
+                },
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -316,61 +311,61 @@ class _AuthorDetails extends StatelessWidget {
       ),
       trailing: (uid == FirebaseAuth.instance.currentUser.uid)
           ? IconButton(
-        icon: Icon(
-          Icons.delete_outline_outlined,
-          color: kAccentColor,
-        ),
-        onPressed: () async {
-          await showDialog(
-            builder: (ctx) {
-              return AlertDialog(
-                title: Text(
-                  "Are you Sure to delete?",
-                  style: TextStyle(
-                    color: kTextColor,
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                actions: [
-                  FlatButton(
-                    color: kPrimaryColor.withAlpha(20),
-                    onPressed: () async {
-                      await FirebaseFirestore.instance
-                          .collection("class_posts")
-                          .doc(postId)
-                          .delete();
-                      emptyStream();
-                      Navigator.of(ctx).pop();
-                    },
-                    child: Text(
-                      "Yes",
-                      style: TextStyle(
-                        color: kPrimaryColor,
-                        fontWeight: FontWeight.w600,
+              icon: Icon(
+                Icons.delete_outline_outlined,
+                color: kAccentColor,
+              ),
+              onPressed: () async {
+                await showDialog(
+                  builder: (ctx) {
+                    return AlertDialog(
+                      title: Text(
+                        "Are you Sure to delete?",
+                        style: TextStyle(
+                          color: kTextColor,
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
-                    ),
-                  ),
-                  FlatButton(
-                    color: kAccentColor,
-                    onPressed: () {
-                      Navigator.of(ctx).pop();
-                    },
-                    child: Text(
-                      "No",
-                      style: TextStyle(
-                        color: kWhite,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                ],
-              );
-            },
-            context: context,
-          );
-        },
-      )
+                      actions: [
+                        FlatButton(
+                          color: kPrimaryColor.withAlpha(20),
+                          onPressed: () async {
+                            await FirebaseFirestore.instance
+                                .collection("class_posts")
+                                .doc(postId)
+                                .delete();
+                            emptyStream();
+                            Navigator.of(ctx).pop();
+                          },
+                          child: Text(
+                            "Yes",
+                            style: TextStyle(
+                              color: kPrimaryColor,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                        FlatButton(
+                          color: kAccentColor,
+                          onPressed: () {
+                            Navigator.of(ctx).pop();
+                          },
+                          child: Text(
+                            "No",
+                            style: TextStyle(
+                              color: kWhite,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                  context: context,
+                );
+              },
+            )
           : Text(""),
     );
   }

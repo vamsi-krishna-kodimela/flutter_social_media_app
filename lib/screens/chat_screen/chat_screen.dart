@@ -55,7 +55,7 @@ class _ChatScreenState extends State<ChatScreen> {
               bottom: 8.0,
               right: 80.0,
             ),
-      padding: EdgeInsets.symmetric(horizontal: 25.0, vertical: 15.0),
+      padding: EdgeInsets.symmetric(horizontal: 25.0, vertical: 10.0),
       width: MediaQuery.of(context).size.width * 0.75,
       decoration: BoxDecoration(
         color: isMe ? Theme.of(context).primaryColor : kWhite,
@@ -96,24 +96,16 @@ class _ChatScreenState extends State<ChatScreen> {
               fontSize: 15.0,
               fontWeight: FontWeight.w500,
             ),
-            linkStyle: TextStyle(color: kAccentColor),
+            linkStyle: TextStyle(color: kAccentColor,fontStyle: FontStyle.italic),
             options: LinkifyOptions(humanize: false),
           ),
-          // Text(
-          //   message["message"].trim(),
-          //   style: TextStyle(
-          //     color: (isMe) ? kWhite : kTextColor,
-          //     fontSize: 15.0,
-          //     fontWeight: FontWeight.w500,
-          //   ),
-          //   textAlign: TextAlign.start,
-          // ),
+
           SizedBox(height: 4.0),
           Text(
             postedOnString,
             style: TextStyle(
               color: (!isMe) ? kGrey : kTextColor,
-              fontSize: 12.0,
+              fontSize: 11.0,
             ),
           ),
         ],
@@ -141,12 +133,18 @@ class _ChatScreenState extends State<ChatScreen> {
           child: Row(
             children: [
               Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(kDefaultPadding/2),
+                ),
                 padding: EdgeInsets.all(8.0),
                 height: AppBar().preferredSize.height,
                 width: AppBar().preferredSize.height,
-                child: FancyShimmerImage(
-                  imageUrl: widget.friend["photoUrl"],
-                  boxFit: BoxFit.cover,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(kDefaultPadding/2),
+                  child: FancyShimmerImage(
+                    imageUrl: widget.friend["photoUrl"],
+                    boxFit: BoxFit.cover,
+                  ),
                 ),
               ),
               Text(

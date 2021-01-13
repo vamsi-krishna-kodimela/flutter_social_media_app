@@ -147,7 +147,6 @@ class _GroupPostWidgetComponent extends State<GroupPostWidgetComponent> {
       ),
       decoration: BoxDecoration(
         color: kWhite,
-        // borderRadius: BorderRadius.circular(kDefaultPadding),
         boxShadow: [
           BoxShadow(
             color: kGrey.withAlpha(50),
@@ -185,17 +184,13 @@ class _GroupPostWidgetComponent extends State<GroupPostWidgetComponent> {
                       leading: Container(
                         width: _size.width * 0.1,
                         height: _size.width * 0.1,
-                        child: ClipRRect(
-                          borderRadius:
-                          BorderRadius.circular(_size.width * 0.1),
-                          child: Shimmer.fromColors(
-                            baseColor: Colors.grey[300],
-                            highlightColor: Colors.grey[100],
-                            child: Container(
-                              width: _size.width * 0.1,
-                              height: _size.width * 0.1,
-                              color: kAccentColor,
-                            ),
+                        child: Shimmer.fromColors(
+                          baseColor: Colors.grey[300],
+                          highlightColor: Colors.grey[100],
+                          child: Container(
+                            width: _size.width * 0.1,
+                            height: _size.width * 0.1,
+                            color: kAccentColor,
                           ),
                         ),
                       ),
@@ -229,7 +224,6 @@ class _GroupPostWidgetComponent extends State<GroupPostWidgetComponent> {
               if (_postData["resources"] != null &&
                   _postData["resources"] != "")
                 ClipRRect(
-                  borderRadius: BorderRadius.circular(kDefaultPadding),
                   child: (_postData["type"] == 0)
                       ? FancyShimmerImage(
                     width: _size.width - (kDefaultPadding * 4),

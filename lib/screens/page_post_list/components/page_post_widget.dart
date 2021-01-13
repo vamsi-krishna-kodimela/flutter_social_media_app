@@ -148,7 +148,6 @@ class _PagePostWidgetState extends State<PagePostWidget> {
       ),
       decoration: BoxDecoration(
         color: kWhite,
-        borderRadius: BorderRadius.circular(kDefaultPadding),
         boxShadow: [
           BoxShadow(
             color: kGrey.withAlpha(50),
@@ -184,17 +183,13 @@ class _PagePostWidgetState extends State<PagePostWidget> {
                       leading: Container(
                         width: _size.width * 0.1,
                         height: _size.width * 0.1,
-                        child: ClipRRect(
-                          borderRadius:
-                          BorderRadius.circular(_size.width * 0.1),
-                          child: Shimmer.fromColors(
-                            baseColor: Colors.grey[300],
-                            highlightColor: Colors.grey[100],
-                            child: Container(
-                              width: _size.width * 0.1,
-                              height: _size.width * 0.1,
-                              color: kAccentColor,
-                            ),
+                        child: Shimmer.fromColors(
+                          baseColor: Colors.grey[300],
+                          highlightColor: Colors.grey[100],
+                          child: Container(
+                            width: _size.width * 0.1,
+                            height: _size.width * 0.1,
+                            color: kAccentColor,
                           ),
                         ),
                       ),
@@ -225,56 +220,53 @@ class _PagePostWidgetState extends State<PagePostWidget> {
               ),
               if (_postData["resources"] != null &&
                   _postData["resources"] != "")
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(kDefaultPadding),
-                  child: (_postData["type"] == 0)
-                      ? FancyShimmerImage(
-                    width: _size.width - (kDefaultPadding * 4),
-                    height:
-                    (_size.width - (kDefaultPadding * 4)) * (3 / 4),
-                    imageUrl: _postData["resources"],
-                    boxFit: BoxFit.cover,
-                  )
-                      : Stack(
-                    children: [
-                      AspectRatio(
-                        aspectRatio: 4/3,
-                        child: SizedBox.expand(
-                          child: FittedBox(
-                            fit: BoxFit.cover,
-                            child: SizedBox(
-                              width: _videoPlayerController.value.size?.width ?? 0,
-                              height: _videoPlayerController.value.size?.height ?? 0,
-                              child: VideoPlayer(_videoPlayerController),
-                            ),
+                (_postData["type"] == 0)
+                    ? FancyShimmerImage(
+                  width: _size.width - (kDefaultPadding * 4),
+                  height:
+                  (_size.width - (kDefaultPadding * 4)) * (3 / 4),
+                  imageUrl: _postData["resources"],
+                  boxFit: BoxFit.cover,
+                )
+                    : Stack(
+                  children: [
+                    AspectRatio(
+                      aspectRatio: 4/3,
+                      child: SizedBox.expand(
+                        child: FittedBox(
+                          fit: BoxFit.cover,
+                          child: SizedBox(
+                            width: _videoPlayerController.value.size?.width ?? 0,
+                            height: _videoPlayerController.value.size?.height ?? 0,
+                            child: VideoPlayer(_videoPlayerController),
                           ),
                         ),
                       ),
-                      Positioned(
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white70,
-                            borderRadius: BorderRadius.circular(40.0),
-                          ),
-                          child: IconButton(
-                            color: (audioState)
-                                ? kPrimaryColor
-                                : kAccentColor,
-                            icon: Icon(
-                              !audioState
-                                  ? Icons.volume_off
-                                  : Icons.volume_up,
-                            ),
-                            onPressed: () {
-                              _toggleMute(audioState);
-                            },
-                          ),
+                    ),
+                    Positioned(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white70,
+                          borderRadius: BorderRadius.circular(40.0),
                         ),
-                        bottom: 10.0,
-                        right: 10.0,
+                        child: IconButton(
+                          color: (audioState)
+                              ? kPrimaryColor
+                              : kAccentColor,
+                          icon: Icon(
+                            !audioState
+                                ? Icons.volume_off
+                                : Icons.volume_up,
+                          ),
+                          onPressed: () {
+                            _toggleMute(audioState);
+                          },
+                        ),
                       ),
-                    ],
-                  ),
+                      bottom: 10.0,
+                      right: 10.0,
+                    ),
+                  ],
                 ),
               Container(
                 padding: EdgeInsets.symmetric(vertical: kDefaultPadding),
