@@ -97,7 +97,7 @@ class UserProfileWidget extends StatelessWidget {
                                     Navigator.of(context).push(
                                       MaterialPageRoute(
                                         builder: (_) => FriendsScreen(
-                                          likedBy: friendsList,
+                                          uid: uid,
                                         ),
                                       ),
                                     );
