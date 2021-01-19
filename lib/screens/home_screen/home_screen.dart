@@ -196,14 +196,25 @@ class _HomeScreenState extends State<HomeScreen> {
 
   AppBar _buildAppBar() {
     return AppBar(
-      title: Text(
-        kAppName,
-        style: TextStyle(
-          color: kTextColor,
-          fontFamily: GoogleFonts.lobster().fontFamily,
-          fontSize: 26.0,
-        ),
-      ),
+      // title: Row(
+      //   children: [
+      //     Image.asset(
+      //       "assets/icon.png",
+      //       height: 40.0,
+      //       fit: BoxFit.fitHeight,
+      //     ),
+      //     SizedBox(width: kDefaultPadding,),
+      //     Text(
+      //       kAppName,
+      //       style: TextStyle(
+      //         color: kTextColor,
+      //         fontFamily: GoogleFonts.lobster().fontFamily,
+      //         fontSize: 26.0,
+      //       ),
+      //     ),
+      //   ],
+      // ),
+      title: Image.asset("assets/logo.png",height: 40.0,fit: BoxFit.fitHeight,),
       actions: [
         // IconButton(
         //   icon: Icon(FeatherIcons.search),
@@ -333,13 +344,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     padding: EdgeInsets.all(0.0),
                     children: [
                       Card(
-
                         child: ListTile(
                           contentPadding: EdgeInsets.symmetric(
                             horizontal: kDefaultPadding,
                             vertical: kDefaultPadding / 2,
                           ),
-
                           title: Text(
                             _user.displayName.trim(),
                             overflow: TextOverflow.ellipsis,
@@ -535,7 +544,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
                             Navigator.of(context).push(MaterialPageRoute(
                                 builder: (_) => PagesScreen()));
-
                           },
                           leading: Icon(
                             FeatherIcons.layout,
