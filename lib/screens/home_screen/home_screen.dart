@@ -205,16 +205,16 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       actions: [
-        IconButton(
-          icon: Icon(FeatherIcons.search),
-          onPressed: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (_) => SearchScreen(),
-              ),
-            );
-          },
-        ),
+        // IconButton(
+        //   icon: Icon(FeatherIcons.search),
+        //   onPressed: () {
+        //     Navigator.of(context).push(
+        //       MaterialPageRoute(
+        //         builder: (_) => SearchScreen(),
+        //       ),
+        //     );
+        //   },
+        // ),
         IconButton(
           icon: Icon(FeatherIcons.bell),
           onPressed: () {

@@ -18,7 +18,7 @@ class ClassPostList extends StatefulWidget {
 
 class _ClassPostListState extends State<ClassPostList> {
   ScrollController _scrollController = ScrollController();
-  final int perPage = 4;
+  final int perPage = 50;
   final String uid = FirebaseAuth.instance.currentUser.uid;
   bool _hasMorePosts = true;
   DocumentSnapshot _lastDocument;
@@ -26,12 +26,14 @@ class _ClassPostListState extends State<ClassPostList> {
       List<List<QueryDocumentSnapshot>>();
 
   emptyState() {
-    if (_allPagedResults.length == 1)
+    if (_allPagedResults.length == 1) {
+      _lastDocument = null;
+      _allPagedResults = List<List<QueryDocumentSnapshot>>();
       setState(() {
-        _lastDocument = null;
-        _allPagedResults = List<List<QueryDocumentSnapshot>>();
-        _hasMorePosts = false;
+
+        _hasMorePosts = true;
       });
+    }
   }
 
   @override
@@ -98,10 +100,11 @@ class _ClassPostListState extends State<ClassPostList> {
     return StreamBuilder<List<QueryDocumentSnapshot>>(
       stream: listenToPostsRealTime(),
       builder: (ctx, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting)
-          return Center(
-            child: CircularProgressIndicator(),
-          );
+        // print(snapshot);
+        // if (snapshot.connectionState == ConnectionState.waiting)
+        //   return Center(
+        //     child: CircularProgressIndicator(),
+        //   );
 
         if (snapshot.hasData) {
           var data = snapshot.data;
