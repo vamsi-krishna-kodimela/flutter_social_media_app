@@ -33,7 +33,7 @@ class RootApp extends StatelessWidget {
             color: Colors.transparent,
             brightness: Brightness.light,
             elevation: 0.0,
-            iconTheme: IconThemeData(color: kPrimaryColor),
+            iconTheme: IconThemeData(color: kTextColor),
             centerTitle: true,
           ),
         ),

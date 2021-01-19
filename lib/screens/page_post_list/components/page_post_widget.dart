@@ -341,45 +341,40 @@ class _PostFooter extends StatelessWidget {
       }
     }
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Row(
-          children: [
-            FlatButton.icon(
-              onPressed: toogleLikes,
-              icon: Icon(
-                (isLiked) ? Icons.favorite : Icons.favorite_border,
-                color: kAccentColor,
-              ),
-              label: GestureDetector(
-                  onTap: () {
-                    if (likesCount > 0)
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (_) => LikesScreen(
-                            likedBy: likesList,
-                          ),
-                        ),
-                      );
-                  },
-                  child: Text("$likesCount likes")),
-            ),
-            IconButton(
-              icon: Icon(
-                Icons.comment_outlined,
-                color: kPrimaryColor,
-              ),
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (_) => CommentsScreen(
-                      postId: widget.post.id,
+        FlatButton.icon(
+          onPressed: toogleLikes,
+          icon: Icon(
+            (isLiked) ? Icons.favorite : Icons.favorite_border,
+            color: kAccentColor,
+          ),
+          label: GestureDetector(
+              onTap: () {
+                if (likesCount > 0)
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => LikesScreen(
+                        likedBy: likesList,
+                      ),
                     ),
-                  ),
-                );
+                  );
               },
-            ),
-          ],
+              child: Text("$likesCount likes")),
+        ),
+        IconButton(
+          icon: Icon(
+            Icons.comment_outlined,
+            color: kPrimaryColor,
+          ),
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => CommentsScreen(
+                  postId: widget.post.id,
+                ),
+              ),
+            );
+          },
         ),
         IconButton(
           icon: Icon(
