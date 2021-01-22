@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:social_media/components/ads_component.dart';
 import 'package:social_media/components/empty_state_component.dart';
 
 import '../../components/post_widget.dart';
@@ -125,7 +126,12 @@ class _PostsScreenState extends State<PostsScreen> {
                 );
             }
 
-            return EmptyStateComponent("No Posts Found.");
+            return Column(
+              children: [
+                AdsComponent(),
+                Expanded(child: EmptyStateComponent("No Posts Found.")),
+              ],
+            );
           },
         );
       },
