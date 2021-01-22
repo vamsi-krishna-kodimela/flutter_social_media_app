@@ -184,14 +184,17 @@ class _UserNameWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Text(
-        name,
-        style: TextStyle(
-          color: kTextColor,
-          fontWeight: FontWeight.w600,
-          fontSize: 18.0,
+      width: double.infinity,
+      child: Center(
+        child: Text(
+          name,
+          style: TextStyle(
+            color: kTextColor,
+            fontWeight: FontWeight.w600,
+            fontSize: 18.0,
+          ),
+          overflow: TextOverflow.ellipsis,
         ),
-        overflow: TextOverflow.ellipsis,
       ),
     );
   }
@@ -210,16 +213,21 @@ class _UserProfilePic extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: _size.width * 0.2,
-      height: _size.width * 0.2,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(kDefaultPadding * 2),
-        child: FancyShimmerImage(
-          imageUrl: photoUrl,
-          boxFit: BoxFit.cover,
+    return Column(
+      children: [
+        Container(
+          width: _size.width * 0.2,
+          height: _size.width * 0.2,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(kDefaultPadding * 2),
+            child: FancyShimmerImage(
+              imageUrl: photoUrl,
+              boxFit: BoxFit.cover,
+            ),
+          ),
         ),
-      ),
+
+      ],
     );
   }
 }

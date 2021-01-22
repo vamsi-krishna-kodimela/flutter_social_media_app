@@ -143,7 +143,6 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: _buildAppBar(),
       drawer: _buildSidebar(),
       body: _widgetRetriver(),
-      floatingActionButton: _buildFloatingActionButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: _buildBottomAppBar(),
     );
@@ -151,8 +150,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _widgetRetriver() {
     switch (tab) {
-      case 1:
-        return MessagingListScreen();
+      // case 1:
+      // return MessagingListScreen();
       case 2:
         return StoreScreen();
       default:
@@ -171,10 +170,10 @@ class _HomeScreenState extends State<HomeScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               buildBottomBarButton(0, FeatherIcons.home),
-              buildBottomBarButton(1, FeatherIcons.messageSquare),
-              SizedBox(width: kDefaultPadding * 3),
+              buildBottomBarButton(1, FeatherIcons.search),
               buildBottomBarButton(2, Icons.storefront_outlined),
               buildBottomBarButton(3, Icons.local_fire_department_sharp),
+              buildBottomBarButton(3, FeatherIcons.user),
             ],
           ),
         ),
@@ -182,50 +181,42 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  FloatingActionButton _buildFloatingActionButton() {
-    return FloatingActionButton(
-      elevation: 0.0,
-      onPressed: () {
-        Navigator.of(context)
-            .push(MaterialPageRoute(builder: (_) => CreatePostScreen()));
-      },
-      child: Icon(Icons.create_outlined),
-      backgroundColor: kPrimaryColor,
-    );
-  }
+  // FloatingActionButton _buildFloatingActionButton() {
+  //   return FloatingActionButton(
+  //     elevation: 0.0,
+  //     onPressed: () {
+  //       Navigator.of(context)
+  //           .push(MaterialPageRoute(builder: (_) => CreatePostScreen()));
+  //     },
+  //     child: Icon(Icons.create_outlined),
+  //     backgroundColor: kPrimaryColor,
+  //   );
+  // }
 
   AppBar _buildAppBar() {
     return AppBar(
-      // title: Row(
-      //   children: [
-      //     Image.asset(
-      //       "assets/icon.png",
-      //       height: 40.0,
-      //       fit: BoxFit.fitHeight,
-      //     ),
-      //     SizedBox(width: kDefaultPadding,),
-      //     Text(
-      //       kAppName,
-      //       style: TextStyle(
-      //         color: kTextColor,
-      //         fontFamily: GoogleFonts.lobster().fontFamily,
-      //         fontSize: 26.0,
-      //       ),
-      //     ),
-      //   ],
-      // ),
-      title: Image.asset("assets/logo.png",height: 40.0,fit: BoxFit.fitHeight,),
+      title: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Image.asset(
+            "assets/icon.png",
+            height: 40.0,
+            fit: BoxFit.fitHeight,
+          ),
+          SizedBox(
+            width: kDefaultPadding,
+          ),
+          Text(
+            kAppName,
+            style: TextStyle(
+              color: kTextColor,
+              fontFamily: GoogleFonts.lobster().fontFamily,
+              fontSize: 26.0,
+            ),
+          ),
+        ],
+      ),
       actions: [
-        // IconButton(
-        //   icon: Icon(FeatherIcons.search),
-        //   onPressed: () {
-        //     Navigator.of(context).push(
-        //       MaterialPageRoute(
-        //         builder: (_) => SearchScreen(),
-        //       ),
-        //     );
-        //   },
-        // ),
         IconButton(
           icon: Icon(FeatherIcons.bell),
           onPressed: () {
@@ -261,6 +252,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       MaterialPageRoute(builder: (_) => EntertainmentScreen()));
                   return;
                 }
+                if (val == 1) {
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (_) => SearchScreen()));
+                  return;
+                }
+
                 if (tab != val) {
                   setState(() {
                     tab = val;
@@ -426,6 +423,33 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           title: Text(
                             "Friends",
+                            style: TextStyle(
+                              color: kTextColor,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(0.0),
+                        ),
+                        margin: EdgeInsets.only(top: 1.0),
+                        elevation: 0.0,
+                        child: ListTile(
+                          onTap: () {
+                            Navigator.of(context).pop();
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) => MessagingListScreen(),
+                              ),
+                            );
+                          },
+                          leading: Icon(
+                            FeatherIcons.messageSquare,
+                            color: kPrimaryColor,
+                          ),
+                          title: Text(
+                            "Messages",
                             style: TextStyle(
                               color: kTextColor,
                             ),
