@@ -3,6 +3,7 @@ import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:social_media/screens/friends_screen/friends_screen.dart';
 
 import '../../../constants.dart';
@@ -30,6 +31,10 @@ class UserProfileWidget extends StatelessWidget {
           else
             friends = _friends.values.toList();
           friends..removeWhere((element) => element != 3);
+          final tempDoB = data["dob"];
+          String _dob = "";
+          if (tempDoB != null)
+            _dob = DateFormat("dd MMMM").format(tempDoB);
           return Container(
             width: double.infinity,
             padding: EdgeInsets.all(kDefaultPadding * 2),
@@ -51,13 +56,14 @@ class UserProfileWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     _UserProfilePic(size: _size, photoUrl: data["photoUrl"]),
-
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Padding(
-                            padding: const EdgeInsets.only(left: kDefaultPadding*2,bottom: kDefaultPadding),
+                            padding: const EdgeInsets.only(
+                                left: kDefaultPadding * 2,
+                                bottom: kDefaultPadding),
                             child: _UserNameWidget(name: data["name"]),
                           ),
                           Row(
@@ -71,10 +77,9 @@ class UserProfileWidget extends StatelessWidget {
                                         ? "0"
                                         : data["postCount"].toString(),
                                     style: TextStyle(
-                                      color: kTextColor,
-                                      fontSize: 16.0,
-                                      fontStyle: FontStyle.italic
-                                    ),
+                                        color: kTextColor,
+                                        fontSize: 16.0,
+                                        fontStyle: FontStyle.italic),
                                   ),
                                   Text(
                                     "Posts",
@@ -110,8 +115,7 @@ class UserProfileWidget extends StatelessWidget {
                                       style: TextStyle(
                                           color: kTextColor,
                                           fontSize: 16.0,
-                                          fontStyle: FontStyle.italic
-                                      ),
+                                          fontStyle: FontStyle.italic),
                                     ),
                                     Text(
                                       "Friends",
@@ -127,8 +131,13 @@ class UserProfileWidget extends StatelessWidget {
                           if (data["description"] != null &&
                               data["description"].length > 0)
                             Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: kDefaultPadding*2,vertical: kDefaultPadding),
-                              child: UserDescriptionWidget(description: data["description"]),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: kDefaultPadding * 2,
+                                  vertical: kDefaultPadding),
+                              child: UserDescriptionWidget(
+                                description: data["description"],
+                                dob: _dob,
+                              ),
                             ),
                         ],
                       ),
@@ -154,21 +163,42 @@ class UserDescriptionWidget extends StatelessWidget {
   const UserDescriptionWidget({
     Key key,
     @required this.description,
+    @required this.dob,
   }) : super(key: key);
 
   final String description;
+  final String dob;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      child: Text(
-        "$description",
-        style: TextStyle(
-          color: kTextColor,
-          fontSize: 14.0,
+    return Column(
+      children: [
+        if (dob != "")
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: kDefaultPadding),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Icon(Icons.cake_outlined,color: kAccentColor,),
+                SizedBox(width: kDefaultPadding,),
+                Expanded(
+                  child: Text(dob.toUpperCase()),
+                ),
+              ],
+            ),
+          ),
+        Container(
+          width: double.infinity,
+          child: Text(
+            "$description",
+            style: TextStyle(
+              color: kTextColor,
+              fontSize: 14.0,
+            ),
+          ),
         ),
-      ),
+      ],
     );
   }
 }
@@ -189,7 +219,7 @@ class _UserNameWidget extends StatelessWidget {
         child: Text(
           name,
           style: TextStyle(
-            color: kTextColor,
+            color: kPrimaryColor,
             fontWeight: FontWeight.w600,
             fontSize: 18.0,
           ),
@@ -226,7 +256,6 @@ class _UserProfilePic extends StatelessWidget {
             ),
           ),
         ),
-
       ],
     );
   }
