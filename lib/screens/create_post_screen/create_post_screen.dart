@@ -9,6 +9,10 @@ import './utils/publish_post_util.dart';
 
 class CreatePostScreen extends StatefulWidget {
   static const routeName = "CreatePostScreen";
+  final file;
+  final type;
+
+  const CreatePostScreen({this.file, this.type});
 
   @override
   _CreatePostScreenState createState() => _CreatePostScreenState();
@@ -20,7 +24,19 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
   bool isLoading = false;
   GlobalKey<ScaffoldState> _scaffold = GlobalKey<ScaffoldState>();
 
-final TextEditingController _description = TextEditingController();
+  @override
+  void initState() {
+    super.initState();
+    if (widget.file != null) {
+      if(widget.type==0)
+        _image=widget.file;
+      else
+        _video=widget.file;
+    }
+  }
+
+  final TextEditingController _description = TextEditingController();
+
   Future<void> publishPost() async {
     var description = _description.value.text;
 
@@ -44,10 +60,10 @@ final TextEditingController _description = TextEditingController();
         ),
       );
     } finally {
-      if(this.mounted)
-      setState(() {
-        isLoading = false;
-      });
+      if (this.mounted)
+        setState(() {
+          isLoading = false;
+        });
       Navigator.of(context).pop();
     }
   }
@@ -104,6 +120,7 @@ final TextEditingController _description = TextEditingController();
               ),
               child: TextField(
                 controller: _description,
+                autofocus: true,
                 decoration: InputDecoration(
                   hintText: "What's on Your Mind...",
                   hintStyle: TextStyle(
@@ -199,7 +216,11 @@ final TextEditingController _description = TextEditingController();
                         children: [
                           FlatButton.icon(
                             onPressed: () async {
-                              await DialogCameraPicker.buildShowDialog(type: 0,setImage: setImage,context: context,isPost: true);
+                              await DialogCameraPicker.buildShowDialog(
+                                  type: 0,
+                                  setImage: setImage,
+                                  context: context,
+                                  isPost: true);
                             },
                             icon: Icon(
                               Icons.image,
@@ -216,8 +237,10 @@ final TextEditingController _description = TextEditingController();
                           ),
                           FlatButton.icon(
                             onPressed: () async {
-                              await DialogCameraPicker
-                                  .buildShowDialog(context:context, setImage: setImage, type: 1);
+                              await DialogCameraPicker.buildShowDialog(
+                                  context: context,
+                                  setImage: setImage,
+                                  type: 1);
                             },
                             icon: Icon(
                               Icons.videocam,

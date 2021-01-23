@@ -3,10 +3,12 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:social_media/components/ads_component.dart';
-import 'package:social_media/components/empty_state_component.dart';
 
+import '../../components/ads_component.dart';
+import '../../components/create_post_component.dart';
+import '../../components/empty_state_component.dart';
 import '../../components/post_widget.dart';
+
 
 class PostsScreen extends StatefulWidget {
   @override
@@ -81,30 +83,43 @@ class _PostsScreenState extends State<PostsScreen> {
         // Determine if there's more posts to request
         _hasMorePosts = (posts.length == perPage);
       }
-
     });
   }
+
   final _firestore = FirebaseFirestore.instance;
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<DocumentSnapshot>(
       future: _firestore.collection("users").doc(uid).get(),
-      builder: (_, info){
-        if(info.connectionState == ConnectionState.waiting)
-          return Center(child: CircularProgressIndicator(),);
+      builder: (_, info) {
+        if (info.connectionState == ConnectionState.waiting)
+          return Center(
+            child: CircularProgressIndicator(),
+          );
         final data = info.data.data();
 
-        if(data["friends"]!=null){
+        if (data["friends"] != null) {
           Map<String, dynamic> _all = data["friends"];
-          _all.removeWhere((key, value) => value !=3);
+          _all.removeWhere((key, value) => value != 3);
           _frnds = _all.keys.toList();
           _frnds.add(uid);
         }
 
-
-        if(_frnds.length==0)
-          return EmptyStateComponent("Make some friends to see their Posts.");
+        if (_frnds.length == 0)
+          return Column(
+            children: [
+              CreatePostComponent(),
+              AdsComponent(),
+              Expanded(
+                child: SingleChildScrollView(
+                  child: EmptyStateComponent(
+                    "Make some friends to see their Posts.",
+                  ),
+                ),
+              ),
+            ],
+          );
         return StreamBuilder<List<QueryDocumentSnapshot>>(
           stream: listenToPostsRealTime(),
           builder: (ctx, snapshot) {
@@ -112,30 +127,42 @@ class _PostsScreenState extends State<PostsScreen> {
               return Center(
                 child: CircularProgressIndicator(),
               );
-            
+
             if (snapshot.hasData) {
               var data = snapshot.data;
               if (data.length > 0)
                 return ListView.builder(
                   controller: _scrollController,
-                  itemCount: data.length,
-                  itemBuilder: (ctx, i) => PostWidget(
-                    key: Key(data[i].id),
-                    post: data[i],
-                  ),
+                  itemCount: data.length + 2,
+                  itemBuilder: (ctx, i) {
+                    if(i==0)
+                      return CreatePostComponent();
+                    if(i==1)
+                      return AdsComponent();
+                    return PostWidget(
+                      key: Key(data[i-2].id),
+                      post: data[i-2],
+                    );
+                  },
                 );
             }
 
             return Column(
               children: [
+                CreatePostComponent(),
                 AdsComponent(),
-                Expanded(child: EmptyStateComponent("No Posts Found.")),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: EmptyStateComponent("No Posts Found."),
+                  ),
+                ),
               ],
             );
           },
         );
       },
-
     );
   }
 }
+
+

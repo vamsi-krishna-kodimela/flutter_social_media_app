@@ -18,7 +18,6 @@ import 'package:uni_links/uni_links.dart';
 //Custom imports
 import '../../constants.dart';
 import '../ads_screen/ads_screen.dart';
-import '../create_post_screen/create_post_screen.dart';
 import '../friends_screen/friends_screen.dart';
 import '../group_posts_screen/group_posts_screen.dart';
 import '../main_screen.dart';
