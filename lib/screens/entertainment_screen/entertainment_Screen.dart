@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:social_media/components/empty_state_component.dart';
@@ -18,6 +19,7 @@ class EntertainmentScreen extends StatefulWidget {
 
 class _EntertainmentScreenState extends State<EntertainmentScreen> {
   var currentOption = 0;
+  final _uid = FirebaseAuth.instance.currentUser.uid;
 
   void changeOption(val) {
     _hasMorePosts = true;
@@ -36,7 +38,6 @@ class _EntertainmentScreenState extends State<EntertainmentScreen> {
 
   ScrollController _scrollController = ScrollController();
   final int perPage = 4;
-  String uid;
   bool _hasMorePosts = true;
   DocumentSnapshot _lastDocument;
   List<List<QueryDocumentSnapshot>> _allPagedResults =
@@ -234,7 +235,7 @@ class _EntertainmentScreenState extends State<EntertainmentScreen> {
         children: [
           Container(
             width: double.infinity,
-            padding: EdgeInsets.symmetric(vertical: kDefaultPadding*2),
+            padding: EdgeInsets.symmetric(vertical: kDefaultPadding * 2),
             child: SingleChildScrollView(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -292,19 +293,79 @@ class _EntertainmentScreenState extends State<EntertainmentScreen> {
                       itemCount: _data.length,
                       itemBuilder: (ctx, i) {
                         Map<String, dynamic> resourceData = _data[i].data();
-                        if (resourceData["type"] == 0) {
-                          return VideoPlayerComponent(
-                            data: resourceData,
+                        if (_uid == resourceData["postedBy"])
+                          return Dismissible(
                             key: Key(_data[i].id),
-                            reference: _data[i].reference,
+                            direction: DismissDirection.endToStart,
+                            background: Container(
+                              color: kAccentColor,
+                              padding: EdgeInsets.all(kDefaultPadding * 4),
+                              alignment: Alignment.centerRight,
+                              child: Icon(
+                                Icons.delete,
+                                color: kWhite,
+                              ),
+                            ),
+                            confirmDismiss: (direction) async {
+                              bool isDismissed = false;
+                              await showDialog(
+                                context: context,
+                                builder: (ctx) => AlertDialog(
+                                  title: Text("Are sure to delete?"),
+                                  actions: [
+                                    FlatButton(
+                                      onPressed: () {
+                                        Navigator.of(ctx).pop();
+                                        FirebaseFirestore.instance
+                                            .collection("entertainment")
+                                            .doc(_data[i].id)
+                                            .delete();
+                                        isDismissed = true;
+                                      },
+                                      child: Text(
+                                        "Yes",
+                                        style: TextStyle(
+                                          color: kPrimaryColor,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                      color: kPrimaryColor.withAlpha(20),
+                                    ),
+                                    FlatButton(
+                                      onPressed: () {
+                                        Navigator.of(ctx).pop();
+                                      },
+                                      child: Text("No"),
+                                      color: kAccentColor,
+                                    ),
+                                  ],
+                                ),
+                              );
+                              return isDismissed;
+                            },
+                            child: (resourceData["type"] == 0)
+                                ? VideoPlayerComponent(
+                                    data: resourceData,
+                                    key: Key(_data[i].id),
+                                    reference: _data[i].reference,
+                                  )
+                                : AudioPlayerComponent(
+                                    reference: _data[i].reference,
+                                    key: Key(_data[i].id),
+                                    data: _data[i].data(),
+                                  ),
                           );
-                        }
-                        // return Text("Audio");
-                        return AudioPlayerComponent(
-                          reference: _data[i].reference,
-                          key: Key(_data[i].id),
-                          data: _data[i].data(),
-                        );
+                        return (resourceData["type"] == 0)
+                            ? VideoPlayerComponent(
+                                data: resourceData,
+                                key: Key(_data[i].id),
+                                reference: _data[i].reference,
+                              )
+                            : AudioPlayerComponent(
+                                reference: _data[i].reference,
+                                key: Key(_data[i].id),
+                                data: _data[i].data(),
+                              );
                       },
                     );
                   }),
