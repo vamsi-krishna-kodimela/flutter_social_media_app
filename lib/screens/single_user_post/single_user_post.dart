@@ -29,7 +29,7 @@ class SingleUserPost extends StatelessWidget {
             );
           return SingleChildScrollView(
             child: PostWidget(
-              post: pId,
+              post: data,
               key: Key(pId),
             ),
           );
