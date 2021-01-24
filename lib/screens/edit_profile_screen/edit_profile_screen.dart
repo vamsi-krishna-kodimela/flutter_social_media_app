@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:social_media/components/image_source_selector.dart';
 import 'package:social_media/services/firebase_storage_service.dart';
 import 'package:social_media/utils.dart';
@@ -20,6 +21,7 @@ class EditProfileScreen extends StatefulWidget {
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
   final String _uid = FirebaseAuth.instance.currentUser.uid;
+  DateTime _dob;
   final _fireStore = FirebaseFirestore.instance;
   final _nameController = TextEditingController();
   final _descriptionController = TextEditingController();
@@ -54,6 +56,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         "name": _name,
         "description": _description,
         "photoUrl": _picUrl,
+        "dob":_dob,
         "keys":keyWordGenerator(_name),
       });
       await FirebaseAuth.instance.currentUser.updateProfile(
@@ -78,6 +81,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     _descriptionController.text =
         _userInfo["description"] == null ? "" : _userInfo["description"];
     _picUrl=_userInfo["photoUrl"];
+    _dob=(_userInfo["dob"]==null)?null:_userInfo["dob"].toDate();
   }
 
   @override
@@ -143,6 +147,21 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               ),
                       ),
                       title: Text("Change Profile Pic..."),
+                    ),
+                  ),
+                  SizedBox(
+                    height: kDefaultPadding,
+                  ),
+                  Card(
+                    child: ListTile(
+                      onTap: () async {
+                        final dob = await showDatePicker(context: context,initialDate: DateTime.now().subtract(Duration(days: 365*16)), firstDate: DateTime(1900,1,1), lastDate: DateTime.now().subtract(Duration(days: 365*16)));
+                        setState(() {
+                          _dob = dob;
+                        });
+                        },
+                      title: Text((_dob==null)?"Date of Birth":DateFormat("dd MMM yyyy").format(_dob).toUpperCase()),
+                      leading: Icon(Icons.calendar_today_rounded,color: kPrimaryColor,),
                     ),
                   ),
                   SizedBox(

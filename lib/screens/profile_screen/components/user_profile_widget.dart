@@ -34,7 +34,7 @@ class UserProfileWidget extends StatelessWidget {
           final tempDoB = data["dob"];
           String _dob = "";
           if (tempDoB != null)
-            _dob = DateFormat("dd MMMM").format(tempDoB);
+            _dob = DateFormat("dd MMMM").format(tempDoB.toDate());
           return Container(
             width: double.infinity,
             padding: EdgeInsets.all(kDefaultPadding * 2),
