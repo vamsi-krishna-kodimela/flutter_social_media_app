@@ -31,7 +31,7 @@ dependencies:
   video_player: ^0.11.0
 
   visibility_detector: ^0.1.5
-  shimmer: ^1.1.1
+  shimmer: ^1.1.2
   fancy_shimmer_image: ^1.2.0
   video_thumbnail: ^0.2.2
 

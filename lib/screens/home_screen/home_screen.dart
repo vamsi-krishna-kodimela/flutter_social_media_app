@@ -172,7 +172,7 @@ class _HomeScreenState extends State<HomeScreen> {
               buildBottomBarButton(1, FeatherIcons.search),
               buildBottomBarButton(2, Icons.storefront_outlined),
               buildBottomBarButton(3, Icons.local_fire_department_sharp),
-              buildBottomBarButton(3, FeatherIcons.user),
+              buildBottomBarButton(4, FeatherIcons.user),
             ],
           ),
         ),
@@ -254,6 +254,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 if (val == 1) {
                   Navigator.of(context)
                       .push(MaterialPageRoute(builder: (_) => SearchScreen()));
+                  return;
+                }
+                if (val == 4) {
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (_) => ProfileScreen()));
                   return;
                 }
 
@@ -381,9 +386,10 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: ListTile(
                           onTap: () {
                             Navigator.of(context).pop();
-                            setState(() {
-                              tab = 0;
-                            });
+                            if (tab != 0)
+                              setState(() {
+                                tab = 0;
+                              });
                           },
                           leading: Icon(
                             FeatherIcons.home,
@@ -631,29 +637,29 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                       ),
-                      Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(0.0),
-                        ),
-                        margin: EdgeInsets.only(top: 1.0),
-                        elevation: 0.0,
-                        child: ListTile(
-                          onTap: () {
-                            Navigator.of(context).push(
-                                MaterialPageRoute(builder: (_) => AdsScreen()));
-                          },
-                          leading: Icon(
-                            FeatherIcons.package,
-                            color: kPrimaryColor,
-                          ),
-                          title: Text(
-                            "Promotions",
-                            style: TextStyle(
-                              color: kTextColor,
-                            ),
-                          ),
-                        ),
-                      ),
+                      // Card(
+                      //   shape: RoundedRectangleBorder(
+                      //     borderRadius: BorderRadius.circular(0.0),
+                      //   ),
+                      //   margin: EdgeInsets.only(top: 1.0),
+                      //   elevation: 0.0,
+                      //   child: ListTile(
+                      //     onTap: () {
+                      //       Navigator.of(context).push(
+                      //           MaterialPageRoute(builder: (_) => AdsScreen()));
+                      //     },
+                      //     leading: Icon(
+                      //       FeatherIcons.package,
+                      //       color: kPrimaryColor,
+                      //     ),
+                      //     title: Text(
+                      //       "Promotions",
+                      //       style: TextStyle(
+                      //         color: kTextColor,
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
                       Card(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(0.0),
