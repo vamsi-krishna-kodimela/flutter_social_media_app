@@ -17,13 +17,26 @@ class SingleUserScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: kWhite,
-        title: Text(
-          kAppName,
-          style: TextStyle(
-            color: kTextColor,
-            fontFamily: GoogleFonts.lobster().fontFamily,
-            fontSize: 26.0,
-          ),
+        title:Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Image.asset(
+              "assets/icon.png",
+              height: 40.0,
+              fit: BoxFit.fitHeight,
+            ),
+            SizedBox(
+              width: kDefaultPadding,
+            ),
+            Text(
+              kAppName,
+              style: TextStyle(
+                color: kTextColor,
+                fontFamily: GoogleFonts.lobster().fontFamily,
+                fontSize: 26.0,
+              ),
+            ),
+          ],
         ),
 
         actions: [
