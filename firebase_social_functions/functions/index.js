@@ -53,13 +53,18 @@ exports.pagePostCountIncrease = functions.firestore
     // Retrieve the current and previous value
     const data = change.data();
     let pid = data.page;
+    let uid = data.postedBy;
+
+
     db.collection("pages")
       .doc(pid)
       .get()
       .then((res) => {
         var page = res.data();
+        var followers = page.followers;
+        followers.splice(followers.indexOf(uid),1);
         db.collection("notifications").add({
-          recievers: page.followers,
+          recievers: followers,
           notificationType: "PAGE_POST",
           message: page.name+" Published a new post",
           title:page.name,
@@ -97,13 +102,19 @@ exports.groupPostCountIncrease = functions.firestore
   .onCreate(async (change, context) => {
     const data = change.data();
     let pid = data.group;
+    let uid = data.postedBy;
+    
     db.collection("groups")
       .doc(pid)
       .get()
       .then((res) => {
         var group = res.data();
+        
+        var members = group.members;
+        members.splice(members.indexOf(uid),1);
+
         db.collection("notifications").add({
-          recievers: group.members,
+          recievers: members,
           notificationType: "GROUP_POST",
           message: group.name+" Published a new post",
           title:group.name,
@@ -128,17 +139,21 @@ exports.classPostCreated = functions.firestore
   .onCreate(async (change, context) => {
     const data = change.data();
     let pid = data.class;
+    let uid = data.postedBy;
+  
     return db
       .collection("class_rooms")
       .doc(pid)
       .get()
       .then((res) => {
         var page = res.data();
+        var students = page.students;
+        students.splice(students.indexOf(uid),1);
         db.collection("notifications").add({
-          recievers: page.students,
+          recievers: students,
           notificationType: "CLASS_POST",
-          message: data.class+" Plublished a new post",
-          title:data.class,
+          message: page.name+" Plublished a new post",
+          title:page.name,
           id: context.params.postId,
           pageId: pid,
           photoUrl: data.resources,

@@ -216,10 +216,6 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       actions: [
-        IconButton(icon: Icon(Icons.add), onPressed: (){
-          Navigator.of(context).push(
-              MaterialPageRoute(builder: (_) => SingleUserPost("1QG5xF9VJqjUhohwFHRh")));
-        }),
         IconButton(
           icon: Icon(FeatherIcons.bell),
           onPressed: () {
